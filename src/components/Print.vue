@@ -28,6 +28,22 @@ export default {
     bmi: {
       type: Number,
       default: 0
+    },
+    biometriaFetale:{
+      type: Array,
+      default: []
+    },
+    heart:{
+      type: Boolean,
+      defalut: true
+    },
+    liquid:{
+      type: String,
+      default: "normale"
+    },
+    placenta:{
+      type: String,
+      defalut: ""
     }
   },
   data(){
@@ -41,6 +57,9 @@ export default {
 
   },
   methods:{
+    pointPercentile(value){
+      return `left: ${value}px`;
+    }
   }
 }
 </script>
@@ -72,6 +91,37 @@ export default {
           Biometria Fetale 
           <span>(Rappresentazione del 5°-95° percentile)</span>
         </div>
+        <!-- <div class="biometria-items"> -->
+          <div 
+            class="biometria-item"
+            v-for="(item, index) in biometriaFetale"
+            :key="index"
+          >
+            <div class="name">
+              {{ item.name }}
+            </div>
+            <div class="value">
+              {{ item.value }}
+            </div>
+            <div class="unit">
+              {{ item.unit }}
+            </div>
+            <div class="chart-percentile">
+              <div class="line"></div>
+              <div class="base">
+                <div class="middle"></div>
+                <div 
+                  class="point"
+                  :style="pointPercentile(item.percentile)"
+                ></div>
+              </div>
+              <div class="line"></div>
+            </div>
+            <div class="percentile">
+              {{ item.percentile }}°p
+            </div>
+          </div>
+        <!-- </div> -->
       </section>
 
     </main>
@@ -116,6 +166,53 @@ export default {
       .medical-history{
         h4{
           margin-bottom: 5px;
+        }
+      }
+      .biometria-item{
+        display: flex;
+        width: 100%;
+        .name{
+          width: 35%;
+        }
+        .value{
+          width: 30px;
+        }
+        .unit{
+          width: 8%;
+        }
+        .chart-percentile{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20%;
+          margin-right: 10px;
+          .base{
+            position: relative;
+            width: 100px;
+            height: 1.5px;
+            background: #1a1a1a;
+            .middle{
+              position: absolute;
+              left: 50px;
+              top: -4px;
+              width: 1.5px;
+              height: 9px;
+              background: #1a1a1a;
+            }
+            .point{
+              position: absolute;
+              top: -3px;
+              width: 7px;
+              height: 7px;
+              transform: rotate(-45deg);
+              background: #1a1a1a;
+            }
+          }
+          .line{
+            height: 12px;
+            width: 1.5px;
+            background: #1a1a1a;
+          }
         }
       }
     }

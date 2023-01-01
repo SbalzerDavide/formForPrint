@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "normal-distribution": "^1.1.1",
     "vue": "^3.2.45"
   },
   "devDependencies": {
