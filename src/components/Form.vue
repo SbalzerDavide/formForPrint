@@ -80,8 +80,19 @@ export default {
     }
   },
   created(){
-    // const normDist = new NormalDistribution(0, 1);
-    // console.log(normDist);
+    let ga = 25;
+    let eX = getExpectedMeans(ga);
+    let cv = getCV(ga);
+    let sk = getSkewness(ga);
+    let efw = 850;
+    let lnEfw = Math.log(efw)
+    let zScore = getZScore(sk, cv, lnEfw, eX)
+    console.log(zScore);
+    const normDist = new NormalDistribution(0, 1);
+    console.log(normDist);
+    let percentile = normDist.cdf(zScore) * 100;
+    console.log(percentile);
+    
   },
   watch: {
     // liquid(newLiquid, oldLiquid) {
@@ -121,6 +132,7 @@ export default {
       }
       this.biometriaFetale[index].percentile = 20;
       console.log(this.biometriaFetale[index]);
+      this.Hadlock();
     }, 
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
@@ -138,6 +150,15 @@ export default {
       let weekDiff = today.diff(this.startDate, 'week');
       this.epocaGestazionale = `${weekDiff} settiname + ${dayDiff} gg`
 
+    },
+    Hadlock(){
+      let hc = this.biometriaFetale[1].value;
+      let ac = this.biometriaFetale[4].value;
+      let fl = this.biometriaFetale[5].value;
+      let efw = 10 ** (1.326 + 0.0107 * hc + 0.0438 * ac + 0.158 * fl - 0.00326 * ac * fl);
+      this.biometriaFetale[this.biometriaFetale.length -1].value = efw;
+      console.log(efw);
+      // 1.326 + 0.0107 × HC + 0.0438 × AC + 0.158 × FL −  0.00326 × AC × FL
     },
     print(){
       this.showPrint = true;
