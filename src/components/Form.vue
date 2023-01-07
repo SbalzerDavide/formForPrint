@@ -18,6 +18,8 @@ export default {
       normalWeight: 0,
       actualWeight: 0,
       bmi: 0,
+      ecoType: "accrescimento",
+      ecoNumber: "singola",
       biometriaFetale: [
       {
           name: "Diametro biparietale (DBP)",
@@ -56,9 +58,10 @@ export default {
           percentile: 0
         },
         {
-          name: "Circ. cranica, cird. addominale",
+          name: "Circ. cranica/ cird. addominale",
+          calc: true,
           value: "",
-          unit: "mm",
+          unit: "",
           percentile: 0
         },
         {
@@ -74,33 +77,27 @@ export default {
       direction: "cefalica",
       placenta: "",
       activeDateSelection: "start",
+      pregnancy: {},
       startDate: "",
       endDate: "",
-      epocaGestazionale: ""
+      epocaGestazionale: "",
+      decimalWeeks: 0,
+      patientMore: false,
+      pregnancyMore: false,
+      ecoMore: false,
+      biometriaMore: false,
+      lastMore: false,
+      patientMoreText: "",
+      pregnancyMoreText: "",
+      ecoMoreText: "",
+      biometriaMoreText: "",
+      lastMoreText: "",
+
     }
   },
   created(){
-    let ga = 25;
-    let eX = getExpectedMeans(ga);
-    let cv = getCV(ga);
-    let sk = getSkewness(ga);
-    let efw = 850;
-    let lnEfw = Math.log(efw)
-    let zScore = getZScore(sk, cv, lnEfw, eX)
-    console.log(zScore);
-    const normDist = new NormalDistribution(0, 1);
-    console.log(normDist);
-    let percentile = normDist.cdf(zScore) * 100;
-    console.log(percentile);
-    
   },
   watch: {
-    // liquid(newLiquid, oldLiquid) {
-    //   if(newLiquid === "oligo"){
-
-    // }
-
-    // }
   },
   methods:{
     changeBirth(){
@@ -114,51 +111,78 @@ export default {
       this.bmi = parseFloat(this.actualWeight / (meterHeight * meterHeight)).toFixed(2)
     },  
     calcPercentile(index){
-      let diametro = false;
+      let femore = false;
       let circonferenzaC = false;
+      let circonferenzaCValue;
       let circonferenzaA = false;
-      this.biometriaFetale.forEach((el, index)=>{
-        if(el.name === "Diametro biparietale (DBP)"){
-          diametro = true;
-        } else if(el.name === "Circonferenza cranica (CC)"){
+      let circonferenzaAValue;
+      this.biometriaFetale.forEach((el)=>{
+        if(el.name === "Lungh, Femore (LF)" && el.value){
+          femore = true;
+        } else if(el.name === "Circonferenza cranica (CC)" && el.value){
           circonferenzaC = true;
-        } else if(el.name === "Circonferenza addominale (CA)"){
+          circonferenzaCValue = el.value;
+        } else if(el.name === "Circonferenza addominale (CA)" && el.value){
           circonferenzaA = true;
+          circonferenzaAValue = el.value;
         }
       })
-      if(diametro && circonferenzaC && circonferenzaA){
-        // posso calcolare stima peso
+      if(circonferenzaC && circonferenzaA){
+        this.biometriaFetale.forEach(el=>{
+          if(el.name === "Circ. cranica/ cird. addominale"){
+            el.value = circonferenzaCValue / circonferenzaAValue;
+            // calcolo percentile
+            el.percentile = 30
+          }
+        })
+      }
 
+      if(femore && circonferenzaC && circonferenzaA){
+        console.log("posso calcolare Hadlock");
+        this.Hadlock();
+      } else{
+        console.log("non posso calcolare Hadlock");
       }
       this.biometriaFetale[index].percentile = 20;
-      console.log(this.biometriaFetale[index]);
-      this.Hadlock();
     }, 
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
         // ho settato l'ultima mestruazione
         this.endDate = dayjs(this.startDate).add(280, 'day').format('DD/MM/YYYY');
-
+        this.pregnancy.start = this.startDate;
+        this.pregnancy.end = this.endDate;
       } else if(this.activeDateSelection === "end"){
         // ho settato data presunta parto
         this.startDate = dayjs(this.startDate).subtract(280, 'day').format('DD/MM/YYYY');
+        this.pregnancy.end = this.endDate;
         this.endDate = dayjs(this.endDate).format('DD/MM/YYYY');
       }
-
       let today = dayjs();
       let dayDiff = (today.diff(this.startDate, 'day')) % 7;
       let weekDiff = today.diff(this.startDate, 'week');
+      this.decimalWeeks = weekDiff + (10 * dayDiff / 7);
       this.epocaGestazionale = `${weekDiff} settiname + ${dayDiff} gg`
-
+      this.pregnancy.epocaGestazionale = this.epocaGestazionale;
     },
     Hadlock(){
-      let hc = this.biometriaFetale[1].value;
-      let ac = this.biometriaFetale[4].value;
-      let fl = this.biometriaFetale[5].value;
-      let efw = 10 ** (1.326 + 0.0107 * hc + 0.0438 * ac + 0.158 * fl - 0.00326 * ac * fl);
-      this.biometriaFetale[this.biometriaFetale.length -1].value = efw;
+      let hc = this.biometriaFetale[1].value * 0.1;
+      let ac = this.biometriaFetale[4].value * 0.1;
+      let fl = this.biometriaFetale[5].value * 0.1;
+      let esponente = 1.326 + (0.0107 * hc) + (0.0438 * ac) + (0.158 * fl) - (0.00326 * ac * fl);
+      let efw = 10 ** (esponente);
+      this.biometriaFetale[this.biometriaFetale.length -1].value = efw.toFixed(2);
       console.log(efw);
-      // 1.326 + 0.0107 × HC + 0.0438 × AC + 0.158 × FL −  0.00326 × AC × FL
+      // calcolo percentile stima peso
+      let ga = this.decimalWeeks;
+      let eX = getExpectedMeans(ga);
+      let cv = getCV(ga);
+      let sk = getSkewness(ga);
+      let lnEfw = Math.log(efw)
+      let zScore = getZScore(sk, cv, lnEfw, eX)
+      console.log(zScore);
+      const normDist = new NormalDistribution(0, 1);
+      let percentile = normDist.cdf(zScore) * 100;
+      this.biometriaFetale[this.biometriaFetale.length -1].percentile = percentile.toFixed(1);
     },
     print(){
       this.showPrint = true;
@@ -209,67 +233,130 @@ export default {
           </div>
         </div>
       </div>
+      <div class="more-info">
+        <div v-if="!patientMore" class="add-more" @click="patientMore = true">
+          +
+        </div>
+        <textarea 
+          v-else 
+          v-model="patientMoreText" 
+          placeholder="Aggiungi ulteriori informazioni" 
+          rows="4">
+        </textarea>
+      </div>
 
     </section>
-    <section class="pregnancy">
-      <div class="title">Gravidanza</div>
-      <div class="switch">
-        <div 
-          @click="activeDateSelection = 'start'"
-          class="selStart"
-          :class="activeDateSelection === 'start' ? 'act' :''"
+    <div class="double">
+      <section class="pregnancy">
+        <div class="title">Gravidanza</div>
+        <div class="switch">
+          <div 
+            @click="activeDateSelection = 'start'"
+            class="selStart"
+            :class="activeDateSelection === 'start' ? 'act' :''"
+          >
+            Ultima mestruazione
+          </div>
+          <div
+            @click="activeDateSelection = 'end'"
+            :class="activeDateSelection === 'end' ? 'act' :''"
+            class="selEnd">Data prevista parto
+          </div>
+          <div 
+            class="active" 
+            :class="activeDateSelection"
+          ></div>
+        </div>
+        <input 
+          v-if="activeDateSelection=='start'" 
+          @change="calcPregnancyDate"
+          v-model="startDate" 
+          type="date"
         >
-          Ultima mestruazione
+        <input 
+          v-else-if="activeDateSelection=='end'" 
+          @change="calcPregnancyDate"
+          v-model="endDate" 
+          type="date"
+        >
+        <div class="calc-date">
+          Data prevista per il parto:
+          {{ endDate }}
         </div>
-        <div
-          @click="activeDateSelection = 'end'"
-          :class="activeDateSelection === 'end' ? 'act' :''"
-          class="selEnd">Data prevista parto
+        <div class="epoca-gestazionale">
+          Epoca gestazionale: 
+          {{ epocaGestazionale }}
         </div>
-        <div 
-          class="active" 
-          :class="activeDateSelection"
-        ></div>
-      </div>
-      <input 
-        v-if="activeDateSelection=='start'" 
-        @change="calcPregnancyDate"
-        v-model="startDate" 
-        type="date"
-      >
-      <input 
-        v-else-if="activeDateSelection=='end'" 
-        @change="calcPregnancyDate"
-        v-model="endDate" 
-        type="date"
-      >
-      <div class="calc-date">
-        Data prevista per il parto:
-        {{ endDate }}
-      </div>
-      <div class="epoca-gestazionale">
-        Epoca gestazionale: 
-        {{ epocaGestazionale }}
-      </div>
-    </section>
-    <section class="eco">
-      <div class="title">Ecografia</div>
-    </section>
+        <div class="more-info">
+          <div v-if="!pregnancyMore" class="add-more" @click="pregnancyMore = true">
+            +
+          </div>
+          <textarea 
+            v-else 
+            v-model="pregnancyMoreText" 
+            placeholder="Aggiungi ulteriori informazioni" 
+            rows="4">
+          </textarea>
+        </div>
+
+      </section>
+      <section class="eco">
+        <div class="title">Ecografia</div>
+        <div class="type">
+          <label for="type">Tipo</label>
+          <select v-model="ecoType">
+            <option value="accrescimento">Controllo Accrescimento</option>
+            <option value="morfologica">Morfologica</option>
+          </select>
+        </div>
+        <div class="number">
+          <label for="number">Gravidanza</label>
+          <select v-model="ecoNumber">
+            <option value="singola">Singola</option>
+            <option value="gemellare">Gemellare</option>
+          </select>
+        </div>
+        <div class="more-info">
+          <div v-if="!ecoMore" class="add-more" @click="ecoMore = true">
+            +
+          </div>
+          <textarea 
+            v-else 
+            v-model="ecoMoreText" 
+            placeholder="Aggiungi ulteriori informazioni" 
+            rows="4">
+          </textarea>
+        </div>
+      </section>
+    </div>
     <section class="biometria-fetale">
       <div class="title">
         Biometria Fetale
         <span>(Rappresentazione del 5°-95° percentile)</span>
       </div>
+      
       <div 
         class="biometria-item" 
         v-for="(item, index) in biometriaFetale"
         :key="index"
       >
         <label :for="'b-' + index">{{ item.name }}</label>
-        <div v-if="item.calc" class="calc"></div>
+        <div v-if="item.calc" class="calc">{{ item.value }}</div>
+        <!-- <div v-if="item.calc" class="calc">{{ item.value !== '' && item.value !== 0 ? item.value.toFixed(2) : '' }}</div> -->
         <input v-else @change="calcPercentile(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
         <div v-if="item.percentile > 0" class="percentile">{{ item.percentile }}° p</div>
+      </div>
+      <div class="more-info">
+        <div v-if="!biometriaMore" class="add-more" @click="biometriaMore = true">
+          +
+        </div>
+        <textarea 
+          v-else 
+          v-model="biometriaMoreText" 
+          placeholder="Aggiungi ulteriori informazioni" 
+          rows="4">
+        </textarea>
       </div>
     </section>
     <section class="more">
@@ -306,6 +393,18 @@ export default {
         <div class="name">Placenta</div>
         <input v-model="placenta" type="text">
       </div>
+      <div class="more-info">
+        <div v-if="!lastMore" class="add-more" @click="lastMore = true">
+          +
+        </div>
+        <textarea 
+          v-else 
+          v-model="lastMoreText" 
+          placeholder="Aggiungi ulteriori informazioni" 
+          rows="4">
+        </textarea>
+      </div>
+
     </section>
 
     <button @click="print">
@@ -319,10 +418,20 @@ export default {
     :normalWeight="normalWeight"
     :actualWeight="actualWeight"
     :bmi="bmi"
+    :pregnancy="pregnancy"
+    :decimalWeeks="decimalWeeks"
+    :ecoType="ecoType"
+    :ecoNumber="ecoNumber"
     :biometriaFetale="biometriaFetale"
     :heart="heart"
     :direction="direction"
     :liquid="liquid"
+    :placenta="placenta"
+    :patientMore= "patientMoreText"
+    :pregnancyMore= "pregnancyMoreText"
+    :ecoMore="ecoMoreText"
+    :biometriaMore="biometriaMoreText"
+    :lastMore=lastMoreText
   />
 
 </template>
@@ -332,6 +441,15 @@ export default {
   .form{
     display: flex;
     flex-direction: column;
+    .double{
+      display: flex;
+      justify-content: space-between;
+      section{
+        width: 48%;
+        // flex-grow: 1;
+        // flex-basis: 300px;
+      }
+    }
     section{
       text-align: left;
       width: 100%;
@@ -339,6 +457,29 @@ export default {
       border-radius: 8px;
       margin: 18px 0;
       padding: 10px;
+      .more-info{
+        margin-top: 8px;
+        .add-more{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 30px;
+          height: 30px;
+          font-weight: 700;
+          border-radius: 8px;
+          border: 1px solid transparent;
+          background-color: #1a1a1a;
+          cursor: pointer;
+          transition: border-color 0.25s;
+          &:hover{
+            border-color: #646cff;
+          }
+        }
+        textarea{
+          width: 100%;
+          resize: none;
+        }
+      }
       &.patient{
         .section-content{
           display: flex;
@@ -400,6 +541,11 @@ export default {
         // border-radius: 25px;
         // border: 1px solid rgb(133, 133, 133);
       }
+      &.eco{
+        select{
+          width: 200px;
+        }
+      }
       &.biometria-fetale{
         .biometria-item{
           display: flex;
@@ -412,6 +558,7 @@ export default {
           margin-right: 10px;
         }
         .unit{
+          width: 30px;
           margin-right: 30px;
         }
       }

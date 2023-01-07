@@ -29,6 +29,16 @@ export default {
       type: Number,
       default: 0
     },
+    pregnancy: Object,
+    ecoType: {
+      type: String,
+      defalut: ""
+    },
+    ecoNumber: {
+      type: String,
+      defalut: ""
+    },
+    decimalWeeks: Number,
     biometriaFetale:{
       type: Array,
       default: []
@@ -44,21 +54,53 @@ export default {
     placenta:{
       type: String,
       defalut: ""
-    }
+    },
+    patientMore:{
+      type: String,
+      defalut: ""
+    }, 
+    pregnancyMore:{
+      type: String,
+      defalut: ""
+    }, 
+    ecoMore:{
+      type: String,
+      defalut: ""
+    },
+    biometriaMore:{
+      type: String,
+      defalut: ""
+    },
+    lastMore:{
+      type: String,
+      defalut: ""
+    },
   },
   data(){
     return{
       date: "",
+      xPosition: 0,
     }
   },
   created(){
     let date = new Date();
     this.date = `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`;
-
+    this.xPosition = 60.5 + ((this.decimalWeeks - 15) * 286.5 / 25)
+    this.calcYPosHc();
   },
   methods:{
     pointPercentile(value){
       return `left: ${value}px`;
+    },
+    calcYPosHc(){
+      let hc = this.biometriaFetale.filter(el=>{
+        el.name === "Circonferenza cranica (CC)"
+      })
+      // console.log(hc);
+      // let pos = 50 + ()
+    },
+    print(){
+      window.print();
     }
   }
 }
@@ -66,6 +108,12 @@ export default {
 
 <template>
   <div class="print">
+    <button 
+      class="confirm hide-print"
+      @click="print"
+    >
+      Conferma
+    </button>
     <div class="header">
       <h2>Azienda Socio Sanitaria del Garda</h2>
       <h3>Presidio ospedaliero di Chiara Beluzzi</h3>
@@ -76,15 +124,22 @@ export default {
     <main>
       <section class="patient">
         Paziente: {{ patient }}, data di nascita: {{ dateOfBirth }}
+        <p v-if="patientMore!==''">{{ patientMore }}</p>
       </section>
       <section class="medical-history">
         <div class="title-par">Anamnesi</div>
         Età materna: {{ age }} anni, Altezza {{ height }}cm, Peso normale {{ normalWeight }}kg, Peso attuale {{ actualWeight }}kg, (BMI {{ bmi }})
       </section>
       <section class="pregnancy-date">
-        <div class="title-par">Data ultime mestruazioni:</div>
-        <div class="title-par">Data prevista per il parto da U.M.:</div>
-        <div class="title-par">Epoca gestazionale:</div>
+        <div v-show="pregnancy?.start" class="title-par">Data ultime mestruazioni: {{ pregnancy?.start?.replaceAll('-', '/') }}</div>
+        <div class="title-par">Data prevista per il parto da U.M.: {{ pregnancy?.end }}</div>
+        <div class="title-par">Epoca gestazionale: {{ pregnancy?.epocaGestazionale }}</div>
+        <p v-if="pregnancyMore!==''">{{ pregnancyMore }}</p>
+      </section>
+      <section class="eco">
+        <div class="title-par">Ecografia {{ ecoType }}</div>
+        Gravidanza {{ ecoNumber }} 
+        <p v-if="ecoMore!==''">{{ ecoMore }}</p>
       </section>
       <section class="biometria-fetale">
         <div class="title-par">
@@ -122,7 +177,43 @@ export default {
             </div>
           </div>
         <!-- </div> -->
+        <p v-if="biometriaMore!==''">{{ biometriaMore }}</p>
+
       </section>
+      <section class="more">
+        <span v-if="heart">Attività cardiaca presente, </span>
+        <span>Presentazione: {{ direction }}, </span>
+        <span>Liquido amniotico: {{ liquid }}, </span>
+        <span>Placenta: {{ placenta }}, </span>
+        <p v-if="lastMore!==''">{{ lastMore }}</p>
+      </section>
+      <!-- <section class="charts">
+        <div class="bpd">
+          <div class="title">
+            Diametro Biparietale
+          </div>
+          <div class="y-axis">mm</div>
+          <img src="../../public/Biparietal diameter.png" alt="">
+          <div class="x-axis">settimane</div>
+          <div 
+            class="my-val"
+            :style="`left:${xPosition}px`"
+          ></div>
+        </div>
+        <div class="hc">
+          <div class="title">
+            Circonferenza Cefalica
+          </div>
+          <div class="y-axis">mm</div>
+          <img src="../../public/Head circunference.png" alt="">
+          <div class="x-axis">settimane</div>
+          <div 
+            class="my-val"
+            :style="`left:${xPosition}px`"
+          ></div>
+        </div>
+
+      </section> -->
 
     </main>
   </div>
@@ -137,6 +228,12 @@ export default {
     padding: 15px 30px;
     background-color: #fff;
     color: #1a1a1a;
+    position: relative;
+    .confirm{
+      position: absolute;
+      right: -150px;
+      top: 30px;
+    }
     h1{
       margin: 10px 0;
     }
@@ -163,6 +260,38 @@ export default {
       section{
         margin: 18px 0;
       }
+      .charts{
+        display: flex;
+        &>div{
+          flex-basis: 200px;
+          flex-grow: 1;
+          position: relative;
+          img{
+            margin-left: 5%;
+            width: 95%;
+          }
+        }
+        .title{
+          text-align: center;
+        }
+        .y-axis{
+          position: absolute;
+          transform: rotate(-90deg);
+          top: 40%;
+
+        }
+        .x-axis{
+          text-align: center;
+        }
+        .my-val{
+          position: absolute;
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: red;
+          bottom: 50px;
+        }
+      }
       .medical-history{
         h4{
           margin-bottom: 5px;
@@ -175,7 +304,7 @@ export default {
           width: 35%;
         }
         .value{
-          width: 30px;
+          width: 70px;
         }
         .unit{
           width: 8%;

@@ -26,13 +26,13 @@ window.getZScore = function(sk, cv, lnEfw, eX){
   return a;
   //return Number.parseFloat(a).toFixed(2);
 }
-let ga = 30;
-let eX = window.getExpectedMeans(ga);
-let cv = window.getCV(ga);
-let sk = window.getSkewness(ga);
-let efw = 1119;
-let lnEfw = Math.log(efw)
-let zScore = window.getZScore(sk, cv, lnEfw, eX)
+// let ga = 30;
+// let eX = window.getExpectedMeans(ga);
+// let cv = window.getCV(ga);
+// let sk = window.getSkewness(ga);
+// let efw = 1119;
+// let lnEfw = Math.log(efw)
+// let zScore = window.getZScore(sk, cv, lnEfw, eX)
 
 
 // per calcolare il percentile alla fine 
