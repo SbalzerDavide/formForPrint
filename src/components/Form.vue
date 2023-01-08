@@ -22,54 +22,62 @@ export default {
       ecoNumber: "singola",
       biometriaFetale: [
       {
-          name: "Diametro biparietale (DBP)",
+          text: "Diametro biparietale (DBP)",
+          name: "DBP",
           value: "",
           unit: "mm",
-          percentile: 0
+          percentile: null
         },
         {
-          name: "Circonferenza cranica (CC)",
+          text: "Circonferenza cranica (CC)",
+          name: "CC",
           value: "",
           unit: "mm",
-          percentile: 0
+          percentile: null
         },
         {
-          name: "Cisterna magna (CM)",
+          text: "Cisterna magna (CM)",
+          name: "CM",
           value: "",
           unit: "mm",
-          percentile: 0
+          percentile: null
         },
         {
-          name: "Cervelletto tr (TCD)",
+          text: "Cervelletto tr (TCD)",
+          name: "DBP",
           value: "",
           unit: "mm",
-          percentile: 0
+          percentile: null
         },
         {
-          name: "Circonferenza addominale (CA)",
+          text: "Circonferenza addominale (CA)",
+          name: "CA",
           value: "",
           unit: "mm",
-          percentile: 0
+          percentile: null
         },
         {
-          name: "Lungh, Femore (LF)",
+          text: "Lungh, Femore (LF)",
+          name: "LF",
           value: "",
           unit: "mm",
-          percentile: 0
+          percentile: null
         },
         {
-          name: "Circ. cranica/ cird. addominale",
+          text: "Circ. cranica/ cird. addominale",
+          name: "CC/CA",
           calc: true,
           value: "",
           unit: "",
-          percentile: 0
+          percentile: null
         },
         {
-          name: "Stima del peso fetale (Hadlock)",
+          text: "Stima del peso fetale (Hadlock)",
+          name: "HADLOCK",
           calc: true,
           value: "",
           unit: "g",
-          percentile: 0
+          percentile: null
         },
       ],
       heart: true,
@@ -110,41 +118,69 @@ export default {
       let meterHeight = this.height/100;
       this.bmi = parseFloat(this.actualWeight / (meterHeight * meterHeight)).toFixed(2)
     },  
-    calcPercentile(index){
+    manageBiometriaFetale(index){
       let femore = false;
       let circonferenzaC = false;
       let circonferenzaCValue;
       let circonferenzaA = false;
       let circonferenzaAValue;
       this.biometriaFetale.forEach((el)=>{
-        if(el.name === "Lungh, Femore (LF)" && el.value){
+        if(el.name === "LF" && el.value){
           femore = true;
-        } else if(el.name === "Circonferenza cranica (CC)" && el.value){
+        } else if(el.name === "CC" && el.value){
           circonferenzaC = true;
           circonferenzaCValue = el.value;
-        } else if(el.name === "Circonferenza addominale (CA)" && el.value){
+        } else if(el.name === "CA" && el.value){
           circonferenzaA = true;
           circonferenzaAValue = el.value;
         }
       })
       if(circonferenzaC && circonferenzaA){
-        this.biometriaFetale.forEach(el=>{
-          if(el.name === "Circ. cranica/ cird. addominale"){
-            el.value = circonferenzaCValue / circonferenzaAValue;
+        this.biometriaFetale.forEach((el,i)=>{
+          if(el.name === "CC/CA"){
+            el.value = (circonferenzaCValue / circonferenzaAValue).toFixed(2);
             // calcolo percentile
-            el.percentile = 30
+            this.calcPercentile(i);
+            // el.percentile = 30
           }
         })
       }
 
       if(femore && circonferenzaC && circonferenzaA){
-        console.log("posso calcolare Hadlock");
-        this.Hadlock();
+        if(this.decimalWeeks >= 25){
+          this.Hadlock();
+        }
       } else{
         console.log("non posso calcolare Hadlock");
       }
-      this.biometriaFetale[index].percentile = 20;
+      this.calcPercentile(index);
+      // this.biometriaFetale[index].percentile = 20;
     }, 
+    calcPercentile(index){
+      let ga = this.decimalWeeks;
+      let mean;
+      let sd;
+      if(this.biometriaFetale[index].name === "CC"){
+        mean = -28.2849 + 1.69267 * (ga ** 2) - 0.397485 * (ga ** 2) * Math.log(ga);
+        sd = 1.98735 + 0.0136772 * (ga ** 3) - 0.00726264 * (ga ** 3) * Math.log(ga) + 0.000976253 * (ga ** 3) * (Math.log(ga) ** 2);
+      } else if(this.biometriaFetale[index].name === "DBP"){
+        mean = 5.60878 + 0.158369 * (ga ** 2) - 0.00256379 ** (ga ** 3);
+        // 5·60878 + 0·158369 × GA2 − 0·00256379 × GA3
+        sd = Math.exp(0.101242 + 0.00150557 * (ga ** 3) - 0.000771535 * (ga ** 3) * Math.log(ga) + 0.0000999638 * (ga ** 3) * (Math.log(ga) ** 2));
+      } else if(this.biometriaFetale[index].name === "CA"){
+        mean = - 81.3243 + 11.6772 * ga - 0.000561865 * (ga ** 3);
+        sd = - 4.36302 + 0.121445 * (ga ** 2) - 0.0130256 * (ga ** 3) + 0.00282143 * (ga ** 3) * Math.log(ga);
+      } else if(this.biometriaFetale[index].name === "LF"){
+        mean = - 39.9616 + 4.32298 * ga - 0.0380156 * (ga ** 2);
+        sd = Math.exp(0.605843 - 42.0014 * (ga ** -2) + 0.00000917972 * (ga ** 3))
+      }
+      if(mean && sd){
+        const normDist = new NormalDistribution(mean, sd);
+        let percentile = normDist.cdf(this.biometriaFetale[index].value) * 100;
+        console.log(percentile);
+        this.biometriaFetale[index].percentile = percentile.toFixed(1)
+      }
+    },
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
         // ho settato l'ultima mestruazione
@@ -160,7 +196,7 @@ export default {
       let today = dayjs();
       let dayDiff = (today.diff(this.startDate, 'day')) % 7;
       let weekDiff = today.diff(this.startDate, 'week');
-      this.decimalWeeks = weekDiff + (10 * dayDiff / 7);
+      this.decimalWeeks = weekDiff + (dayDiff / 7);
       this.epocaGestazionale = `${weekDiff} settiname + ${dayDiff} gg`
       this.pregnancy.epocaGestazionale = this.epocaGestazionale;
     },
@@ -338,14 +374,15 @@ export default {
       <div 
         class="biometria-item" 
         v-for="(item, index) in biometriaFetale"
+        v-show="item.name !='HADLOCK' || decimalWeeks >= 25"
         :key="index"
       >
-        <label :for="'b-' + index">{{ item.name }}</label>
+        <label :for="'b-' + index">{{ item.text }}</label>
         <div v-if="item.calc" class="calc">{{ item.value }}</div>
         <!-- <div v-if="item.calc" class="calc">{{ item.value !== '' && item.value !== 0 ? item.value.toFixed(2) : '' }}</div> -->
-        <input v-else @change="calcPercentile(index)" v-model="item.value" type="number">
+        <input v-else @change="manageBiometriaFetale(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
-        <div v-if="item.percentile > 0" class="percentile">{{ item.percentile }}° p</div>
+        <div v-if="item.percentile != null" class="percentile">{{ item.percentile }}° p</div>
       </div>
       <div class="more-info">
         <div v-if="!biometriaMore" class="add-more" @click="biometriaMore = true">
