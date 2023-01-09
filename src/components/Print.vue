@@ -17,6 +17,10 @@ export default {
       type: Number,
       default: 0
     },
+    height: {
+      type: Number,
+      default: 0
+    },
     normalWeight: {
       type: Number,
       default: 0
@@ -50,6 +54,10 @@ export default {
     liquid:{
       type: String,
       default: "normale"
+    },
+    direction:{
+      type: String,
+      default: "cefalica"
     },
     placenta:{
       type: String,

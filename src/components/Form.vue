@@ -164,7 +164,7 @@ export default {
         mean = -28.2849 + 1.69267 * (ga ** 2) - 0.397485 * (ga ** 2) * Math.log(ga);
         sd = 1.98735 + 0.0136772 * (ga ** 3) - 0.00726264 * (ga ** 3) * Math.log(ga) + 0.000976253 * (ga ** 3) * (Math.log(ga) ** 2);
       } else if(this.biometriaFetale[index].name === "DBP"){
-        mean = 5.60878 + 0.158369 * (ga ** 2) - 0.00256379 ** (ga ** 3);
+        mean = 5.60878 + 0.158369 * (ga ** 2) - 0.00256379 * (ga ** 3);
         // 5·60878 + 0·158369 × GA2 − 0·00256379 × GA3
         sd = Math.exp(0.101242 + 0.00150557 * (ga ** 3) - 0.000771535 * (ga ** 3) * Math.log(ga) + 0.0000999638 * (ga ** 3) * (Math.log(ga) ** 2));
       } else if(this.biometriaFetale[index].name === "CA"){
@@ -452,6 +452,7 @@ export default {
     :patient="name + ' ' + surname"
     :dateOfBirth="dateOfBirth"
     :age="age"
+    :height="height"
     :normalWeight="normalWeight"
     :actualWeight="actualWeight"
     :bmi="bmi"
