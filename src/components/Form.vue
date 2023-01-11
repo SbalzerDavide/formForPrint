@@ -80,6 +80,29 @@ export default {
           percentile: null
         },
       ],
+      doppler: [
+        {
+          text: "PI - Uterine",
+          name: "PIU",
+          value: "",
+          unit: "",
+          percentile: null
+        },
+        {
+          text: "RI - Uterine",
+          name: "RIU",
+          value: "",
+          unit: "",
+          percentile: null
+        },
+                {
+          text: "PI - Ombellicale",
+          name: "PIO",
+          value: "",
+          unit: "",
+          percentile: null
+        },
+      ],
       heart: true,
       liquid: "normale",
       direction: "cefalica",
@@ -396,6 +419,23 @@ export default {
         </textarea>
       </div>
     </section>
+    <section class="doppler">
+      <div class="title">
+        Doppler
+      </div>
+      <div 
+        class="doppler-item" 
+        v-for="(item, index) in doppler"
+        :key="index"
+      >
+        <label :for="'b-' + index">{{ item.text }}</label>
+        <input @change="manageBiometriaFetale(index)" v-model="item.value" type="number">
+        <div class="unit">{{ item.unit }}</div>
+        <div v-if="item.percentile != null" class="percentile">{{ item.percentile }}° p</div>
+      </div>
+
+
+    </section>
     <section class="more">
       <div class="title">
         Altro
@@ -461,6 +501,7 @@ export default {
     :ecoType="ecoType"
     :ecoNumber="ecoNumber"
     :biometriaFetale="biometriaFetale"
+    :doppler="doppler"
     :heart="heart"
     :direction="direction"
     :liquid="liquid"
@@ -586,6 +627,22 @@ export default {
       }
       &.biometria-fetale{
         .biometria-item{
+          display: flex;
+        }
+        label{
+          width: 35%;
+        }
+        input, .calc{
+          width: 15%;
+          margin-right: 10px;
+        }
+        .unit{
+          width: 30px;
+          margin-right: 30px;
+        }
+      }
+      &.doppler{
+        .doppler-item{
           display: flex;
         }
         label{

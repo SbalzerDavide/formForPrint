@@ -47,6 +47,10 @@ export default {
       type: Array,
       default: []
     },
+    doppler:{
+      type: Array,
+      default: []
+    },
     heart:{
       type: Boolean,
       defalut: true
@@ -188,6 +192,43 @@ export default {
         <p v-if="biometriaMore!==''">{{ biometriaMore }}</p>
 
       </section>
+      <section class="biometria-fetale">
+        <div class="title-par">
+          Doppler 
+        </div>
+          <div 
+            class="doppler-item"
+            v-for="(item, index) in doppler"
+            :key="index"
+          >
+            <div class="name">
+              {{ item.name }}
+            </div>
+            <div class="value">
+              {{ item.value }}
+            </div>
+            <div class="unit">
+              {{ item.unit }}
+            </div>
+            <div class="chart-percentile">
+              <div class="line"></div>
+              <div class="base">
+                <div class="middle"></div>
+                <div 
+                  class="point"
+                  :style="pointPercentile(item.percentile)"
+                ></div>
+              </div>
+              <div class="line"></div>
+            </div>
+            <div class="percentile">
+              {{ item.percentile }}°p
+            </div>
+          </div>
+        <!-- </div> -->
+        <p v-if="dopplerMore!==''">{{ dopplerMore }}</p>
+
+      </section>
       <section class="more">
         <span v-if="heart">Attività cardiaca presente, </span>
         <span>Presentazione: {{ direction }}, </span>
@@ -305,7 +346,7 @@ export default {
           margin-bottom: 5px;
         }
       }
-      .biometria-item{
+      .biometria-item, .doppler-item{
         display: flex;
         width: 100%;
         .name{
