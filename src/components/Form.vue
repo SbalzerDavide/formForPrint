@@ -164,7 +164,6 @@ export default {
             el.value = (circonferenzaCValue / circonferenzaAValue).toFixed(2);
             // calcolo percentile
             this.calcPercentile(i);
-            // el.percentile = 30
           }
         })
       }
@@ -173,12 +172,12 @@ export default {
         if(this.decimalWeeks >= 25){
           this.Hadlock();
         }
-      } else{
-        console.log("non posso calcolare Hadlock");
       }
       this.calcPercentile(index);
-      // this.biometriaFetale[index].percentile = 20;
-    }, 
+    },
+    manageDopler(index){
+      this.calcPercentileDopler(index);
+    } ,
     calcPercentile(index){
       let ga = this.decimalWeeks;
       let mean;
@@ -202,6 +201,11 @@ export default {
         let percentile = normDist.cdf(this.biometriaFetale[index].value) * 100;
         console.log(percentile);
         this.biometriaFetale[index].percentile = percentile.toFixed(1)
+      }
+    },
+    calcPercentileDopler(index){
+      if(this.doppler[index].name === "PIU"){
+        
       }
     },
     calcPregnancyDate(){
@@ -429,7 +433,7 @@ export default {
         :key="index"
       >
         <label :for="'b-' + index">{{ item.text }}</label>
-        <input @change="manageBiometriaFetale(index)" v-model="item.value" type="number">
+        <input @change="manageDopler(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
         <div v-if="item.percentile != null" class="percentile">{{ item.percentile }}° p</div>
       </div>
