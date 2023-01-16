@@ -204,8 +204,28 @@ export default {
       }
     },
     calcPercentileDopler(index){
-      if(this.doppler[index].name === "PIU"){
-        
+      if(this.doppler[index].name === "PIO"){
+        let pi = this.doppler[index].value;
+        let zScore = -(0.0768617 ** -1) * (Math.exp((pi - (1.02944 + 77.7456 * (this.decimalWeeks ** -2) - 0.000004455 * (this.decimalWeeks ** 3))) * -0.0768617 * (-0.00645693 + 254.885 * Math.log(this.decimalWeeks) * (this.decimalWeeks ** - 2) - 715.949 * (this.decimalWeeks ** -2)) ** - 1) -1);
+        console.log(zScore);
+        const normDist = new NormalDistribution(0, 1);
+        let percentile = normDist.cdf(zScore) * 100
+        this.doppler[index].percentile = percentile.toFixed(1);
+      } else if(this.doppler[index].name === "PIU"){
+        let pi = this.doppler[index].value;
+        let ga = this.decimalWeeks * 7
+        let a = 1.39 - 0.012 * ga + (ga ** 2) * 0.0000198;
+        // console.log(a);
+        console.log(Math.exp(a));
+        let mean = Math.exp(a);
+        let sd = 0.272 - ga * 0.000259
+        const normDist = new NormalDistribution(mean, sd);
+        let percentile = normDist.cdf(pi);
+        console.log(percentile * 100);
+
+        // SD Loge mean UtA-PI = 0.272 − GA × 0.000259
+
+        // Loge mean UtA-PI = 1.39 − 0.012 × GA + GA2 × 0.0000198
       }
     },
     calcPregnancyDate(){
