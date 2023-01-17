@@ -222,10 +222,11 @@ export default {
         const normDist = new NormalDistribution(mean, sd);
         let percentile = normDist.cdf(pi);
         console.log(percentile * 100);
-
-        // SD Loge mean UtA-PI = 0.272 − GA × 0.000259
-
-        // Loge mean UtA-PI = 1.39 − 0.012 × GA + GA2 × 0.0000198
+        // prova mca
+        let esponente = 2.31 + 0.046 * this.decimalWeeks;
+        // e(2.31+0.046 GA) = mca
+        let mca = Math.exp(esponente);
+        console.log(mca);
       }
     },
     calcPregnancyDate(){
