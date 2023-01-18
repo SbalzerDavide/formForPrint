@@ -72,6 +72,13 @@ export default {
           percentile: null
         },
         {
+          text: "Cervelletto",
+          name: "TDC",
+          value: "mm",
+          unit: "",
+          percentile: null
+        },
+        {
           text: "Stima del peso fetale (Hadlock)",
           name: "HADLOCK",
           calc: true,
@@ -95,9 +102,16 @@ export default {
           unit: "",
           percentile: null
         },
-                {
+        {
           text: "PI - Ombellicale",
           name: "PIO",
+          value: "",
+          unit: "",
+          percentile: null
+        },
+        {
+          text: "Velocità di picco",
+          name: "MCA",
           value: "",
           unit: "",
           percentile: null
@@ -222,11 +236,16 @@ export default {
         const normDist = new NormalDistribution(mean, sd);
         let percentile = normDist.cdf(pi);
         console.log(percentile * 100);
+      } else if(this.doppler[index].name === "MCA"){
         // prova mca
-        let esponente = 2.31 + 0.046 * this.decimalWeeks;
+        // let esponente = 2.31 + 0.046 * this.decimalWeeks;
         // e(2.31+0.046 GA) = mca
-        let mca = Math.exp(esponente);
-        console.log(mca);
+        let mean = Math.exp(2.31 + 0.046 * this.decimalWeeks);
+        // calcolare mean in questo modo oppure prendere i dati nella tabella?
+        console.log(mean);
+        // dell'mca non si calcolano i percentili ma lo scostamento rispetto al valore atteso
+        this.doppler[index].percentile = (this.doppler[index].value / mean).toFixed(2);
+
       }
     },
     calcPregnancyDate(){
@@ -451,12 +470,17 @@ export default {
       <div 
         class="doppler-item" 
         v-for="(item, index) in doppler"
+        v-show="item.name !='PIO' || decimalWeeks >= 19"
         :key="index"
       >
         <label :for="'b-' + index">{{ item.text }}</label>
         <input @change="manageDopler(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
-        <div v-if="item.percentile != null" class="percentile">{{ item.percentile }}° p</div>
+        <div v-if="item.percentile != null" class="percentile">{{ item.percentile }}
+          <span v-show="item.name != 'MCA'">
+            ° p
+          </span>
+        </div>
       </div>
 
 
