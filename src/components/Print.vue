@@ -38,9 +38,13 @@ export default {
       type: String,
       defalut: ""
     },
-    ecoNumber: {
-      type: String,
-      defalut: ""
+    // ecoNumber: {
+    //   type: String,
+    //   defalut: ""
+    // },
+    fetusNumber: {
+      type: Number,
+      defalut: 1
     },
     decimalWeeks: Number,
     biometriaFetale:{
@@ -84,6 +88,10 @@ export default {
       defalut: ""
     },
     lastMore:{
+      type: String,
+      defalut: ""
+    },
+    conclusion:{
       type: String,
       defalut: ""
     },
@@ -149,8 +157,10 @@ export default {
         <p v-if="pregnancyMore!==''">{{ pregnancyMore }}</p>
       </section>
       <section class="eco">
-        <div class="title-par">Ecografia {{ ecoType }}</div>
-        Gravidanza {{ ecoNumber }} 
+        <div class="title-par">{{ ecoType }}</div>
+        <div v-if="fetusNumber === 1">Gravidanza singola</div>
+        <div v-else>Gravidanza gemellare ({{ fetusNumber }} feti)</div>
+        <!-- Gravidanza {{ ecoNumber }}  -->
         <p v-if="ecoMore!==''">{{ ecoMore }}</p>
       </section>
       <section class="biometria-fetale">
@@ -235,6 +245,12 @@ export default {
         <span>Liquido amniotico: {{ liquid }}, </span>
         <span>Placenta: {{ placenta }}, </span>
         <p v-if="lastMore!==''">{{ lastMore }}</p>
+      </section>
+      <section class="conclusion">
+        <div class="title-par">
+          Conclusioni 
+        </div>
+        <p>{{ conclusion }}</p>
       </section>
       <!-- <section class="charts">
         <div class="bpd">

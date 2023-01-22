@@ -18,65 +18,131 @@ export default {
       normalWeight: 0,
       actualWeight: 0,
       bmi: 0,
-      ecoType: "accrescimento",
+      ecoTypesList: [
+        {
+          name: "Ecografia di screening del I trimestre",
+          value: "1T"
+        },
+        {
+          name: "Ecografia di screening del II trimestre",
+          value: "2T"
+        },
+        {
+          name: "Ecografia di screening del III trimestre",
+          value: "3T"
+        },
+        {
+          name: "Controllo accrescimento",
+          value: "CA"
+        },
+      ],
+      ecoMethod: "transaddominale",
+      ecoTool: "Samsung HS50",
+      otherTool: "",
+      ecoType: 
+        {
+          name: "Ecografia di screening del I trimestre",
+          value: "1T"
+        },
       ecoNumber: "singola",
+      fetusNumber: 1,
       biometriaFetale: [
       {
-          text: "Diametro biparietale (DBP)",
-          name: "DBP",
+          text: "Diametro biparietale (BPD)",
+          name: "BPD",
           value: "",
           unit: "mm",
-          percentile: null
+          percentile: null,
+          ecoType: ["1T", "2T", "3T", "CA"]
+        },
+        {
+          text: "Lunghezza vertice-sacro (CRL)",
+          name: "CRL",
+          value: "",
+          unit: "mm",
+          percentile: null,
+          ecoType: ["1T"]
+        },
+        {
+          text: "Translucenza nucale (NT)",
+          name: "NT",
+          value: "",
+          unit: "mm",
+          percentile: false,
+          ecoType: ["1T"]
+        },
+        {
+          text: "Frequenza cardiaca fetale",
+          name: "FCF",
+          value: "",
+          unit: "",
+          percentile: null,
+          ecoType: ["1T"]
         },
         {
           text: "Circonferenza cranica (CC)",
           name: "CC",
           value: "",
           unit: "mm",
-          percentile: null
+          percentile: null,
+          ecoType: ["2T", "3T", "CA"]
         },
         {
           text: "Cisterna magna (CM)",
           name: "CM",
           value: "",
           unit: "mm",
-          percentile: null
+          percentile: null,
+          ecoType: ["2T", "3T", "CA"]
         },
         {
-          text: "Cervelletto tr (TCD)",
-          name: "DBP",
+          text: "Ventricolo posteriore (VP)",
+          name: "VP",
           value: "",
           unit: "mm",
-          percentile: null
+          percentile: null,
+          ecoType: ["2T", "3T", "CA"]
         },
         {
           text: "Circonferenza addominale (CA)",
           name: "CA",
           value: "",
           unit: "mm",
-          percentile: null
+          percentile: null,
+          ecoType: ["2T", "3T", "CA"]
         },
         {
           text: "Lungh, Femore (LF)",
           name: "LF",
           value: "",
           unit: "mm",
-          percentile: null
+          percentile: null,
+          ecoType: ["2T", "3T", "CA"]
         },
         {
-          text: "Circ. cranica/ cird. addominale",
-          name: "CC/CA",
-          calc: true,
+          text: "Omero",
+          name: "LO",
           value: "",
-          unit: "",
-          percentile: null
+          unit: "mm",
+          percentile: null,
+          ecoType: ["2T", "3T", "CA"]
         },
+        // {
+        //   text: "Circ. cranica/ cird. addominale",
+        //   name: "CC/CA",
+        //   calc: true,
+        //   value: "",
+        //   unit: "",
+        //   percentile: null,
+        //   ecoType: ["1T", "2T", "3T", "CA"]
+        // },
         {
           text: "Cervelletto",
-          name: "TDC",
+          name: "TCD",
           value: "mm",
           unit: "",
-          percentile: null
+          percentile: null,
+          ecoType: ["2T", "3T", "CA"]
         },
         {
           text: "Stima del peso fetale (Hadlock)",
@@ -84,7 +150,142 @@ export default {
           calc: true,
           value: "",
           unit: "g",
-          percentile: null
+          percentile: null,
+          ecoType: ["2T", "3T", "CA"]
+        },
+      ],
+      anatomy: [
+      {
+          name: "Cranio encefalo",
+          value: "cranio",
+          checked: false,
+          ecoType: ["1T"]
+        },
+        {
+          name: "Stomaco",
+          value: "stomaco",
+          checked: false,
+          ecoType: ["1T"]
+        },
+        {
+          name: "Vescica",
+          value: "vescica",
+          checked: false,
+          ecoType: ["1T", "2T", "3T", "CA"]
+        },
+        {
+          name: "Parete addominale",
+          value: "addome",
+          checked: false,
+          ecoType: ["1T"]
+        },
+        {
+          name: "Arti superiori",
+          value: "artiS",
+          checked: false,
+          ecoType: ["1T"]
+        },
+        {
+          name: "Arti inferiori",
+          value: "artiI",
+          checked: false,
+          ecoType: ["1T"]
+        },
+        {
+          name: "3 vasi nel cordone",
+          value: "cordone",
+          checked: false,
+          ecoType: ["1T"]
+        },
+        {
+          name: "Trigono del ventricolo laterale distale",
+          value: "trigono",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Cavo del setto pellucido",
+          value: "cavo",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Cervelletto",
+          value: "cervelletto",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Cisterna magna",
+          value: "cisterna",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Orbite",
+          value: "orbite",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Labbro superiore",
+          value: "labbro",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Colonna vertebrale",
+          value: "colonna",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Situs cardiaco",
+          value: "situs",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "4 camere cardiache",
+          value: "4Camere",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Efflussi cardiaci sinistro e destro",
+          value: "eflussi",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Parete addominale anteriore",
+          value: "pareteAddominale",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Bolla gastirica",
+          value: "bolla",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Reni",
+          value: "reni",
+          checked: false,
+          ecoType: [ "2T", "3T", "CA"]
+        },
+        {
+          name: "Ossa lunghe degli arti superiori e inferiori",
+          value: "ossaLunghe",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
+        },
+        {
+          name: "Mani e piedi",
+          value: "maniPiedi",
+          checked: false,
+          ecoType: ["2T", "3T", "CA"]
         },
       ],
       doppler: [
@@ -93,28 +294,32 @@ export default {
           name: "PIU",
           value: "",
           unit: "",
-          percentile: null
+          percentile: null,
+          ecoType: ["1T", "2T", "3T", "CA"]
         },
         {
           text: "RI - Uterine",
           name: "RIU",
           value: "",
           unit: "",
-          percentile: null
+          percentile: null,
+          ecoType: ["1T", "2T", "3T", "CA"]
         },
         {
           text: "PI - Ombellicale",
           name: "PIO",
           value: "",
           unit: "",
-          percentile: null
+          percentile: null,
+          ecoType: ["1T", "2T", "3T", "CA"]
         },
         {
           text: "Velocità di picco",
           name: "MCA",
           value: "",
           unit: "",
-          percentile: null
+          percentile: null,
+          ecoType: ["1T", "2T", "3T", "CA"]
         },
       ],
       heart: true,
@@ -125,6 +330,7 @@ export default {
       pregnancy: {},
       startDate: "",
       endDate: "",
+      endDateFormatting: "",
       epocaGestazionale: "",
       decimalWeeks: 0,
       patientMore: false,
@@ -137,12 +343,15 @@ export default {
       ecoMoreText: "",
       biometriaMoreText: "",
       lastMoreText: "",
-
+      conclusion: ""
     }
   },
   created(){
   },
   watch: {
+    endDate(val) {
+      this.endDateFormatting = dayjs(val).format('DD/MM/YYYY');
+    }
   },
   methods:{
     changeBirth(){
@@ -154,7 +363,18 @@ export default {
     calcBMI(){
       let meterHeight = this.height/100;
       this.bmi = parseFloat(this.actualWeight / (meterHeight * meterHeight)).toFixed(2)
-    },  
+    },
+    changeEcoType(){
+      if(this.ecoType.value === "1T"){
+        this.conclusion = "Gravidanza intrauterina in regolare evoluzione, CRL corrispondente all’amenorrea. Ovaie regolari allegati al referto n°Operatore accreditato FMF ID: 221235"
+      } else if(this.ecoType.value === "2T"){
+        this.conclusion = "Biometria fetale nella norma per epoca gestazionale. Morfologia indagabile secondo linee guida SIEOG del II trimestre nella norma. Velocimetria Doppler delle arterie uterine nella norma. Fotogrammi allegati al referto n°"
+      } else if(this.ecoType.value === "3T"){
+        this.conclusion = "Biometria fetale nella norma per epoca gestazionale. Morfologia indagabile secondo linee guida SIEOG del III trimestre nella norma. Fotogrammi allegati al referto n° "
+      } else if(this.ecoType.value === "CA"){
+        this.conclusion = "Biometria fetale regolare"
+      }
+    }, 
     manageBiometriaFetale(index){
       let femore = false;
       let circonferenzaC = false;
@@ -172,15 +392,15 @@ export default {
           circonferenzaAValue = el.value;
         }
       })
-      if(circonferenzaC && circonferenzaA){
-        this.biometriaFetale.forEach((el,i)=>{
-          if(el.name === "CC/CA"){
-            el.value = (circonferenzaCValue / circonferenzaAValue).toFixed(2);
-            // calcolo percentile
-            this.calcPercentile(i);
-          }
-        })
-      }
+      // if(circonferenzaC && circonferenzaA){
+      //   this.biometriaFetale.forEach((el,i)=>{
+      //     if(el.name === "CC/CA"){
+      //       el.value = (circonferenzaCValue / circonferenzaAValue).toFixed(2);
+      //       // calcolo percentile
+      //       this.calcPercentile(i);
+      //     }
+      //   })
+      // }
 
       if(femore && circonferenzaC && circonferenzaA){
         if(this.decimalWeeks >= 25){
@@ -199,7 +419,7 @@ export default {
       if(this.biometriaFetale[index].name === "CC"){
         mean = -28.2849 + 1.69267 * (ga ** 2) - 0.397485 * (ga ** 2) * Math.log(ga);
         sd = 1.98735 + 0.0136772 * (ga ** 3) - 0.00726264 * (ga ** 3) * Math.log(ga) + 0.000976253 * (ga ** 3) * (Math.log(ga) ** 2);
-      } else if(this.biometriaFetale[index].name === "DBP"){
+      } else if(this.biometriaFetale[index].name === "BPD"){
         mean = 5.60878 + 0.158369 * (ga ** 2) - 0.00256379 * (ga ** 3);
         // 5·60878 + 0·158369 × GA2 − 0·00256379 × GA3
         sd = Math.exp(0.101242 + 0.00150557 * (ga ** 3) - 0.000771535 * (ga ** 3) * Math.log(ga) + 0.0000999638 * (ga ** 3) * (Math.log(ga) ** 2));
@@ -214,7 +434,7 @@ export default {
         const normDist = new NormalDistribution(mean, sd);
         let percentile = normDist.cdf(this.biometriaFetale[index].value) * 100;
         console.log(percentile);
-        this.biometriaFetale[index].percentile = percentile.toFixed(1)
+        this.biometriaFetale[index].percentile = percentile.toFixed(0)
       }
     },
     calcPercentileDopler(index){
@@ -224,7 +444,7 @@ export default {
         console.log(zScore);
         const normDist = new NormalDistribution(0, 1);
         let percentile = normDist.cdf(zScore) * 100
-        this.doppler[index].percentile = percentile.toFixed(1);
+        this.doppler[index].percentile = percentile.toFixed(0);
       } else if(this.doppler[index].name === "PIU"){
         let pi = this.doppler[index].value;
         let ga = this.decimalWeeks * 7
@@ -244,21 +464,23 @@ export default {
         // calcolare mean in questo modo oppure prendere i dati nella tabella?
         console.log(mean);
         // dell'mca non si calcolano i percentili ma lo scostamento rispetto al valore atteso
-        this.doppler[index].percentile = (this.doppler[index].value / mean).toFixed(2);
+        this.doppler[index].percentile = (this.doppler[index].value / mean).toFixed(0);
 
       }
     },
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
         // ho settato l'ultima mestruazione
-        this.endDate = dayjs(this.startDate).add(280, 'day').format('DD/MM/YYYY');
+        // this.endDate = dayjs(this.startDate).add(280, 'day').format('DD/MM/YYYY');
+        this.endDate = dayjs(this.startDate).add(280, 'day');
         this.pregnancy.start = this.startDate;
         this.pregnancy.end = this.endDate;
       } else if(this.activeDateSelection === "end"){
         // ho settato data presunta parto
-        this.startDate = dayjs(this.startDate).subtract(280, 'day').format('DD/MM/YYYY');
+        // this.startDate = dayjs(this.endDate).subtract(280, 'day').format('DD/MM/YYYY');
+        this.startDate = dayjs(this.endDate).subtract(280, 'day');
         this.pregnancy.end = this.endDate;
-        this.endDate = dayjs(this.endDate).format('DD/MM/YYYY');
+        // this.endDate = dayjs(this.endDate).format('DD/MM/YYYY');
       }
       let today = dayjs();
       let dayDiff = (today.diff(this.startDate, 'day')) % 7;
@@ -285,7 +507,7 @@ export default {
       console.log(zScore);
       const normDist = new NormalDistribution(0, 1);
       let percentile = normDist.cdf(zScore) * 100;
-      this.biometriaFetale[this.biometriaFetale.length -1].percentile = percentile.toFixed(1);
+      this.biometriaFetale[this.biometriaFetale.length -1].percentile = percentile.toFixed(0);
     },
     print(){
       this.showPrint = true;
@@ -384,7 +606,7 @@ export default {
         >
         <div class="calc-date">
           Data prevista per il parto:
-          {{ endDate }}
+          {{ endDateFormatting }}
         </div>
         <div class="epoca-gestazionale">
           Epoca gestazionale: 
@@ -405,19 +627,49 @@ export default {
       </section>
       <section class="eco">
         <div class="title">Ecografia</div>
+        <div class="method">
+          <label for="type">Metodo ecografico</label>
+          <select v-model="ecoMethod">
+            <option value="transaddominale">Transaddominale</option>
+            <option value="transvaginale">Transvaginale</option>
+            <option value="transaddominale e trasvaginale">Transaddominale e Trasvaginale</option>
+          </select>
+        </div>
+        <div class="tool">
+          <label for="type">Strumento ecografico</label>
+          <select v-model="ecoTool">
+            <option value="Samsung HS50">Samsung HS50</option>
+            <option value="Samsung WS80">Samsung WS80</option>
+            <option value="altro">altro</option>
+          </select>
+          <input 
+            type="text"
+            v-if="ecoTool == 'altro'" 
+            v-model="otherTool"
+            placeholder="Specificare nome strumento"
+            class="other-tool" 
+            >
+        </div>
         <div class="type">
           <label for="type">Tipo</label>
-          <select v-model="ecoType">
-            <option value="accrescimento">Controllo Accrescimento</option>
-            <option value="morfologica">Morfologica</option>
+          <select @change="changeEcoType" v-model="ecoType">
+            <option
+              v-for="(type, index) in ecoTypesList"
+              :key="index" 
+              :value="type"
+            >
+              {{ type.name }}
+            </option>
           </select>
         </div>
         <div class="number">
-          <label for="number">Gravidanza</label>
-          <select v-model="ecoNumber">
+          <!-- <label for="number">Gravidanza</label> -->
+          <!-- <select v-model="ecoNumber">
             <option value="singola">Singola</option>
             <option value="gemellare">Gemellare</option>
-          </select>
+          </select> -->
+          <label for="fetusNumber">Numero di feti</label>
+          <input v-model="fetusNumber" type="number" name="fetusNumber" id="fetusNumber">
         </div>
         <div class="more-info">
           <div v-if="!ecoMore" class="add-more" @click="ecoMore = true">
@@ -441,7 +693,7 @@ export default {
       <div 
         class="biometria-item" 
         v-for="(item, index) in biometriaFetale"
-        v-show="item.name !='HADLOCK' || decimalWeeks >= 25"
+        v-show="item.ecoType.includes(ecoType.value)"
         :key="index"
       >
         <label :for="'b-' + index">{{ item.text }}</label>
@@ -461,6 +713,29 @@ export default {
           placeholder="Aggiungi ulteriori informazioni" 
           rows="4">
         </textarea>
+      </div>
+    </section>
+    <section class="anatomy">
+      <div class="title">
+        Anatomia
+      </div>
+      <div class="anatomy-container">
+        <div 
+          v-for="(element, index) in anatomy" 
+          :key="index"
+          v-show="element.ecoType.includes(ecoType.value)"
+          class="anatomy-element">
+          <label 
+            :for="element.value"
+            :class="element.checked ? 'anatomy-checked' : ''"
+          >{{ element.name }}</label>
+          <input 
+            type="checkbox" 
+            :name="element.value" 
+            :id="element.value"
+            v-model="element.checked"
+            >
+        </div>
       </div>
     </section>
     <section class="doppler">
@@ -508,16 +783,25 @@ export default {
       </div>
       <div class="liq-amn">
         <div class="name">Liquido amniotico</div>
-        <select v-model="liquid" @change="changeLiquid">
+        <select v-model="liquid">
           <option value="normale">Normale</option>
-          <option value="oligoamnios">Oligoamnios</option>
-          <option value="polioamnios">Polioamnios</option>
+          <option value="ridotto">Ridotto</option>
+          <option value="oligoanidramnios">Oligoanidramnios</option>
+          <option value="poliamnios">Poliamnios</option>
         </select>
 
       </div>
       <div class="placenta">
         <div class="name">Placenta</div>
-        <input v-model="placenta" type="text">
+        <!-- <input v-model="placenta" type="text"> -->
+        <select v-model="placenta">
+          <option value="anteriore">Anteriore</option>
+          <option value="posteriore">Posteriore</option>
+          <option value="fundica">Fundica</option>
+          <option value="bassa">A inserzione bassa</option>
+          <option value="major">Previa major</option>
+          <option value="minor">previa minor</option>
+        </select>
       </div>
       <div class="more-info">
         <div v-if="!lastMore" class="add-more" @click="lastMore = true">
@@ -531,6 +815,10 @@ export default {
         </textarea>
       </div>
 
+    </section>
+
+    <section class="conclusion">
+      <textarea v-model="conclusion" rows="4"> </textarea>
     </section>
 
     <button @click="print">
@@ -547,8 +835,9 @@ export default {
     :bmi="bmi"
     :pregnancy="pregnancy"
     :decimalWeeks="decimalWeeks"
-    :ecoType="ecoType"
+    :ecoType="ecoType.name"
     :ecoNumber="ecoNumber"
+    :fetusNumber="fetusNumber"
     :biometriaFetale="biometriaFetale"
     :doppler="doppler"
     :heart="heart"
@@ -560,6 +849,7 @@ export default {
     :ecoMore="ecoMoreText"
     :biometriaMore="biometriaMoreText"
     :lastMore=lastMoreText
+    :conclusion="conclusion"
   />
 
 </template>
@@ -670,8 +960,11 @@ export default {
         // border: 1px solid rgb(133, 133, 133);
       }
       &.eco{
-        select{
-          width: 200px;
+        select, input{
+          width: 250px;
+        }
+        .other-tool{
+          margin-left: 150px;
         }
       }
       &.biometria-fetale{
@@ -690,6 +983,30 @@ export default {
           margin-right: 30px;
         }
       }
+      &.anatomy{
+        .anatomy-container{
+          display: flex;
+          flex-wrap: wrap;
+          user-select: none;
+        }
+        .anatomy-element{
+          width: 33%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 8px;
+          label{
+            width: auto;
+            &.anatomy-checked{
+              font-weight: bold;
+            }
+          }
+          input{
+            width: auto;
+            margin-right: 40px;
+          }
+        }
+      }
       &.doppler{
         .doppler-item{
           display: flex;
@@ -704,6 +1021,12 @@ export default {
         .unit{
           width: 30px;
           margin-right: 30px;
+        }
+      }
+      &.conclusion{
+        textarea{
+          width: 100%;
+          resize: none;
         }
       }
       &.more{
