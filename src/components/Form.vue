@@ -92,7 +92,7 @@ export default {
           name: "CM",
           value: "",
           unit: "mm",
-          percentile: null,
+          right: null,
           ecoType: ["2T", "3T", "CA"]
         },
         {
@@ -100,7 +100,7 @@ export default {
           name: "VP",
           value: "",
           unit: "mm",
-          percentile: null,
+          right: null,
           ecoType: ["2T", "3T", "CA"]
         },
         {
@@ -159,133 +159,177 @@ export default {
           name: "Cranio encefalo",
           value: "cranio",
           checked: false,
-          ecoType: ["1T"]
+          ecoType: ["1T"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Stomaco",
           value: "stomaco",
           checked: false,
-          ecoType: ["1T"]
+          ecoType: ["1T"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Vescica",
           value: "vescica",
           checked: false,
-          ecoType: ["1T", "2T", "3T", "CA"]
+          ecoType: ["1T", "2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Parete addominale",
           value: "addome",
           checked: false,
-          ecoType: ["1T"]
+          ecoType: ["1T"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Arti superiori",
           value: "artiS",
           checked: false,
-          ecoType: ["1T"]
+          ecoType: ["1T"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Arti inferiori",
           value: "artiI",
           checked: false,
-          ecoType: ["1T"]
+          ecoType: ["1T"],
+          comment: "",
+          showComment: false
         },
         {
           name: "3 vasi nel cordone",
           value: "cordone",
           checked: false,
-          ecoType: ["1T"]
+          ecoType: ["1T"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Trigono del ventricolo laterale distale",
           value: "trigono",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Cavo del setto pellucido",
           value: "cavo",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Cervelletto",
           value: "cervelletto",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Cisterna magna",
           value: "cisterna",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Orbite",
           value: "orbite",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Labbro superiore",
           value: "labbro",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Colonna vertebrale",
           value: "colonna",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Situs cardiaco",
           value: "situs",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "4 camere cardiache",
           value: "4Camere",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Efflussi cardiaci sinistro e destro",
           value: "eflussi",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Parete addominale anteriore",
           value: "pareteAddominale",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Bolla gastirica",
           value: "bolla",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Reni",
           value: "reni",
           checked: false,
-          ecoType: [ "2T", "3T", "CA"]
+          ecoType: [ "2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Ossa lunghe degli arti superiori e inferiori",
           value: "ossaLunghe",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
         {
           name: "Mani e piedi",
           value: "maniPiedi",
           checked: false,
-          ecoType: ["2T", "3T", "CA"]
+          ecoType: ["2T", "3T", "CA"],
+          comment: "",
+          showComment: false
         },
       ],
       doppler: [
@@ -314,7 +358,7 @@ export default {
           ecoType: ["1T", "2T", "3T", "CA"]
         },
         {
-          text: "Velocità di picco",
+          text: "Velocità di picco (MCA)",
           name: "MCA",
           value: "",
           unit: "",
@@ -378,9 +422,9 @@ export default {
     manageBiometriaFetale(index){
       let femore = false;
       let circonferenzaC = false;
-      let circonferenzaCValue;
+      // let circonferenzaCValue;
       let circonferenzaA = false;
-      let circonferenzaAValue;
+      // let circonferenzaAValue;
       this.biometriaFetale.forEach((el)=>{
         if(el.name === "LF" && el.value){
           femore = true;
@@ -429,7 +473,29 @@ export default {
       } else if(this.biometriaFetale[index].name === "LF"){
         mean = - 39.9616 + 4.32298 * ga - 0.0380156 * (ga ** 2);
         sd = Math.exp(0.605843 - 42.0014 * (ga ** -2) + 0.00000917972 * (ga ** 3))
-      }
+      } else if(this.biometriaFetale[index].name === "LO"){
+        // calcolo omero
+      } else if(this.biometriaFetale[index].name === "CRL"){
+        // calcolo CRL
+      } else if(this.biometriaFetale[index].name === "NT"){
+        // calcolo NT
+      } else if(this.biometriaFetale[index].name === "FCF"){
+        // calcolo frequenza cardiaca fetale
+      } else if(this.biometriaFetale[index].name === "TCD"){
+        // calcolo cervelletto
+      } else if(this.biometriaFetale[index].name === "CM"){
+        if(this.biometriaFetale[index].value >= 2 && this.biometriaFetale[index].value <= 10){
+          this.biometriaFetale[index].right = true;
+        } else{
+          this.biometriaFetale[index].right = false;
+        }
+      } else if(this.biometriaFetale[index].name === "VP"){
+        if(this.biometriaFetale[index].value <= 10){
+          this.biometriaFetale[index].right = true;
+        } else{
+          this.biometriaFetale[index].right = false;
+        }
+      } 
       if(mean && sd){
         const normDist = new NormalDistribution(mean, sd);
         let percentile = normDist.cdf(this.biometriaFetale[index].value) * 100;
@@ -702,6 +768,10 @@ export default {
         <input v-else @change="manageBiometriaFetale(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
         <div v-if="item.percentile != null" class="percentile">{{ item.percentile }}° p</div>
+        <div v-else-if="item.right != null" class="right">
+          <div v-if="item.right" class="right-ok"></div>
+          <div v-else class="right-not-ok"></div>
+        </div>
       </div>
       <div class="more-info">
         <div v-if="!biometriaMore" class="add-more" @click="biometriaMore = true">
@@ -725,16 +795,23 @@ export default {
           :key="index"
           v-show="element.ecoType.includes(ecoType.value)"
           class="anatomy-element">
-          <label 
-            :for="element.value"
-            :class="element.checked ? 'anatomy-checked' : ''"
-          >{{ element.name }}</label>
+          <div class="left">
+            <div @click="element.showComment = !element.showComment" class="anatomy-more">
+              <div v-if="element.showComment">-</div>
+              <div v-else>+</div>
+            </div>
+            <label 
+              :for="element.value"
+              :class="element.checked ? 'anatomy-checked' : ''"
+            >{{ element.name }}</label>
+          </div>
           <input 
             type="checkbox" 
             :name="element.value" 
             :id="element.value"
             v-model="element.checked"
             >
+            <input v-if="element.showComment" v-model="element.comment" type="text">
         </div>
       </div>
     </section>
@@ -839,6 +916,7 @@ export default {
     :ecoNumber="ecoNumber"
     :fetusNumber="fetusNumber"
     :biometriaFetale="biometriaFetale"
+    :anatomy="anatomy"
     :doppler="doppler"
     :heart="heart"
     :direction="direction"
@@ -982,6 +1060,22 @@ export default {
           width: 30px;
           margin-right: 30px;
         }
+        .right{
+          display: flex;
+          align-items: center;
+          .right-ok{
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: green;
+          }
+          .right-not-ok{
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: red;
+          }
+        }
       }
       &.anatomy{
         .anatomy-container{
@@ -989,11 +1083,33 @@ export default {
           flex-wrap: wrap;
           user-select: none;
         }
+        .anatomy-more{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          margin-right: 8px;
+          font-weight: 700;
+          border-radius: 8px;
+          border: 1px solid transparent;
+          background-color: #1a1a1a;
+          cursor: pointer;
+          transition: border-color 0.25s;
+          &:hover{
+            border-color: #646cff;
+          }
+        }
+        .left{
+          display: flex;
+          align-items: center;
+        }
         .anatomy-element{
           width: 33%;
           display: flex;
           align-items: center;
           justify-content: space-between;
+          flex-wrap: wrap;
           margin-bottom: 8px;
           label{
             width: auto;
@@ -1001,9 +1117,13 @@ export default {
               font-weight: bold;
             }
           }
-          input{
+          input[type=checkbox]{
             width: auto;
             margin-right: 40px;
+          }
+          input[type=text]{
+            margin-top: 5px;
+            width: 87%;
           }
         }
       }
