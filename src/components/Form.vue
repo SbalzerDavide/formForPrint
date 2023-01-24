@@ -18,6 +18,7 @@ export default {
       normalWeight: 0,
       actualWeight: 0,
       bmi: 0,
+      office: "Desenzano",
       ecoTypesList: [
         {
           name: "Ecografia di screening del I trimestre",
@@ -139,8 +140,8 @@ export default {
         {
           text: "Cervelletto",
           name: "TCD",
-          value: "mm",
-          unit: "",
+          value: "",
+          unit: "mm",
           percentile: null,
           ecoType: ["2T", "3T", "CA"]
         },
@@ -584,6 +585,13 @@ export default {
 
 <template>
   <div v-if="!showPrint" class="form">
+    <section class="office">
+      <div class="title">Ambulatorio</div>
+      <select v-model="office">
+        <option value="Desenzano">Desenzano</option>
+        <option value="Pralboino">Pralboino</option>
+      </select>
+    </section>
     <section class="patient">
       <div class="title">Dati Paziente</div>
       <div class="section-content">
@@ -903,6 +911,7 @@ export default {
     </button>
   </div>
   <Print v-else
+    :office="office"
     :patient="name + ' ' + surname"
     :dateOfBirth="dateOfBirth"
     :age="age"
@@ -913,6 +922,8 @@ export default {
     :pregnancy="pregnancy"
     :decimalWeeks="decimalWeeks"
     :ecoType="ecoType.name"
+    :ecoMethod="ecoMethodz"
+    :ecoTool="ecoTool"
     :ecoNumber="ecoNumber"
     :fetusNumber="fetusNumber"
     :biometriaFetale="biometriaFetale"
@@ -953,6 +964,21 @@ export default {
       border-radius: 8px;
       margin: 18px 0;
       padding: 10px;
+      &.office{
+        display: flex;
+        align-items: center;
+        .title{
+          // display: flex;
+          // align-items: center;
+          vertical-align: middle;
+          margin-bottom: 0;
+          height: 100%;
+          margin-right: 10px;
+        }
+        select{
+          height: 25px;
+        }
+      }
       .more-info{
         margin-top: 8px;
         .add-more{
@@ -1112,7 +1138,7 @@ export default {
           flex-wrap: wrap;
           margin-bottom: 8px;
           label{
-            width: auto;
+            width: 240px;
             &.anatomy-checked{
               font-weight: bold;
             }

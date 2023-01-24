@@ -5,6 +5,10 @@ export default {
   components: {
   },
   props: {
+    office: {
+      type: String,
+      default: ""
+    },
     patient: {
       type: String,
       default: "Pico della Mirandola"
@@ -37,6 +41,14 @@ export default {
     ecoType: {
       type: String,
       defalut: ""
+    },
+    ecoTool:{
+      type: String,
+      default: ""
+    },
+    ecoMethod:{
+      type: String,
+      default: ""
     },
     // ecoNumber: {
     //   type: String,
@@ -139,9 +151,9 @@ export default {
       Conferma
     </button>
     <div class="header">
-      <h2>Azienda Socio Sanitaria del Garda</h2>
-      <h3>Presidio ospedaliero di Chiara Beluzzi</h3>
-      <h4>Unità operativa per smaltimento feti vivi</h4>
+      <h2>Ambulartorio di {{ office }}</h2>
+      <!-- <h3>Presidio ospedaliero di Chiara Beluzzi</h3>
+      <h4>Unità operativa per smaltimento feti vivi</h4> -->
       <div class="date">Data: {{ date }}</div>
     </div>
 
@@ -162,10 +174,32 @@ export default {
       </section>
       <section class="eco">
         <div class="title-par">{{ ecoType }}</div>
+        <div>
+          <span v-if="ecoMethod" class="eco-method">Metodo ecografico: {{ ecoMethod }}, </span>
+          <span v-if="ecoTool" class="tool">Strumento utilizzato: {{ ecoTool }}</span>
+        </div>
         <div v-if="fetusNumber === 1">Gravidanza singola</div>
         <div v-else>Gravidanza gemellare ({{ fetusNumber }} feti)</div>
         <!-- Gravidanza {{ ecoNumber }}  -->
         <p v-if="ecoMore!==''">{{ ecoMore }}</p>
+      </section>
+      <section class="anatomy">
+        <div class="title-par">Anatomia</div>
+        <div class="anatomy-container">
+          <div 
+            class="anatomy-box"
+            v-for="(element, index) in anatomy"
+            :key="index"
+          >
+            <div class="anatomy-el"  v-if="element.checked || element.comment">
+              {{ element.name }}
+              <span v-if="element.comment">{{ element.comment }},</span>
+              <span v-else-if="element.checked">normale,</span>
+            </div>
+
+          </div>
+
+        </div>
       </section>
       <section class="biometria-fetale">
         <div class="title-par">
@@ -179,7 +213,7 @@ export default {
             :key="index"
           >
             <div class="name">
-              {{ item.name }}
+              {{ item.text }}
             </div>
             <div class="value">
               {{ item.value }}
@@ -247,7 +281,7 @@ export default {
         <span v-if="heart">Attività cardiaca presente, </span>
         <span>Presentazione: {{ direction }}, </span>
         <span>Liquido amniotico: {{ liquid }}, </span>
-        <span>Placenta: {{ placenta }}, </span>
+        <span v-if="placenta">Placenta: {{ placenta }}, </span>
         <p v-if="lastMore!==''">{{ lastMore }}</p>
       </section>
       <section class="conclusion">
@@ -364,6 +398,14 @@ export default {
       .medical-history{
         h4{
           margin-bottom: 5px;
+        }
+      }
+      .anatomy{
+        .anatomy-container{
+          display: flex;
+          .anatomy-el{
+            margin-right: 5px;
+          }
         }
       }
       .biometria-item, .doppler-item{
