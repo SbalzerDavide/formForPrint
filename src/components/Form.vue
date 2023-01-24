@@ -392,6 +392,7 @@ export default {
     }
   },
   created(){
+    this.changeEcoType();
   },
   watch: {
     endDate(val) {
