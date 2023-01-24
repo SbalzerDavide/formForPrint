@@ -479,6 +479,14 @@ export default {
         // calcolo omero
       } else if(this.biometriaFetale[index].name === "CRL"){
         // calcolo CRL
+        ga = ga * 7;
+        mean = -50.6562 + (0.815118 * ga) + (0.00535302 * (ga ** 2));
+        sd = -2.21626 + (0.0984894 * ga)
+        // -2.21626 + (0.0984894 * ga);
+        let crl = this.biometriaFetale[index].value;
+        let meanGa = 40.9041 + (3.21585 * (crl ** 0.5)) + (0.348956 * crl)
+        let sdGa = 2.39102 + (0.0193474 * crl);
+        console.log(meanGa / 7);
       } else if(this.biometriaFetale[index].name === "NT"){
         // calcolo NT
       } else if(this.biometriaFetale[index].name === "FCF"){
@@ -501,7 +509,6 @@ export default {
       if(mean && sd){
         const normDist = new NormalDistribution(mean, sd);
         let percentile = normDist.cdf(this.biometriaFetale[index].value) * 100;
-        console.log(percentile);
         this.biometriaFetale[index].percentile = percentile.toFixed(0)
       }
     },
