@@ -150,12 +150,16 @@ export default {
     >
       Conferma
     </button>
-    <div class="header">
-      <h2>Ambulartorio di {{ office }}</h2>
+    <header>
+      <div class="img">
+        <img class="img-dese" v-if="office === 'Desenzano'" src="../../public/headerDese.jpg">
+        <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="../../public/headerPralboino.jpg">
+      </div>
+      <!-- <h2>Ambulartorio di {{ office }}</h2> -->
       <!-- <h3>Presidio ospedaliero di Chiara Beluzzi</h3>
       <h4>Unità operativa per smaltimento feti vivi</h4> -->
       <div class="date">Data: {{ date }}</div>
-    </div>
+    </header>
 
     <main>
       <section class="patient">
@@ -319,6 +323,9 @@ export default {
       </section> -->
 
     </main>
+    <footer>
+      <img class="footer-pralboino" v-if="office === 'Pralboino'" src="../../public/footerPralboino.jpg">
+    </footer>
   </div>
 </template>
 
@@ -342,6 +349,17 @@ export default {
     }
     h2, h3, h4{
       margin: 8px 0;
+    }
+    header{
+      .img{
+        display: flex;
+      }
+      .img-dese{
+        height: 250px;
+      }
+      .img-pralboino{
+        height: 90px;
+      }
     }
     .title-par{
       display: flex;
@@ -456,10 +474,18 @@ export default {
         }
       }
     }
+    footer{
+      .footer-pralboino{
+        width: 90%;
+      }
+      // display: none;
+    }
   }
   @page {
     size: A4;
     margin: 0;
+    margin-top: 30px;
+    margin-bottom: 30px;
   }
 
   @media print {
@@ -469,6 +495,7 @@ export default {
   }
   .print{
       margin: 0;
+      padding-top: 0;
       border: initial;
       border-radius: initial;
       width: initial;
@@ -480,6 +507,18 @@ export default {
   .hide-print{
     display: none;
   }
+  footer{
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+      .footer-pralboino{
+        width: 90%;
+      }
+    }
 }
 
 </style>
