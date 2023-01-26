@@ -69,7 +69,7 @@ export default {
           name: "NT",
           value: "",
           unit: "mm",
-          percentile: false,
+          percentile: null,
           ecoType: ["1T"]
         },
         {

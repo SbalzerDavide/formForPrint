@@ -123,6 +123,8 @@ export default {
     this.date = `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`;
     this.xPosition = 60.5 + ((this.decimalWeeks - 15) * 286.5 / 25)
     this.calcYPosHc();
+    // scrolla a top
+    window.scrollTo(0, 0);
   },
   methods:{
     pointPercentile(value){
@@ -152,8 +154,8 @@ export default {
     </button>
     <header>
       <div class="img">
-        <img class="img-dese" v-if="office === 'Desenzano'" src="../../public/headerDese.jpg">
-        <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="../../public/headerPralboino.jpg">
+        <img class="img-dese" v-if="office === 'Desenzano'" src="/headerDese.jpg">
+        <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="/headerPralboino.jpg">
       </div>
       <!-- <h2>Ambulartorio di {{ office }}</h2> -->
       <!-- <h3>Presidio ospedaliero di Chiara Beluzzi</h3>
@@ -216,6 +218,7 @@ export default {
             v-for="(item, index) in biometriaFetale"
             :key="index"
           >
+          <div v-if="item.percentile" class="biometria-box">
             <div class="name">
               {{ item.text }}
             </div>
@@ -240,6 +243,7 @@ export default {
               {{ item.percentile }}°p
             </div>
           </div>
+          </div>
         <!-- </div> -->
         <p v-if="biometriaMore!==''">{{ biometriaMore }}</p>
 
@@ -253,28 +257,30 @@ export default {
             v-for="(item, index) in doppler"
             :key="index"
           >
-            <div class="name">
-              {{ item.name }}
-            </div>
-            <div class="value">
-              {{ item.value }}
-            </div>
-            <div class="unit">
-              {{ item.unit }}
-            </div>
-            <div class="chart-percentile">
-              <div class="line"></div>
-              <div class="base">
-                <div class="middle"></div>
-                <div 
-                  class="point"
-                  :style="pointPercentile(item.percentile)"
-                ></div>
+            <div v-if="item.percentile" class="doppler-box">
+              <div class="name">
+                {{ item.name }}
               </div>
-              <div class="line"></div>
-            </div>
-            <div class="percentile">
-              {{ item.percentile }}°p
+              <div class="value">
+                {{ item.value }}
+              </div>
+              <div class="unit">
+                {{ item.unit }}
+              </div>
+              <div class="chart-percentile">
+                <div class="line"></div>
+                <div class="base">
+                  <div class="middle"></div>
+                  <div 
+                    class="point"
+                    :style="pointPercentile(item.percentile)"
+                  ></div>
+                </div>
+                <div class="line"></div>
+              </div>
+              <div class="percentile">
+                {{ item.percentile }}°p
+              </div>
             </div>
           </div>
         <!-- </div> -->
@@ -324,7 +330,7 @@ export default {
 
     </main>
     <footer>
-      <img class="footer-pralboino" v-if="office === 'Pralboino'" src="../../public/footerPralboino.jpg">
+      <img class="footer-pralboino" v-if="office === 'Pralboino'" src="/footerPralboino.jpg">
     </footer>
   </div>
 </template>
@@ -426,7 +432,7 @@ export default {
           }
         }
       }
-      .biometria-item, .doppler-item{
+      .biometria-box, .doppler-box{
         display: flex;
         width: 100%;
         .name{
