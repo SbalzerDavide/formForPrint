@@ -116,13 +116,21 @@ export default {
     return{
       date: "",
       xPosition: 0,
+      formattingDateOfBirth: "",
+      formattingPregnancyEnd: "",
+      formattingPregnancyStart: ""
     }
   },
   created(){
-    let date = new Date();
-    this.date = `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`;
+    this.date = dayjs().format('DD/MM/YYYY')
     this.xPosition = 60.5 + ((this.decimalWeeks - 15) * 286.5 / 25)
     this.calcYPosHc();
+    this.formattingDateOfBirth = dayjs(this.dateOfBirth).format('DD/MM/YYYY');
+    this.formattingPregnancyEnd = dayjs(this.pregnancy?.end).format('DD/MM/YYYY');
+    this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
+    
+
+
     // scrolla a top
     window.scrollTo(0, 0);
   },
@@ -165,7 +173,7 @@ export default {
 
     <main>
       <section class="patient">
-        Paziente: {{ patient }}, data di nascita: {{ dateOfBirth }}
+        Paziente: {{ patient }}, data di nascita: {{ formattingDateOfBirth }}
         <p v-if="patientMore!==''">{{ patientMore }}</p>
       </section>
       <section class="medical-history">
@@ -173,8 +181,8 @@ export default {
         Età materna: {{ age }} anni, Altezza {{ height }}cm, Peso normale {{ normalWeight }}kg, Peso attuale {{ actualWeight }}kg, (BMI {{ bmi }})
       </section>
       <section class="pregnancy-date">
-        <div v-show="pregnancy?.start" class="title-par">Data ultime mestruazioni: {{ pregnancy?.start?.replaceAll('-', '/') }}</div>
-        <div class="title-par">Data prevista per il parto da U.M.: {{ pregnancy?.end }}</div>
+        <div v-show="pregnancy?.start" class="title-par">Data ultime mestruazioni: {{ formattingPregnancyStart }}</div>
+        <div class="title-par">Data prevista per il parto da U.M.: {{ formattingPregnancyEnd }}</div>
         <div class="title-par">Epoca gestazionale: {{ pregnancy?.epocaGestazionale }}</div>
         <p v-if="pregnancyMore!==''">{{ pregnancyMore }}</p>
       </section>

@@ -521,7 +521,7 @@ export default {
       if(this.doppler[index].name === "PIO"){
         let pi = this.doppler[index].value;
         let zScore = -(0.0768617 ** -1) * (Math.exp((pi - (1.02944 + 77.7456 * (this.decimalWeeks ** -2) - 0.000004455 * (this.decimalWeeks ** 3))) * -0.0768617 * (-0.00645693 + 254.885 * Math.log(this.decimalWeeks) * (this.decimalWeeks ** - 2) - 715.949 * (this.decimalWeeks ** -2)) ** - 1) -1);
-        console.log(zScore);
+        // console.log(zScore);
         const normDist = new NormalDistribution(0, 1);
         let percentile = normDist.cdf(zScore) * 100
         this.doppler[index].percentile = percentile.toFixed(0);
@@ -530,12 +530,12 @@ export default {
         let ga = this.decimalWeeks * 7
         let a = 1.39 - 0.012 * ga + (ga ** 2) * 0.0000198;
         // console.log(a);
-        console.log(Math.exp(a));
+        // console.log(Math.exp(a));
         let mean = Math.exp(a);
         let sd = 0.272 - ga * 0.000259
         const normDist = new NormalDistribution(mean, sd);
         let percentile = normDist.cdf(pi);
-        console.log(percentile * 100);
+        // console.log(percentile * 100);
       } else if(this.doppler[index].name === "MCA"){
         // prova mca
         // let esponente = 2.31 + 0.046 * this.decimalWeeks;
@@ -568,15 +568,26 @@ export default {
       this.decimalWeeks = weekDiff + (dayDiff / 7);
       this.epocaGestazionale = `${weekDiff} settiname + ${dayDiff} gg`
       this.pregnancy.epocaGestazionale = this.epocaGestazionale;
+      // finito il calcolo della data ricalcolo anche i valori inseriti?
+      let vue = this;
+      this.biometriaFetale.forEach((el, index)=>{
+        vue.manageBiometriaFetale(index);
+      })
+      this.doppler.forEach((el, index)=>{
+        vue.manageDopler(index);
+      })
     },
     Hadlock(){
-      let hc = this.biometriaFetale[1].value * 0.1;
-      let ac = this.biometriaFetale[4].value * 0.1;
-      let fl = this.biometriaFetale[5].value * 0.1;
+      let hc = this.biometriaFetale.find(el=> el.name == "CC").value * 0.1;
+      let ac = this.biometriaFetale.find(el=> el.name == "CA").value * 0.1;
+      let fl = this.biometriaFetale.find(el=> el.name == "LF").value * 0.1;
+      // let hc = this.biometriaFetale["CC"].value * 0.1;
+      // let ac = this.biometriaFetale["CA"].value * 0.1;
+      // let fl = this.biometriaFetale["LF"].value * 0.1;
       let esponente = 1.326 + (0.0107 * hc) + (0.0438 * ac) + (0.158 * fl) - (0.00326 * ac * fl);
       let efw = 10 ** (esponente);
       this.biometriaFetale[this.biometriaFetale.length -1].value = efw.toFixed(2);
-      console.log(efw);
+      // console.log(efw);
       // calcolo percentile stima peso
       let ga = this.decimalWeeks;
       let eX = getExpectedMeans(ga);
@@ -584,7 +595,7 @@ export default {
       let sk = getSkewness(ga);
       let lnEfw = Math.log(efw)
       let zScore = getZScore(sk, cv, lnEfw, eX)
-      console.log(zScore);
+      // console.log(zScore);
       const normDist = new NormalDistribution(0, 1);
       let percentile = normDist.cdf(zScore) * 100;
       this.biometriaFetale[this.biometriaFetale.length -1].percentile = percentile.toFixed(0);
@@ -936,7 +947,7 @@ export default {
     :decimalWeeks="decimalWeeks"
     :ecoType="ecoType.name"
     :ecoMethod="ecoMethodz"
-    :ecoTool="ecoTool"
+    :ecoTool="ecoTool != 'altro' ? ecoTool : otherTool"
     :ecoNumber="ecoNumber"
     :fetusNumber="fetusNumber"
     :biometriaFetale="biometriaFetale"
