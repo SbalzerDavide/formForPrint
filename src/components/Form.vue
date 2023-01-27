@@ -424,9 +424,9 @@ export default {
     manageBiometriaFetale(index){
       let femore = false;
       let circonferenzaC = false;
-      // let circonferenzaCValue;
+      let circonferenzaCValue;
       let circonferenzaA = false;
-      // let circonferenzaAValue;
+      let circonferenzaAValue;
       this.biometriaFetale.forEach((el)=>{
         if(el.name === "LF" && el.value){
           femore = true;
@@ -481,12 +481,17 @@ export default {
         // calcolo CRL
         ga = ga * 7;
         mean = -50.6562 + (0.815118 * ga) + (0.00535302 * (ga ** 2));
-        sd = -2.21626 + (0.0984894 * ga)
+        sd = -2.21626 + (0.0984894 * ga);
         // -2.21626 + (0.0984894 * ga);
         let crl = this.biometriaFetale[index].value;
-        let meanGa = 40.9041 + (3.21585 * (crl ** 0.5)) + (0.348956 * crl)
+        let meanGa = (40.9041 + (3.21585 * (crl ** 0.5)) + (0.348956 * crl))/7;
+        let decimal = meanGa - Math.floor(meanGa);
+        let days = (decimal * 7).toFixed(0);
+        console.log(`${Number.parseInt(meanGa)} weeks  + ${days} days`)
+
+
         let sdGa = 2.39102 + (0.0193474 * crl);
-        console.log(meanGa / 7);
+        // console.log(meanGa / 7);
       } else if(this.biometriaFetale[index].name === "NT"){
         // calcolo NT
       } else if(this.biometriaFetale[index].name === "FCF"){

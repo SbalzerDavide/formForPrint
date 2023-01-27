@@ -427,6 +427,7 @@ export default {
       .anatomy{
         .anatomy-container{
           display: flex;
+          flex-wrap: wrap;
           .anatomy-el{
             margin-right: 5px;
           }
