@@ -118,7 +118,43 @@ export default {
       xPosition: 0,
       formattingDateOfBirth: "",
       formattingPregnancyEnd: "",
-      formattingPregnancyStart: ""
+      formattingPregnancyStart: "",
+      showBiometria: false,
+      showDoppler: false,
+      showAnatomia: false,
+      uterineStd95: {
+        "11": 2.70,
+        "12": 2.53,
+        "13": 2.38,
+        "14": 2.24,
+        "15": 2.11,
+        "16": 1.99,
+        "17": 1.88,
+        "18": 1.79,
+        "19": 1.70,
+        "20": 1.61,
+        "21": 1.54,
+        "22": 1.47,
+        "23": 1.41,
+        "24": 1.35,
+        "25": 1.30,
+        "26": 1.25,
+        "27": 1.21,
+        "28": 1.17,
+        "29": 1.13,
+        "30": 1.10,
+        "31": 1.06,
+        "32": 1.04,
+        "33": 1.01,
+        "34": 0.99,
+        "35": 0.97,
+        "36": 0.95,
+        "37": 0.94,
+        "38": 0.92,
+        "39": 0.91,
+        "40": 0.90,
+        "41": 0.89,
+      }
     }
   },
   created(){
@@ -129,7 +165,25 @@ export default {
     this.formattingPregnancyEnd = dayjs(this.pregnancy?.end).format('DD/MM/YYYY');
     this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
     
-
+    // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
+    for(let i = 0; i < this.biometriaFetale.length; ++i){
+      if(this.biometriaFetale[i].value){
+        this.showBiometria = true;
+        break;
+      }
+    }
+    for(let i = 0; i < this.anatomy.length; ++i){
+      if(this.anatomy[i].checked || this.anatomy[i].comment){
+        this.showAnatomia = true;
+        break;
+      }
+    }
+    for(let i = 0; i < this.doppler.length; ++i){
+      if(this.doppler[i].value){
+        this.showDoppler = true;
+        break;
+      }
+    }
 
     // scrolla a top
     window.scrollTo(0, 0);
@@ -145,6 +199,18 @@ export default {
       // console.log(hc);
       // let pos = 50 + ()
     },
+    calcPercentileUterine(index){
+      let uterine = this.doppler[index];
+      let weeks = parseInt(this.decimalWeeks);
+      if(this.uterineStd95[weeks] < uterine.value){
+        return true;
+      } else{
+        if(uterine.percentile >= 96){
+          uterine.percentile = 94;
+        }
+        return false;
+      }
+    },  
     print(){
       window.print();
     }
@@ -197,25 +263,7 @@ export default {
         <!-- Gravidanza {{ ecoNumber }}  -->
         <p v-if="ecoMore!==''">{{ ecoMore }}</p>
       </section>
-      <section class="anatomy">
-        <div class="title-par">Anatomia</div>
-        <div class="anatomy-container">
-          <div 
-            class="anatomy-box"
-            v-for="(element, index) in anatomy"
-            :key="index"
-          >
-            <div class="anatomy-el"  v-if="element.checked || element.comment">
-              {{ element.name }}
-              <span v-if="element.comment">{{ element.comment }},</span>
-              <span v-else-if="element.checked">normale,</span>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-      <section class="biometria-fetale">
+      <section v-if="showBiometria" class="biometria-fetale">
         <div class="title-par">
           Biometria Fetale 
           <span>(Rappresentazione del 5°-95° percentile)</span>
@@ -256,7 +304,26 @@ export default {
         <p v-if="biometriaMore!==''">{{ biometriaMore }}</p>
 
       </section>
-      <section class="biometria-fetale">
+      <section v-if="showAnatomy" class="anatomy">
+        <div class="title-par">Anatomia</div>
+        <div class="anatomy-container">
+          <div 
+            class="anatomy-box"
+            v-for="(element, index) in anatomy"
+            :key="index"
+          >
+            <div class="anatomy-el"  v-if="element.checked || element.comment">
+              {{ element.name }}
+              <span v-if="element.comment">{{ element.comment }},</span>
+              <span v-else-if="element.checked">normale,</span>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <section v-if="showDoppler" class="doppler">
         <div class="title-par">
           Doppler 
         </div>
@@ -267,7 +334,7 @@ export default {
           >
             <div v-if="item.percentile" class="doppler-box">
               <div class="name">
-                {{ item.name }}
+                {{ item.text }}
               </div>
               <div class="value">
                 {{ item.value }}
@@ -286,8 +353,9 @@ export default {
                 </div>
                 <div class="line"></div>
               </div>
-              <div class="percentile">
-                {{ item.percentile }}°p
+              <div v-if="calcPercentileUterine(index)" class="percentile">
+                > 95°p
+                <!-- {{ item.percentile }}°p -->
               </div>
             </div>
           </div>

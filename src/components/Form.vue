@@ -1,4 +1,5 @@
 <script>
+import { isVoidTag } from '@vue/shared';
 import Print from './Print.vue';
 
 
@@ -334,32 +335,43 @@ export default {
         },
       ],
       doppler: [
-        {
-          text: "PI - Uterine",
-          name: "PIU",
+      {
+          text: "PI - Uterina destra",
+          name: "PIUDX",
           value: "",
           unit: "",
           percentile: null,
-          ecoType: ["1T", "2T", "3T", "CA"]
+          ecoType: ["1T", "2T", "3T", "CA"],
+          incisura: null
         },
         {
-          text: "RI - Uterine",
-          name: "RIU",
+          text: "PI - Uterina sinistra",
+          name: "PIUSX",
           value: "",
           unit: "",
           percentile: null,
-          ecoType: ["1T", "2T", "3T", "CA"]
+          ecoType: ["1T", "2T", "3T", "CA"],
+          incisura: null
         },
+        // {
+        //   text: "RI - Uterine",
+        //   name: "RIU",
+        //   value: "",
+        //   unit: "",
+        //   percentile: null,
+        //   ecoType: ["1T", "2T", "3T", "CA"]
+        // },
         {
           text: "PI - Ombellicale",
           name: "PIO",
           value: "",
           unit: "",
           percentile: null,
-          ecoType: ["1T", "2T", "3T", "CA"]
+          ecoType: ["1T", "2T", "3T", "CA"],
+          incisura: null
         },
         {
-          text: "Velocità di picco (MCA)",
+          text: "Celebrale media (MCA)",
           name: "MCA",
           value: "",
           unit: "",
@@ -453,7 +465,11 @@ export default {
           this.Hadlock();
         }
       }
-      this.calcPercentile(index);
+      if(this.biometriaFetale[index].value){
+        this.calcPercentile(index);
+      } else{
+        this.biometriaFetale[index].percentile = null;
+      }
     },
     manageDopler(index){
       this.calcPercentileDopler(index);
@@ -477,6 +493,8 @@ export default {
         sd = Math.exp(0.605843 - 42.0014 * (ga ** -2) + 0.00000917972 * (ga ** 3))
       } else if(this.biometriaFetale[index].name === "LO"){
         // calcolo omero
+        mean = 11.459 * ga - 2.2362 * ga * Math.log(ga) - 63.704;
+        sd = 0.040292 * ga + 1.3464;
       } else if(this.biometriaFetale[index].name === "CRL"){
         // calcolo CRL
         ga = ga * 7;
@@ -525,17 +543,15 @@ export default {
         const normDist = new NormalDistribution(0, 1);
         let percentile = normDist.cdf(zScore) * 100
         this.doppler[index].percentile = percentile.toFixed(0);
-      } else if(this.doppler[index].name === "PIU"){
+      } else if(this.doppler[index].name === "PIUDX" || this.doppler[index].name === "PIUSX"){
         let pi = this.doppler[index].value;
         let ga = this.decimalWeeks * 7
         let a = 1.39 - 0.012 * ga + (ga ** 2) * 0.0000198;
-        // console.log(a);
-        // console.log(Math.exp(a));
         let mean = Math.exp(a);
         let sd = 0.272 - ga * 0.000259
         const normDist = new NormalDistribution(mean, sd);
-        let percentile = normDist.cdf(pi);
-        // console.log(percentile * 100);
+        let percentile = normDist.cdf(pi) * 100;
+        this.doppler[index].percentile = percentile.toFixed(0);
       } else if(this.doppler[index].name === "MCA"){
         // prova mca
         // let esponente = 2.31 + 0.046 * this.decimalWeeks;
@@ -568,14 +584,33 @@ export default {
       this.decimalWeeks = weekDiff + (dayDiff / 7);
       this.epocaGestazionale = `${weekDiff} settiname + ${dayDiff} gg`
       this.pregnancy.epocaGestazionale = this.epocaGestazionale;
-      // finito il calcolo della data ricalcolo anche i valori inseriti?
+      // propongo la visita del relativo trimestre
+      if(this.decimalWeeks < 14){
+        this.ecoType = {
+          name: "Ecografia di screening del I trimestre",
+          value: "1T"
+        };
+      } else if(this.decimalWeeks >= 14 && this.decimalWeeks < 28){
+        this.ecoType = {
+          name: "Ecografia di screening del II trimestre",
+          value: "2T"
+        };
+      } else if(this.decimalWeeks >= 28){
+        this.ecoType = {
+          name: "Ecografia di screening del III trimestre",
+          value: "3T"
+        }
+      }
+      // finito il calcolo della data ricalcolo anche i valori inseriti
       let vue = this;
       this.biometriaFetale.forEach((el, index)=>{
         vue.manageBiometriaFetale(index);
       })
       this.doppler.forEach((el, index)=>{
-        vue.manageDopler(index);
-      })
+        if(el.value){
+          vue.manageDopler(index);
+        }
+      });
     },
     Hadlock(){
       let hc = this.biometriaFetale.find(el=> el.name == "CC").value * 0.1;
@@ -860,10 +895,20 @@ export default {
         <label :for="'b-' + index">{{ item.text }}</label>
         <input @change="manageDopler(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
-        <div v-if="item.percentile != null" class="percentile">{{ item.percentile }}
-          <span v-show="item.name != 'MCA'">
+        <div class="percentile">{{ item.percentile }}
+          <span v-show="item.name != 'MCA' && item.value">
             ° p
           </span>
+        </div>
+        <div v-if="item.name != 'MCA'" class="check-doppler">
+          <input 
+            :name="item.name" 
+            :id="item.name" 
+            type="checkbox"
+            v-model="item.incisura"
+          >
+          <label v-if="item.name == 'PIUDX' || item.name == 'PIUSX'" :for="item.name">Incisura</label>
+          <label v-else-if="item.name == 'PIO'" :for="item.name">EDF positivo</label>
         </div>
       </div>
 
@@ -1191,6 +1236,16 @@ export default {
         .unit{
           width: 30px;
           margin-right: 30px;
+        }
+        .percentile{
+          width: 80px;
+        }
+        .check-doppler{
+          display: flex;
+          align-items: center;
+          label{
+            width: 100px;
+          }
         }
       }
       &.conclusion{
