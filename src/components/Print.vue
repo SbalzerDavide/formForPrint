@@ -122,64 +122,8 @@ export default {
       showBiometria: false,
       showDoppler: false,
       showAnatomia: false,
-      uterineStd95: {
-        "11": 2.70,
-        "12": 2.53,
-        "13": 2.38,
-        "14": 2.24,
-        "15": 2.11,
-        "16": 1.99,
-        "17": 1.88,
-        "18": 1.79,
-        "19": 1.70,
-        "20": 1.61,
-        "21": 1.54,
-        "22": 1.47,
-        "23": 1.41,
-        "24": 1.35,
-        "25": 1.30,
-        "26": 1.25,
-        "27": 1.21,
-        "28": 1.17,
-        "29": 1.13,
-        "30": 1.10,
-        "31": 1.06,
-        "32": 1.04,
-        "33": 1.01,
-        "34": 0.99,
-        "35": 0.97,
-        "36": 0.95,
-        "37": 0.94,
-        "38": 0.92,
-        "39": 0.91,
-        "40": 0.90,
-        "41": 0.89,
-        ombellicaleStd95:{
-          // "19": 1.70,
-          // "20": ,
-          // "21": ,
-          // "22": ,
-          // "23": ,
-          // "24": ,
-          // "25": ,
-          // "26": ,
-          // "27": ,
-          // "28": ,
-          // "29": ,
-          // "30": ,
-          // "31": ,
-          // "32": ,
-          // "33": ,
-          // "34": ,
-          // "35": ,
-          // "36": ,
-          // "37": ,
-          // "38": ,
-          // "39": ,
-          // "40": ,
-          // "41": ,
-        }
-      }
+      uterineStd95: {},
+      ombellicaleStd95:{}
     }
   },
   created(){
@@ -189,6 +133,9 @@ export default {
     this.formattingDateOfBirth = dayjs(this.dateOfBirth).format('DD/MM/YYYY');
     this.formattingPregnancyEnd = dayjs(this.pregnancy?.end).format('DD/MM/YYYY');
     this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
+
+    this.uterineStd95 = window.uterineStd95;
+    this.ombellicaleStd95 = window.ombellicaleStd95;
     
     // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
     for(let i = 0; i < this.biometriaFetale.length; ++i){
@@ -226,9 +173,18 @@ export default {
     },
     calcPercentileUterine(index){
       let uterine = this.doppler[index];
+      let weeks = parseInt(this.decimalWeeks);
       if(this.doppler[index].name == "PIUDX" || this.doppler[index].name == "PIUSX"){
-        let weeks = parseInt(this.decimalWeeks);
         if(this.uterineStd95[weeks] < uterine.value){
+          return true;
+        } else{
+          if(uterine.percentile >= 96){
+            uterine.percentile = 94;
+          }
+          return false;
+        }
+      } else if(this.doppler[index].name == "PIO" ){
+        if(this.ombellicaleStd95[weeks] < uterine.value){
           return true;
         } else{
           if(uterine.percentile >= 96){

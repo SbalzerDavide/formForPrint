@@ -379,6 +379,8 @@ export default {
           ecoType: ["1T", "2T", "3T", "CA"]
         },
       ],
+      uterineStd95: {},
+      ombellicaleStd95:{},
       heart: true,
       liquid: "normale",
       direction: "cefalica",
@@ -405,6 +407,8 @@ export default {
   },
   created(){
     this.changeEcoType();
+    this.uterineStd95 = window.uterineStd95;
+    this.ombellicaleStd95 = window.ombellicaleStd95;
   },
   watch: {
     endDate(val) {
@@ -415,7 +419,7 @@ export default {
     changeBirth(){
       let today = dayjs();
       let dateOfBirth = dayjs(this.dateOfBirth);
-      let b = dayjs();
+      // let b = dayjs();
       this.age = today.diff(dateOfBirth, "year");
     },
     calcBMI(){
@@ -564,6 +568,32 @@ export default {
 
       }
     },
+    pointPercentile(value){
+      return `left: ${value}px`;
+    },
+    calcPercentileUterine(index){
+      let uterine = this.doppler[index];
+      let weeks = parseInt(this.decimalWeeks);
+      if(this.doppler[index].name == "PIUDX" || this.doppler[index].name == "PIUSX"){
+        if(this.uterineStd95[weeks] < uterine.value){
+          return true;
+        } else{
+          if(uterine.percentile >= 96){
+            uterine.percentile = 94;
+          }
+          return false;
+        }
+      } else if(this.doppler[index].name == "PIO" ){
+        if(this.ombellicaleStd95[weeks] < uterine.value){
+          return true;
+        } else{
+          if(uterine.percentile >= 96){
+            uterine.percentile = 94;
+          }
+          return false;
+        }
+      }
+    },  
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
         // ho settato l'ultima mestruazione
@@ -895,11 +925,28 @@ export default {
         <label :for="'b-' + index">{{ item.text }}</label>
         <input @change="manageDopler(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
-        <div class="percentile">{{ item.percentile }}
+        <div class="chart-percentile">
+          <div class="line"></div>
+          <div class="base">
+            <div class="middle"></div>
+            <div 
+              class="point"
+              :style="`left: ${item.percentile}px`"
+            ></div>
+          </div>
+          <div class="line"></div>
+        </div>
+        <div v-if="calcPercentileUterine(index)"      class="percentile">
+            > 95°p
+            <!-- {{ item.percentile }}°p -->
+          </div>
+
+
+        <!-- <div class="percentile">{{ item.percentile }}
           <span v-show="item.name != 'MCA' && item.value">
             ° p
           </span>
-        </div>
+        </div> -->
         <div v-if="item.name != 'MCA'" class="check-doppler">
           <input 
             :name="item.name" 
@@ -1245,6 +1292,40 @@ export default {
           align-items: center;
           label{
             width: 100px;
+          }
+        }
+        .chart-percentile{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20%;
+          margin-right: 10px;
+          .base{
+            position: relative;
+            width: 100px;
+            height: 1.5px;
+            background: rgba(255, 255, 255, 0.87);;
+            .middle{
+              position: absolute;
+              left: 50px;
+              top: -4px;
+              width: 1.5px;
+              height: 9px;
+              background: rgba(255, 255, 255, 0.87);;
+            }
+            .point{
+              position: absolute;
+              top: -3px;
+              width: 7px;
+              height: 7px;
+              transform: rotate(-45deg);
+              background: rgba(255, 255, 255, 0.87);;
+            }
+          }
+          .line{
+            height: 12px;
+            width: 1.5px;
+            background: rgba(255, 255, 255, 0.87);;
           }
         }
       }
