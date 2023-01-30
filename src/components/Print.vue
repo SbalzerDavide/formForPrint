@@ -154,6 +154,31 @@ export default {
         "39": 0.91,
         "40": 0.90,
         "41": 0.89,
+        ombellicaleStd95:{
+          // "19": 1.70,
+          // "20": ,
+          // "21": ,
+          // "22": ,
+          // "23": ,
+          // "24": ,
+          // "25": ,
+          // "26": ,
+          // "27": ,
+          // "28": ,
+          // "29": ,
+          // "30": ,
+          // "31": ,
+          // "32": ,
+          // "33": ,
+          // "34": ,
+          // "35": ,
+          // "36": ,
+          // "37": ,
+          // "38": ,
+          // "39": ,
+          // "40": ,
+          // "41": ,
+        }
       }
     }
   },
@@ -201,14 +226,16 @@ export default {
     },
     calcPercentileUterine(index){
       let uterine = this.doppler[index];
-      let weeks = parseInt(this.decimalWeeks);
-      if(this.uterineStd95[weeks] < uterine.value){
-        return true;
-      } else{
-        if(uterine.percentile >= 96){
-          uterine.percentile = 94;
+      if(this.doppler[index].name == "PIUDX" || this.doppler[index].name == "PIUSX"){
+        let weeks = parseInt(this.decimalWeeks);
+        if(this.uterineStd95[weeks] < uterine.value){
+          return true;
+        } else{
+          if(uterine.percentile >= 96){
+            uterine.percentile = 94;
+          }
+          return false;
         }
-        return false;
       }
     },  
     print(){
@@ -357,6 +384,11 @@ export default {
                 > 95°p
                 <!-- {{ item.percentile }}°p -->
               </div>
+            </div>
+            <div class="more-doppler">
+              <div v-if="(item.name == 'PIUDX' ||  item.name == 'PIUSX') && item.incisura" class="incisura">EDF positivo</div>
+              <div v-else-if="item.name == 'PIO' && item.incisura == true" class="incisura">Incisura presente</div>
+              <div v-else-if="item.name == 'PIO' && item.incisura == false" class="incisura">Incisura assente</div>
             </div>
           </div>
         <!-- </div> -->
@@ -555,6 +587,10 @@ export default {
             background: #1a1a1a;
           }
         }
+      }
+      .more-doppler{
+        margin-left: 100px;
+        font-weight: bold;
       }
     }
     footer{
