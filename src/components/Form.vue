@@ -375,7 +375,7 @@ export default {
           name: "MCA",
           value: "",
           unit: "",
-          percentile: null,
+          MoM: null,
           ecoType: ["1T", "2T", "3T", "CA"]
         },
       ],
@@ -564,7 +564,7 @@ export default {
         // calcolare mean in questo modo oppure prendere i dati nella tabella?
         console.log(mean);
         // dell'mca non si calcolano i percentili ma lo scostamento rispetto al valore atteso
-        this.doppler[index].percentile = (this.doppler[index].value / mean).toFixed(0);
+        this.doppler[index].MoM = (this.doppler[index].value / mean).toFixed(2);
 
       }
     },
@@ -936,12 +936,11 @@ export default {
           </div>
           <div class="line"></div>
         </div>
-        <div v-if="calcPercentileUterine(index)"      class="percentile">
-            > 95°p
+        <div class="percentile">
+          <span v-if="item.MoM">{{ item.MoM }} MoM</span>
+          <span v-else-if="calcPercentileUterine(index)">> 95°p</span>
             <!-- {{ item.percentile }}°p -->
           </div>
-
-
         <!-- <div class="percentile">{{ item.percentile }}
           <span v-show="item.name != 'MCA' && item.value">
             ° p
@@ -1298,7 +1297,7 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 20%;
+          width: 16%;
           margin-right: 10px;
           .base{
             position: relative;
