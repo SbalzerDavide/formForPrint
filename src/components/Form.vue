@@ -926,15 +926,17 @@ export default {
         <input @change="manageDopler(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
         <div class="chart-percentile">
-          <div class="line"></div>
-          <div class="base">
-            <div class="middle"></div>
-            <div 
-              class="point"
-              :style="`left: ${item.percentile}px`"
-            ></div>
+          <div v-if="item.name !=='MCA'">
+            <div class="line"></div>
+            <div class="base">
+              <div class="middle"></div>
+              <div 
+                class="point"
+                :style="`left: ${item.percentile - 4}px`"
+              ></div>
+            </div>
+            <div class="line"></div>
           </div>
-          <div class="line"></div>
         </div>
         <div class="percentile">
           <span v-if="item.MoM">{{ item.MoM }} MoM</span>
@@ -1296,9 +1298,13 @@ export default {
         .chart-percentile{
           display: flex;
           align-items: center;
-          justify-content: center;
           width: 16%;
-          margin-right: 10px;
+          margin-right: 10px;        
+          & > div{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
           .base{
             position: relative;
             width: 100px;
