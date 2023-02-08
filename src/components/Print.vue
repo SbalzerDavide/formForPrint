@@ -391,6 +391,14 @@ export default {
         </div>
 
       </section> -->
+      <section class="container-signature">
+        <div class="signature">
+          <div class="empty-space"></div>
+          <div class="doctor">
+            Dott. ssa Giorgia Campobasso
+          </div>
+        </div>
+      </section>
 
     </main>
     <footer>
@@ -547,6 +555,18 @@ export default {
       .more-doppler{
         margin-left: 100px;
         font-weight: bold;
+      }
+      .container-signature{
+        display: flex;
+        justify-content: flex-end;
+        .empty-space{
+          // width: 200px;
+          width: 100%;
+          height: 1px;
+          background: black;
+          margin-bottom: 5px;
+          margin-top: 40px;
+        }
       }
     }
     footer{
