@@ -509,8 +509,14 @@ export default {
         let meanGa = (40.9041 + (3.21585 * (crl ** 0.5)) + (0.348956 * crl))/7;
         let decimal = meanGa - Math.floor(meanGa);
         let days = (decimal * 7).toFixed(0);
+        if(days == 7){
+          days = 0;
+          meanGa++;
+        }
         console.log(`${Number.parseInt(meanGa)} weeks  + ${days} days`)
-
+        if(this.decimalWeeks - meanGa < -0.714 || this.decimalWeeks - meanGa > 0.714){
+          console.log("proporre ridatazione perché differenza maggiore di 4 giorni");
+        }
 
         let sdGa = 2.39102 + (0.0193474 * crl);
         // console.log(meanGa / 7);
