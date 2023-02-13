@@ -402,7 +402,12 @@ export default {
       ecoMoreText: "",
       biometriaMoreText: "",
       lastMoreText: "",
-      conclusion: ""
+      conclusion: "",
+      redatingPanel: false,
+      enableCRLReDate: false,
+      decimalWeeksFromCRL: 0,
+      // weeksCRL: 0,
+      // daysCRL: 0,
     }
   },
   created(){
@@ -413,6 +418,18 @@ export default {
   watch: {
     endDate(val) {
       this.endDateFormatting = dayjs(val).format('DD/MM/YYYY');
+    },
+    enableCRLReDate(){
+      // cambiata l'epoca gestazionale aggiorno tutti i valori dei percentili 
+      let vue = this;
+      this.biometriaFetale.forEach((el, index)=>{
+        vue.manageBiometriaFetale(index);
+      })
+      this.doppler.forEach((el, index)=>{
+        if(el.value){
+          vue.manageDopler(index);
+        }
+      });
     }
   },
   methods:{
@@ -514,8 +531,10 @@ export default {
           meanGa++;
         }
         console.log(`${Number.parseInt(meanGa)} weeks  + ${days} days`)
+        this.decimalWeeksFromCRL = Number.parseInt(meanGa) + (days/7);
         if(this.decimalWeeks - meanGa < -0.714 || this.decimalWeeks - meanGa > 0.714){
           console.log("proporre ridatazione perché differenza maggiore di 4 giorni");
+          this.redatingPanel = true;
         }
 
         let sdGa = 2.39102 + (0.0193474 * crl);
@@ -599,7 +618,11 @@ export default {
           return false;
         }
       }
-    },  
+    },
+    reDateCRL(){
+      this.enableCRLReDate = true;
+      this.redatingPanel = false;
+    }, 
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
         // ho settato l'ultima mestruazione
@@ -666,7 +689,6 @@ export default {
       let sk = getSkewness(ga);
       let lnEfw = Math.log(efw)
       let zScore = getZScore(sk, cv, lnEfw, eX)
-      // console.log(zScore);
       const normDist = new NormalDistribution(0, 1);
       let percentile = normDist.cdf(zScore) * 100;
       this.biometriaFetale[this.biometriaFetale.length -1].percentile = percentile.toFixed(0);
@@ -781,6 +803,22 @@ export default {
           Epoca gestazionale: 
           {{ epocaGestazionale }}
         </div>
+        <div class="epoca-gestazionale-CRL">
+          <div class="checkbox">
+            <input 
+              type="checkbox" 
+              name="enableReDating" 
+              id="enableReDating"
+              v-model="enableCRLReDate"
+              @change="enableCRLReDate = !enableCRLReDate"
+            >
+            <label for="enableReDating">Applica ridatazione CRL</label>
+          </div>
+          <div v-show="enableCRLReDate" class="re-date-show">
+            Ridatazione CRL: 
+            {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni
+          </div>
+        </div>
         <div class="more-info">
           <div v-if="!pregnancyMore" class="add-more" @click="pregnancyMore = true">
             +
@@ -870,11 +908,14 @@ export default {
         <!-- <div v-if="item.calc" class="calc">{{ item.value !== '' && item.value !== 0 ? item.value.toFixed(2) : '' }}</div> -->
         <input v-else @change="manageBiometriaFetale(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
-        <div v-if="item.percentile != null" class="percentile">{{ item.percentile }}° p</div>
-        <div v-else-if="item.right != null" class="right">
-          <div v-if="item.right" class="right-ok"></div>
-          <div v-else class="right-not-ok"></div>
+        <div class="percentile">
+          <div v-if="item.percentile != null">{{ item.percentile }}° p</div>
+          <div v-else-if="item.right != null" class="right">
+            <div v-if="item.right" class="right-ok"></div>
+            <div v-else class="right-not-ok"></div>
+          </div>
         </div>
+        <button @click="redatingPanel = true" v-if="item.name === 'CRL'">Imposta Ridatazione</button>
       </div>
       <div class="more-info">
         <div v-if="!biometriaMore" class="add-more" @click="biometriaMore = true">
@@ -886,6 +927,40 @@ export default {
           placeholder="Aggiungi ulteriori informazioni" 
           rows="4">
         </textarea>
+      </div>
+    </section>
+    <section v-show="redatingPanel" class="re-dating-background"
+    @click="redatingPanel = false">
+      <div class="re-dating-container">
+        <div class="panel-title">
+          Ridatazione da CRL
+        </div>
+        <div class="old-date">
+          <span>Data originale: </span> {{ parseInt(decimalWeeks) }} settimane + {{ ((decimalWeeks -  parseInt(decimalWeeks)) * 7).toFixed(0) }} giorni
+        </div>
+        <div class="new-date">
+          <span>Ridatazione proposta</span>
+          <div class="re-dating-input">
+            <div>
+              <input 
+                type="number" 
+                :value="parseInt(decimalWeeksFromCRL)"
+                > Settimane
+                <!-- v-model="weeksCRL" -->
+            </div>
+            <div>
+              <input 
+                type="number" 
+                :value="((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0)"
+                > Giorni
+                <!-- v-model="daysCRL" -->
+            </div>
+          </div>
+        </div>
+        <div class="action">
+          <button @click="reDateCRL">Ridata</button>
+        </div>
+        
       </div>
     </section>
     <section class="anatomy">
@@ -1151,6 +1226,22 @@ export default {
         input{
           width: 150px;
         }
+        .epoca-gestazionale-CRL{
+          display: flex;
+          flex-direction: column;
+          user-select: none;
+          .checkbox{
+            display: flex;
+            align-items: center;
+            input{
+              width: auto;
+              margin-right: 10px;
+            }
+            label{
+              width: auto;
+            }
+          }
+        }
       }
       .switch{
         display: flex;
@@ -1197,6 +1288,7 @@ export default {
       &.biometria-fetale{
         .biometria-item{
           display: flex;
+          align-items: center;
         }
         label{
           width: 35%;
@@ -1208,6 +1300,9 @@ export default {
         .unit{
           width: 30px;
           margin-right: 30px;
+        }
+        .percentile{
+          min-width: 50px;
         }
         .right{
           display: flex;
@@ -1223,6 +1318,62 @@ export default {
             height: 18px;
             border-radius: 50%;
             background: red;
+          }
+        }
+        button{
+          margin-left: 10px;
+          padding: 3px 8px;
+        }
+      }
+      &.re-dating-background{
+        margin: 0;
+        padding: 0;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        // background: rgba($color: #fff, $alpha: .5);
+        // filter: blur(4px);
+        // -webkit-filter: blur(8px);
+        backdrop-filter: blur(4px);
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .re-dating-container{
+          padding: 20px;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.87);
+          background-color: #242424;
+          span{
+            display: inline-block;
+            width: 200px;
+            font-weight: bold;
+          }
+          .old-date{
+            margin: 8px 0;
+          }
+          .new-date{
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+          }
+          .panel-title{
+            text-align: center;
+          }
+          .re-dating-input{
+            display: flex;
+            flex-direction: column;
+          }
+          input{
+            width: 60px;
+            margin-right: 10px;
+          }
+          .action{
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
           }
         }
       }
