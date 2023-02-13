@@ -534,7 +534,9 @@ export default {
         this.decimalWeeksFromCRL = Number.parseInt(meanGa) + (days/7);
         if(this.decimalWeeks - meanGa < -0.714 || this.decimalWeeks - meanGa > 0.714){
           console.log("proporre ridatazione perché differenza maggiore di 4 giorni");
-          this.redatingPanel = true;
+          // this.redatingPanel = true;
+          // capire se far aprire direttamente pannello o meno. Sembrerebbe che dia problemi quando triggero ricalcolo tutti i parametri attivando la ridatazione. 
+          // in quel caso succede che passi da questa funzione facendo uscire il pannello di modifica anche se non lo vorrei in questo caso
         }
 
         let sdGa = 2.39102 + (0.0193474 * crl);
@@ -809,9 +811,9 @@ export default {
               type="checkbox" 
               name="enableReDating" 
               id="enableReDating"
-              v-model="enableCRLReDate"
               @change="enableCRLReDate = !enableCRLReDate"
-            >
+              >
+              <!-- v-model="enableCRLReDate" -->
             <label for="enableReDating">Applica ridatazione CRL</label>
           </div>
           <div v-show="enableCRLReDate" class="re-date-show">
