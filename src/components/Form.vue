@@ -79,7 +79,7 @@ export default {
           value: "",
           unit: "",
           percentile: null,
-          ecoType: ["1T"]
+          ecoType: ["1T", "2T"]
         },
         {
           text: "Circonferenza cranica (CC)",
@@ -698,6 +698,19 @@ export default {
       let percentile = normDist.cdf(zScore) * 100;
       this.biometriaFetale[this.biometriaFetale.length -1].percentile = percentile.toFixed(0);
     },
+    checkShowBiometria(item){
+      let show = false;
+      if(item.ecoType.includes(this.ecoType.value)){
+        if(item.name === "FCF"){
+          if(this.decimalWeeks >= 10 && this.decimalWeeks < 15){
+            show = true;
+          }
+        } else{
+          show = true;
+        }
+      }
+      return show;
+    },
     print(){
       this.showPrint = true;
     }
@@ -905,9 +918,10 @@ export default {
       <div 
         class="biometria-item" 
         v-for="(item, index) in biometriaFetale"
-        v-show="item.ecoType.includes(ecoType.value)"
+        v-show="checkShowBiometria(item)"
         :key="index"
-      >
+        >
+        <!-- v-show="item.ecoType.includes(ecoType.value)" -->
         <label :for="'b-' + index">{{ item.text }}</label>
         <div v-if="item.calc" class="calc">{{ item.value }}</div>
         <!-- <div v-if="item.calc" class="calc">{{ item.value !== '' && item.value !== 0 ? item.value.toFixed(2) : '' }}</div> -->
