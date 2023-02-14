@@ -545,6 +545,9 @@ export default {
         // calcolo NT
       } else if(this.biometriaFetale[index].name === "FCF"){
         // calcolo frequenza cardiaca fetale
+        // limitare calcolo tra la 10 e la 14 settimana 
+        mean = 208.8 - (3.178 * this.decimalWeeks);
+        sd = 6.93;
       } else if(this.biometriaFetale[index].name === "TCD"){
         // calcolo cervelletto
       } else if(this.biometriaFetale[index].name === "CM"){
