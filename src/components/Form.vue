@@ -77,7 +77,7 @@ export default {
           text: "Frequenza cardiaca fetale",
           name: "FCF",
           value: "",
-          unit: "",
+          unit: "bpm",
           percentile: null,
           ecoType: ["1T", "2T"]
         },
@@ -934,7 +934,7 @@ export default {
             <div v-else class="right-not-ok"></div>
           </div>
         </div>
-        <button @click="redatingPanel = true" v-if="item.name === 'CRL'">Imposta Ridatazione</button>
+        <button @click="redatingPanel = true" v-if="item.name === 'CRL' && item.value">Imposta Ridatazione</button>
       </div>
       <div class="more-info">
         <div v-if="!biometriaMore" class="add-more" @click="biometriaMore = true">

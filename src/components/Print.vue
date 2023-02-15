@@ -395,7 +395,7 @@ export default {
         <div class="signature">
           <div class="empty-space"></div>
           <div class="doctor">
-            Dott. ssa Giorgia Campobasso
+            Dott.ssa Giorgia Campobasso
           </div>
         </div>
       </section>
