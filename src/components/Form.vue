@@ -1549,4 +1549,38 @@ export default {
 
     }
   }
+  @media (prefers-color-scheme: light) {
+    .form{
+      section{
+        background-color: rgba(0, 0, 0, .04);
+        .more-info{
+          .add-more{
+            background-color: rgba(0, 0, 0, .1);
+
+          }
+        }
+        &.anatomy{
+          .anatomy-more{
+            background-color: rgba(0, 0, 0, .1);
+          }
+        }
+        .chart-percentile{
+          .line, .base .middle, .base .point, .base{
+            background-color: #1a1a1a !important;
+          }
+        }  
+      }
+
+
+      input, select{
+        background-color: rgba(0, 0, 0, .04);
+        border: 1px solid #1a1a1a
+      }
+      textarea{
+        background-color: rgba(0, 0, 0, .04);
+      }
+    }
+
+  }
+
 </style>

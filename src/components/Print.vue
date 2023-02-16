@@ -395,7 +395,7 @@ export default {
         <div class="signature">
           <div class="empty-space"></div>
           <div class="doctor">
-            Dott.ssa Giorgia Campobasso
+            Dott.ssa Giorgia Mazzoni
           </div>
         </div>
       </section>
@@ -574,6 +574,12 @@ export default {
         width: 90%;
       }
       // display: none;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    .print{
+      border: 1px solid #242424;
     }
   }
   @page {
