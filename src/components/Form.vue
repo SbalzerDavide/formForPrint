@@ -392,6 +392,7 @@ export default {
       endDateFormatting: "",
       epocaGestazionale: "",
       decimalWeeks: 0,
+      decimalWeeksFromCRL: 0,
       patientMore: false,
       pregnancyMore: false,
       ecoMore: false,
@@ -405,7 +406,6 @@ export default {
       conclusion: "",
       redatingPanel: false,
       enableCRLReDate: false,
-      decimalWeeksFromCRL: 0,
       // weeksCRL: 0,
       // daysCRL: 0,
     }
@@ -627,6 +627,9 @@ export default {
     reDateCRL(){
       this.enableCRLReDate = true;
       this.redatingPanel = false;
+      this.pregnancy.reDateFromCrl = `${parseInt(this.decimalWeeksFromCRL)} settimane + ${((this.decimalWeeksFromCRL -  parseInt(this.decimalWeeksFromCRL)) * 7).toFixed(0)} giorni`;
+      console.log(this.pregnancy.reDateFromCrl);
+      // {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni 
     }, 
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
@@ -822,19 +825,25 @@ export default {
           {{ epocaGestazionale }}
         </div>
         <div class="epoca-gestazionale-CRL">
-          <div class="checkbox">
-            <input 
-              type="checkbox" 
-              name="enableReDating" 
-              id="enableReDating"
-              @change="enableCRLReDate = !enableCRLReDate"
-              >
-              <!-- v-model="enableCRLReDate" -->
-            <label for="enableReDating">Applica ridatazione CRL</label>
+          <div class="show">
+            <div class="checkbox">
+              <input 
+                type="checkbox" 
+                name="enableReDating" 
+                id="enableReDating"
+                v-model="enableCRLReDate"
+                >
+                <!-- @change="enableCRLReDate = !enableCRLReDate" -->
+              <label for="enableReDating">Applica ridatazione CRL</label>
+            </div>
+            <div v-show="enableCRLReDate" class="re-date-show">
+              Ridatazione CRL: 
+              {{ pregnancy.reDateFromCrl }}
+              <!-- {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni -->
+            </div>
           </div>
-          <div v-show="enableCRLReDate" class="re-date-show">
-            Ridatazione CRL: 
-            {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni
+          <div class="action">
+            <button @click="redatingPanel = true">Imposta Ridatazione</button>
           </div>
         </div>
         <div class="more-info">
@@ -1138,6 +1147,8 @@ export default {
     :bmi="bmi"
     :pregnancy="pregnancy"
     :decimalWeeks="decimalWeeks"
+    :enableCRLReDate="enableCRLReDate"
+    :decimalWeeksFromCRL="decimalWeeksFromCRL"
     :ecoType="ecoType.name"
     :ecoMethod="ecoMethodz"
     :ecoTool="ecoTool != 'altro' ? ecoTool : otherTool"
@@ -1248,6 +1259,7 @@ export default {
         .epoca-gestazionale-CRL{
           display: flex;
           flex-direction: column;
+          justify-content: space-between;
           user-select: none;
           .checkbox{
             display: flex;
@@ -1259,6 +1271,13 @@ export default {
             label{
               width: auto;
             }
+          }
+          .action{
+            display: flex;
+            justify-content: flex-end;
+          }
+          button{
+            padding: 3px 8px;
           }
         }
       }

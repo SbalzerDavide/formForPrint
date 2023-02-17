@@ -59,6 +59,11 @@ export default {
       defalut: 1
     },
     decimalWeeks: Number,
+    enableCRLReDate:{
+      type: Boolean,
+      default: false
+    },
+    decimalWeeksFromCRL: Number,
     biometriaFetale:{
       type: Array,
       default: []
@@ -131,7 +136,12 @@ export default {
     this.xPosition = 60.5 + ((this.decimalWeeks - 15) * 286.5 / 25)
     this.calcYPosHc();
     this.formattingDateOfBirth = dayjs(this.dateOfBirth).format('DD/MM/YYYY');
-    this.formattingPregnancyEnd = dayjs(this.pregnancy?.end).format('DD/MM/YYYY');
+    if(this.enableCRLReDate && this.pregnancy.reDateFromCrl){
+      // sbagliato ma inserire data fine in base a ridatazione
+      this.formattingPregnancyEnd = dayjs(this.pregnancy?.end).format('DD/MM/YYYY');
+    } else{
+      this.formattingPregnancyEnd = dayjs(this.pregnancy?.end).format('DD/MM/YYYY');
+    }
     this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
 
     this.uterineStd95 = window.uterineStd95;
@@ -232,7 +242,15 @@ export default {
       <section class="pregnancy-date">
         <div v-show="pregnancy?.start" class="title-par">Data ultime mestruazioni: {{ formattingPregnancyStart }}</div>
         <div class="title-par">Data prevista per il parto da U.M.: {{ formattingPregnancyEnd }}</div>
-        <div class="title-par">Epoca gestazionale: {{ pregnancy?.epocaGestazionale }}</div>
+        <div class="title-par">
+          Epoca gestazionale 
+          <span class="original-re-date" v-if="enableCRLReDate && pregnancy.reDateFromCrl">
+          (originale)</span>
+          : {{ pregnancy?.epocaGestazionale }}
+        </div>
+        <div v-if="enableCRLReDate && pregnancy.reDateFromCrl" class="title-par">
+          Epoca gestazionale(ridatata): {{ pregnancy?.reDateFromCrl }}
+        </div>
         <p v-if="pregnancyMore!==''">{{ pregnancyMore }}</p>
       </section>
       <section class="eco">
@@ -444,7 +462,7 @@ export default {
       align-items: center;
       font-weight: bold;
       height: 20px;
-      span{
+      span:not(.original-re-date){
         margin-left: 5px;
         font-weight: normal;
       }
