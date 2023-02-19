@@ -388,8 +388,11 @@ export default {
       activeDateSelection: "start",
       pregnancy: {},
       startDate: "",
-      endDate: "",
-      endDateFormatting: "",
+      deliveryDate: "",
+      deliveryDateCRL: "",
+      deliveryDateCRLInput: "",
+      deliveryDateFormatting: "",
+      deliveryDateCRLFormatting: "",
       epocaGestazionale: "",
       decimalWeeks: 0,
       decimalWeeksFromCRL: 0,
@@ -406,6 +409,8 @@ export default {
       conclusion: "",
       redatingPanel: false,
       enableCRLReDate: false,
+      daysFromCRL: 0,
+      weeksFromCRL: 0,
       // weeksCRL: 0,
       // daysCRL: 0,
     }
@@ -416,8 +421,11 @@ export default {
     this.ombellicaleStd95 = window.ombellicaleStd95;
   },
   watch: {
-    endDate(val) {
-      this.endDateFormatting = dayjs(val).format('DD/MM/YYYY');
+    deliveryDate(val) {
+      this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY');
+    },
+    deliveryDateCRL(val){
+      this.deliveryDateCRLFormatting = dayjs(val).format('DD/MM/YYYY');
     },
     enableCRLReDate(){
       // cambiata l'epoca gestazionale aggiorno tutti i valori dei percentili 
@@ -430,6 +438,13 @@ export default {
           vue.manageDopler(index);
         }
       });
+    },
+    weeksFromCRL(val){
+      this.decimalWeeksFromCRL = val + (this.daysFromCRL/7);
+
+    },
+    daysFromCRL(val){
+      this.decimalWeeksFromCRL = this.weeksFromCRL + (val/7);
     }
   },
   methods:{
@@ -482,7 +497,13 @@ export default {
       // }
 
       if(femore && circonferenzaC && circonferenzaA){
-        if(this.decimalWeeks >= 25){
+        let weeks;
+        if(this.enableCRLReDate){
+          weeks = this.decimalWeeksFromCRL
+        } else{
+          weeks = this.decimalWeeks
+        }
+        if(weeks >= 25){
           this.Hadlock();
         }
       }
@@ -496,7 +517,12 @@ export default {
       this.calcPercentileDopler(index);
     } ,
     calcPercentile(index){
-      let ga = this.decimalWeeks;
+      let ga;
+      if(this.enableCRLReDate){
+        ga = this.decimalWeeksFromCRL
+      } else{
+        ga = this.decimalWeeks;
+      }
       let mean;
       let sd;
       if(this.biometriaFetale[index].name === "CC"){
@@ -530,8 +556,11 @@ export default {
           days = 0;
           meanGa++;
         }
+        this.daysFromCRL = parseInt(days);
         console.log(`${Number.parseInt(meanGa)} weeks  + ${days} days`)
         this.decimalWeeksFromCRL = Number.parseInt(meanGa) + (days/7);
+        this.weeksFromCRL = parseInt(this.decimalWeeksFromCRL);
+
         if(this.decimalWeeks - meanGa < -0.714 || this.decimalWeeks - meanGa > 0.714){
           console.log("proporre ridatazione perché differenza maggiore di 4 giorni");
           // this.redatingPanel = true;
@@ -546,7 +575,7 @@ export default {
       } else if(this.biometriaFetale[index].name === "FCF"){
         // calcolo frequenza cardiaca fetale
         // limitare calcolo tra la 10 e la 14 settimana 
-        mean = 208.8 - (3.178 * this.decimalWeeks);
+        mean = 208.8 - (3.178 * ga);
         sd = 6.93;
       } else if(this.biometriaFetale[index].name === "TCD"){
         // calcolo cervelletto
@@ -570,16 +599,22 @@ export default {
       }
     },
     calcPercentileDopler(index){
+      let weeks;
+      if(this.enableCRLReDate){
+        weeks = this.decimalWeeksFromCRL;
+      } else{
+        weeks = this.decimalWeeks;
+      }
       if(this.doppler[index].name === "PIO"){
         let pi = this.doppler[index].value;
-        let zScore = -(0.0768617 ** -1) * (Math.exp((pi - (1.02944 + 77.7456 * (this.decimalWeeks ** -2) - 0.000004455 * (this.decimalWeeks ** 3))) * -0.0768617 * (-0.00645693 + 254.885 * Math.log(this.decimalWeeks) * (this.decimalWeeks ** - 2) - 715.949 * (this.decimalWeeks ** -2)) ** - 1) -1);
+        let zScore = -(0.0768617 ** -1) * (Math.exp((pi - (1.02944 + 77.7456 * (weeks ** -2) - 0.000004455 * (weeks ** 3))) * -0.0768617 * (-0.00645693 + 254.885 * Math.log(weeks) * (weeks ** - 2) - 715.949 * (weeks ** -2)) ** - 1) -1);
         // console.log(zScore);
         const normDist = new NormalDistribution(0, 1);
         let percentile = normDist.cdf(zScore) * 100
         this.doppler[index].percentile = percentile.toFixed(0);
       } else if(this.doppler[index].name === "PIUDX" || this.doppler[index].name === "PIUSX"){
         let pi = this.doppler[index].value;
-        let ga = this.decimalWeeks * 7
+        let ga = weeks * 7
         let a = 1.39 - 0.012 * ga + (ga ** 2) * 0.0000198;
         let mean = Math.exp(a);
         let sd = 0.272 - ga * 0.000259
@@ -588,9 +623,9 @@ export default {
         this.doppler[index].percentile = percentile.toFixed(0);
       } else if(this.doppler[index].name === "MCA"){
         // prova mca
-        // let esponente = 2.31 + 0.046 * this.decimalWeeks;
+        // let esponente = 2.31 + 0.046 * weeks;
         // e(2.31+0.046 GA) = mca
-        let mean = Math.exp(2.31 + 0.046 * this.decimalWeeks);
+        let mean = Math.exp(2.31 + 0.046 * weeks);
         // calcolare mean in questo modo oppure prendere i dati nella tabella?
         console.log(mean);
         // dell'mca non si calcolano i percentili ma lo scostamento rispetto al valore atteso
@@ -602,8 +637,13 @@ export default {
       return `left: ${value}px`;
     },
     calcPercentileUterine(index){
+      let weeks;
+      if(this.enableCRLReDate){
+        weeks = parseInt(this.decimalWeeksFromCRL);
+      } else{
+        weeks = parseInt(this.decimalWeeks);
+      }
       let uterine = this.doppler[index];
-      let weeks = parseInt(this.decimalWeeks);
       if(this.doppler[index].name == "PIUDX" || this.doppler[index].name == "PIUSX"){
         if(this.uterineStd95[weeks] < uterine.value){
           return true;
@@ -628,22 +668,26 @@ export default {
       this.enableCRLReDate = true;
       this.redatingPanel = false;
       this.pregnancy.reDateFromCrl = `${parseInt(this.decimalWeeksFromCRL)} settimane + ${((this.decimalWeeksFromCRL -  parseInt(this.decimalWeeksFromCRL)) * 7).toFixed(0)} giorni`;
+      let daysDiff = parseInt(((this.decimalWeeks - this.decimalWeeksFromCRL) * 7).toFixed(0));
+      this.pregnancy.deliveryCrl = dayjs(this.deliveryDate).add(daysDiff, 'day');
+      this.deliveryDateCRL = this.pregnancy.deliveryCrl;
+      console.log(this.pregnancy.deliveryCrl);
       console.log(this.pregnancy.reDateFromCrl);
       // {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni 
     }, 
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
         // ho settato l'ultima mestruazione
-        // this.endDate = dayjs(this.startDate).add(280, 'day').format('DD/MM/YYYY');
-        this.endDate = dayjs(this.startDate).add(280, 'day');
+        // this.deliveryDate = dayjs(this.startDate).add(280, 'day').format('DD/MM/YYYY');
+        this.deliveryDate = dayjs(this.startDate).add(280, 'day');
         this.pregnancy.start = this.startDate;
-        this.pregnancy.end = this.endDate;
+        this.pregnancy.delivery = this.deliveryDate;
       } else if(this.activeDateSelection === "end"){
         // ho settato data presunta parto
-        // this.startDate = dayjs(this.endDate).subtract(280, 'day').format('DD/MM/YYYY');
-        this.startDate = dayjs(this.endDate).subtract(280, 'day');
-        this.pregnancy.end = this.endDate;
-        // this.endDate = dayjs(this.endDate).format('DD/MM/YYYY');
+        // this.startDate = dayjs(this.deliveryDate).subtract(280, 'day').format('DD/MM/YYYY');
+        this.startDate = dayjs(this.deliveryDate).subtract(280, 'day');
+        this.pregnancy.delivery = this.deliveryDate;
+        // this.deliveryDate = dayjs(this.deliveryDate).format('DD/MM/YYYY');
       }
       let today = dayjs();
       let dayDiff = (today.diff(this.startDate, 'day')) % 7;
@@ -691,7 +735,13 @@ export default {
       this.biometriaFetale[this.biometriaFetale.length -1].value = efw.toFixed(2);
       // console.log(efw);
       // calcolo percentile stima peso
-      let ga = this.decimalWeeks;
+      let ga;
+      if(this.enableCRLReDate){
+        ga = this.decimalWeeksFromCRL;
+      } else{
+        ga = this.decimalWeeks;
+      }
+
       let eX = getExpectedMeans(ga);
       let cv = getCV(ga);
       let sk = getSkewness(ga);
@@ -705,7 +755,13 @@ export default {
       let show = false;
       if(item.ecoType.includes(this.ecoType.value)){
         if(item.name === "FCF"){
-          if(this.decimalWeeks >= 10 && this.decimalWeeks < 15){
+          let weeks;
+          if(this.enableCRLReDate){
+            weeks = this.decimalWeeksFromCRL;
+          } else{
+            weeks = this.decimalWeeks;
+          }
+          if(weeks >= 10 && weeks < 15){
             show = true;
           }
         } else{
@@ -813,12 +869,12 @@ export default {
         <input 
           v-else-if="activeDateSelection=='end'" 
           @change="calcPregnancyDate"
-          v-model="endDate" 
+          v-model="deliveryDate" 
           type="date"
         >
         <div class="calc-date">
           Data prevista per il parto:
-          {{ endDateFormatting }}
+          {{ deliveryDateFormatting }}
         </div>
         <div class="epoca-gestazionale">
           Epoca gestazionale: 
@@ -837,13 +893,19 @@ export default {
               <label for="enableReDating">Applica ridatazione CRL</label>
             </div>
             <div v-show="enableCRLReDate" class="re-date-show">
-              Ridatazione CRL: 
-              {{ pregnancy.reDateFromCrl }}
+              <div class="ga-crl">
+                Ridatazione CRL: 
+                {{ pregnancy.reDateFromCrl }}
+              </div>
+              <div class="delivery-crl">
+                Data prevista per il parto da eco:
+                  {{ deliveryDateCRLFormatting }}
+              </div>
               <!-- {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni -->
             </div>
           </div>
           <div class="action">
-            <button @click="redatingPanel = true">Imposta Ridatazione</button>
+            <button @click="redatingPanel = true">Modifica Ridatazione</button>
           </div>
         </div>
         <div class="more-info">
@@ -957,8 +1019,13 @@ export default {
         </textarea>
       </div>
     </section>
-    <section v-show="redatingPanel" class="re-dating-background"
-    @click="redatingPanel = false">
+    <section v-show="redatingPanel" class="re-dating-panel"
+    >
+      <div 
+        class="re-dating-background"
+        @click="redatingPanel = false"
+      >
+      </div>
       <div class="re-dating-container">
         <div class="panel-title">
           Ridatazione da CRL
@@ -967,21 +1034,27 @@ export default {
           <span>Data originale: </span> {{ parseInt(decimalWeeks) }} settimane + {{ ((decimalWeeks -  parseInt(decimalWeeks)) * 7).toFixed(0) }} giorni
         </div>
         <div class="new-date">
-          <span>Ridatazione proposta</span>
+          <span>Ridatazione:</span>
           <div class="re-dating-input">
-            <div>
+            <div class="number">
+              <div>
               <input 
-                type="number" 
-                :value="parseInt(decimalWeeksFromCRL)"
-                > Settimane
-                <!-- v-model="weeksCRL" -->
+              type="number" 
+              v-model="weeksFromCRL"
+                  > Settimane +
+                  <!-- v-model="weeksCRL" -->
+              </div>
+              <div>
+                <input 
+                  type="number" 
+                  v-model="daysFromCRL"
+                  > Giorni
+                  <!-- v-model="daysCRL" -->
+              </div>
             </div>
-            <div>
-              <input 
-                type="number" 
-                :value="((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0)"
-                > Giorni
-                <!-- v-model="daysCRL" -->
+            <div class="delivery">
+              <label>Termine eco:</label>
+              <input v-model="deliveryDateCRLinput" type="date">
             </div>
           </div>
         </div>
@@ -1028,7 +1101,7 @@ export default {
       <div 
         class="doppler-item" 
         v-for="(item, index) in doppler"
-        v-show="item.name !='PIO' || decimalWeeks >= 19"
+        v-show="item.name !='PIO' || (enableCRLReDate ? (decimalWeeksFromCRL >= 19) : (decimalWeeks >= 19))"
         :key="index"
       >
         <label :for="'b-' + index">{{ item.text }}</label>
@@ -1363,7 +1436,7 @@ export default {
           padding: 3px 8px;
         }
       }
-      &.re-dating-background{
+      &.re-dating-panel{
         margin: 0;
         padding: 0;
         position: fixed;
@@ -1371,30 +1444,39 @@ export default {
         bottom: 0;
         left: 0;
         right: 0;
-        // background: rgba($color: #fff, $alpha: .5);
-        // filter: blur(4px);
-        // -webkit-filter: blur(8px);
         backdrop-filter: blur(4px);
         z-index: 1;
         display: flex;
         align-items: center;
         justify-content: center;
+        .re-dating-background{
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: 1;
+          
+        }
         .re-dating-container{
           padding: 20px;
           border-radius: 8px;
           border: 1px solid rgba(255, 255, 255, 0.87);
           background-color: #242424;
+          z-index: 2;
           span{
             display: inline-block;
             width: 200px;
             font-weight: bold;
           }
           .old-date{
-            margin: 8px 0;
+            margin: 12px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #d9d9d9;
           }
           .new-date{
             display: flex;
-            align-items: center;
+            // align-items: center;
             margin: 8px 0;
           }
           .panel-title{
@@ -1404,9 +1486,24 @@ export default {
             display: flex;
             flex-direction: column;
           }
-          input{
-            width: 60px;
-            margin-right: 10px;
+          .number{
+            display: flex;
+            input{
+              width: 40px;
+              margin: 5px;
+            }
+          }
+          .delivery{
+            display: flex;
+            margin-top: 8px;
+            label{
+              width: auto;
+            }
+            input{
+              margin-left: 8px;
+              flex-grow: 1;
+              width: auto;
+            }
           }
           .action{
             display: flex;
