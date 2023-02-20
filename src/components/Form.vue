@@ -419,12 +419,16 @@ export default {
     this.changeEcoType();
     this.uterineStd95 = window.uterineStd95;
     this.ombellicaleStd95 = window.ombellicaleStd95;
+    // this.deliveryDateCRLInput = new Date(1995, 11, 17);
+    this.deliveryDateCRLInput = "2022-01-12";
+    console.log(this.deliveryDateCRLInput);
   },
   watch: {
     deliveryDate(val) {
       this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY');
     },
     deliveryDateCRL(val){
+      console.log(val);
       this.deliveryDateCRLFormatting = dayjs(val).format('DD/MM/YYYY');
     },
     enableCRLReDate(){
@@ -673,6 +677,7 @@ export default {
       this.deliveryDateCRL = this.pregnancy.deliveryCrl;
       console.log(this.pregnancy.deliveryCrl);
       console.log(this.pregnancy.reDateFromCrl);
+      this.deliveryDateCRLInput = dayjs(this.deliveryDateCRL).format('YYYY-MM-DD');
       // {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni 
     }, 
     calcPregnancyDate(){
@@ -1054,7 +1059,8 @@ export default {
             </div>
             <div class="delivery">
               <label>Termine eco:</label>
-              <input v-model="deliveryDateCRLinput" type="date">
+              <input v-model="deliveryDateCRLInput" type="date">
+              <!-- <input v-model="deliveryDateCRL" type="date"> -->
             </div>
           </div>
         </div>
