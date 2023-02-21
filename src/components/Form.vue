@@ -419,9 +419,6 @@ export default {
     this.changeEcoType();
     this.uterineStd95 = window.uterineStd95;
     this.ombellicaleStd95 = window.ombellicaleStd95;
-    // this.deliveryDateCRLInput = new Date(1995, 11, 17);
-    this.deliveryDateCRLInput = "2022-01-12";
-    console.log(this.deliveryDateCRLInput);
   },
   watch: {
     deliveryDate(val) {
@@ -445,10 +442,14 @@ export default {
     },
     weeksFromCRL(val){
       this.decimalWeeksFromCRL = val + (this.daysFromCRL/7);
-
+      // aggiorno anche data a calendario
     },
     daysFromCRL(val){
       this.decimalWeeksFromCRL = this.weeksFromCRL + (val/7);
+      // aggiorno anche data a calendario
+    },
+    deliveryDateCRLInput(val){
+      // aggiorno anche weeksFromCRL, daysFromCRL e deliveryDateCRL
     }
   },
   methods:{
@@ -551,6 +552,7 @@ export default {
         ga = ga * 7;
         mean = -50.6562 + (0.815118 * ga) + (0.00535302 * (ga ** 2));
         sd = -2.21626 + (0.0984894 * ga);
+        
         // -2.21626 + (0.0984894 * ga);
         let crl = this.biometriaFetale[index].value;
         let meanGa = (40.9041 + (3.21585 * (crl ** 0.5)) + (0.348956 * crl))/7;
@@ -562,7 +564,7 @@ export default {
         }
         this.daysFromCRL = parseInt(days);
         console.log(`${Number.parseInt(meanGa)} weeks  + ${days} days`)
-        this.decimalWeeksFromCRL = Number.parseInt(meanGa) + (days/7);
+        // this.decimalWeeksFromCRL = Number.parseInt(meanGa) + (days/7);
         this.weeksFromCRL = parseInt(this.decimalWeeksFromCRL);
 
         if(this.decimalWeeks - meanGa < -0.714 || this.decimalWeeks - meanGa > 0.714){
@@ -598,6 +600,9 @@ export default {
       } 
       if(mean && sd){
         const normDist = new NormalDistribution(mean, sd);
+        console.log(ga);
+        console.log(mean);
+        console.log(sd);
         let percentile = normDist.cdf(this.biometriaFetale[index].value) * 100;
         this.biometriaFetale[index].percentile = percentile.toFixed(0)
       }
