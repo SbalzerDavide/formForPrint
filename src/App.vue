@@ -26,10 +26,14 @@ export default {
     <h1>
       App per chiarella 
     </h1>
-    <button @click="openForm">Crea nuovo</button>
+    <button class="create-new" @click="openForm">Crea nuovo</button>
   </div>
   <Form v-else/>
 </template>
 
 <style lang="scss" scoped>
+  button.create-new{
+    background: #55917F;
+  }
+
 </style>

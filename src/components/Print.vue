@@ -146,7 +146,7 @@ export default {
       this.formattingDeliveryCRL = this.pregnancy?.deliveryCrl.format('DD/MM/YYYY');
     } else{
       // this.formattingPregnancyEnd = dayjs(this.pregnancy?.delivery).format('DD/MM/YYYY');
-      this.formattingPregnancyEnd = this.pregnancy?.delivery.format('DD/MM/YYYY');
+      this.formattingPregnancyEnd = this.pregnancy?.delivery?.format('DD/MM/YYYY');
     }
     this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
 
@@ -212,6 +212,11 @@ export default {
     },  
     print(){
       window.print();
+    },
+    comeBack(){
+      this.$emit('comeBack', {
+        save: true
+      })
     }
   }
 }
@@ -224,6 +229,12 @@ export default {
       @click="print"
     >
       Conferma
+    </button>
+    <button
+      class="come-back-to-form hide-print"
+      @click="comeBack"
+      >
+        Modifica dati
     </button>
     <header>
       <div class="img">
@@ -252,11 +263,11 @@ export default {
         <div class="title-par">
           Epoca gestazionale 
           <span class="original-re-date" v-if="enableCRLReDate && pregnancy.reDateFromCrl">
-          (originale)</span>
+          (da U.M.)</span>
           : {{ pregnancy?.epocaGestazionale }}
         </div>
         <div v-if="enableCRLReDate && pregnancy.reDateFromCrl" class="title-par">
-          Epoca gestazionale(ridatata): {{ pregnancy?.reDateFromCrl }}
+          Epoca gestazionale(da eco): {{ pregnancy?.reDateFromCrl }}
         </div>
         <p v-if="pregnancyMore!==''">{{ pregnancyMore }}</p>
       </section>
@@ -442,10 +453,17 @@ export default {
     background-color: #fff;
     color: #1a1a1a;
     position: relative;
-    .confirm{
+    button{
       position: absolute;
+      background: #55917F;
       right: -150px;
+      width: 140px;
+    }
+    .confirm{
       top: 30px;
+    }
+    .come-back-to-form{
+      top: 84px;
     }
     h1{
       margin: 10px 0;

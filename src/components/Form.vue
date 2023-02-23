@@ -782,6 +782,10 @@ export default {
     },
     print(){
       this.showPrint = true;
+    },
+    comeBack(e){
+      console.log(e);
+      this.showPrint = false;
     }
   }
 }
@@ -1216,11 +1220,12 @@ export default {
       <textarea v-model="conclusion" rows="4"> </textarea>
     </section>
 
-    <button @click="print">
+    <button class="print" @click="print">
       Print
     </button>
   </div>
   <Print v-else
+    @comeBack="comeBack"
     :office="office"
     :patient="name + ' ' + surname"
     :dateOfBirth="dateOfBirth"
@@ -1673,6 +1678,10 @@ export default {
           width: 20%;
         }
       }
+
+    }
+    button.print{
+      background: #55917F;
 
     }
   }
