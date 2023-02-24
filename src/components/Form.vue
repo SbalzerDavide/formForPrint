@@ -424,10 +424,10 @@ export default {
     deliveryDate(val) {
       this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY');
     },
-    deliveryDateCRL(val){
-      console.log(val);
-      this.deliveryDateCRLFormatting = dayjs(val).format('DD/MM/YYYY');
-    },
+    // deliveryDateCRL(val){
+    //   console.log(val);
+    //   // this.deliveryDateCRLFormatting = dayjs(val).format('DD/MM/YYYY');
+    // },
     enableCRLReDate(){
       // cambiata l'epoca gestazionale aggiorno tutti i valori dei percentili 
       let vue = this;
@@ -440,17 +440,17 @@ export default {
         }
       });
     },
-    weeksFromCRL(val){
-      this.decimalWeeksFromCRL = val + (this.daysFromCRL/7);
-      // aggiorno anche data a calendario
-    },
-    daysFromCRL(val){
-      this.decimalWeeksFromCRL = this.weeksFromCRL + (val/7);
-      // aggiorno anche data a calendario
-    },
-    deliveryDateCRLInput(val){
-      // aggiorno anche weeksFromCRL, daysFromCRL e deliveryDateCRL
-    }
+    // weeksFromCRL(val){
+    //   this.decimalWeeksFromCRL = val + (this.daysFromCRL/7);
+    //   // aggiorno anche data a calendario
+    // },
+    // daysFromCRL(val){
+    //   this.decimalWeeksFromCRL = this.weeksFromCRL + (val/7);
+    //   // aggiorno anche data a calendario
+    // },
+    // deliveryDateCRLInput(val){
+    //   // aggiorno anche weeksFromCRL, daysFromCRL e deliveryDateCRL
+    // }
   },
   methods:{
     changeBirth(){
@@ -556,16 +556,26 @@ export default {
         // -2.21626 + (0.0984894 * ga);
         let crl = this.biometriaFetale[index].value;
         let meanGa = (40.9041 + (3.21585 * (crl ** 0.5)) + (0.348956 * crl))/7;
-        let decimal = meanGa - Math.floor(meanGa);
-        let days = (decimal * 7).toFixed(0);
-        if(days == 7){
-          days = 0;
-          meanGa++;
-        }
-        this.daysFromCRL = parseInt(days);
-        console.log(`${Number.parseInt(meanGa)} weeks  + ${days} days`)
+        this.decimalWeeksFromCRL = meanGa;
+
+
+
+
+        // modifica per calcolo crl date da qui
+        this.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL);
+        this.crlWeeks = getWeeksFromDecimal(this.decimalWeeksFromCRL);
+        this.crlDays = getDaysFromDecimal(this.decimalWeeksFromCRL);
+        // let decimal = meanGa - Math.floor(meanGa);
+        // let days = (decimal * 7).toFixed(0);
+        // if(days == 7){
+        //   days = 0;
+        //   meanGa++;
+        // }
+        // let uniqueCrlDate = 
+        // this.daysFromCRL = parseInt(days);
+        // console.log(`${Number.parseInt(meanGa)} weeks  + ${days} days`)
         // this.decimalWeeksFromCRL = Number.parseInt(meanGa) + (days/7);
-        this.weeksFromCRL = parseInt(this.decimalWeeksFromCRL);
+        // this.weeksFromCRL = parseInt(this.decimalWeeksFromCRL);
 
         if(this.decimalWeeks - meanGa < -0.714 || this.decimalWeeks - meanGa > 0.714){
           console.log("proporre ridatazione perché differenza maggiore di 4 giorni");
@@ -673,16 +683,27 @@ export default {
         }
       }
     },
+    getDeliveryDateFromDecimalWeeks(decimal){
+      let daysToDeliveryFromCRL = 280 - (decimal * 7);
+      return dayjs().add(daysToDeliveryFromCRL).format('YYYY-MM-DD');
+    },
+    getWeeksFromDecimal(decimal){
+      return Number.parseInt(decimal)
+    },
+    getDaysFromDecimal(decimal){
+        let decimalDays = decimal - Math.floor(decimal);
+        return days = (decimalDays * 7).toFixed(0);
+    },
     reDateCRL(){
       this.enableCRLReDate = true;
       this.redatingPanel = false;
-      this.pregnancy.reDateFromCrl = `${parseInt(this.decimalWeeksFromCRL)} settimane + ${((this.decimalWeeksFromCRL -  parseInt(this.decimalWeeksFromCRL)) * 7).toFixed(0)} giorni`;
-      let daysDiff = parseInt(((this.decimalWeeks - this.decimalWeeksFromCRL) * 7).toFixed(0));
-      this.pregnancy.deliveryCrl = dayjs(this.deliveryDate).add(daysDiff, 'day');
-      this.deliveryDateCRL = this.pregnancy.deliveryCrl;
-      console.log(this.pregnancy.deliveryCrl);
-      console.log(this.pregnancy.reDateFromCrl);
-      this.deliveryDateCRLInput = dayjs(this.deliveryDateCRL).format('YYYY-MM-DD');
+      // this.pregnancy.reDateFromCrl = `${parseInt(this.decimalWeeksFromCRL)} settimane + ${((this.decimalWeeksFromCRL -  parseInt(this.decimalWeeksFromCRL)) * 7).toFixed(0)} giorni`;
+      // let daysDiff = parseInt(((this.decimalWeeks - this.decimalWeeksFromCRL) * 7).toFixed(0));
+      // this.pregnancy.deliveryCrl = dayjs(this.deliveryDate).add(daysDiff, 'day');
+      // this.deliveryDateCRL = this.pregnancy.deliveryCrl;
+      // console.log(this.pregnancy.deliveryCrl);
+      // console.log(this.pregnancy.reDateFromCrl);
+      // this.deliveryDateCRLInput = dayjs(this.deliveryDateCRL).format('YYYY-MM-DD');
       // {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni 
     }, 
     calcPregnancyDate(){
@@ -909,11 +930,11 @@ export default {
             <div v-show="enableCRLReDate" class="re-date-show">
               <div class="ga-crl">
                 Ridatazione CRL: 
-                {{ pregnancy.reDateFromCrl }}
+                <!-- {{ pregnancy.reDateFromCrl }} -->
               </div>
               <div class="delivery-crl">
                 Data prevista per il parto da eco:
-                  {{ deliveryDateCRLFormatting }}
+                  <!-- {{ deliveryDateCRLFormatting }} -->
               </div>
               <!-- {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni -->
             </div>
@@ -1052,23 +1073,23 @@ export default {
           <div class="re-dating-input">
             <div class="number">
               <div>
-              <input 
-              type="number" 
-              v-model="weeksFromCRL"
-                  > Settimane +
+                <input 
+                type="number" 
+                > Settimane +
+                <!-- v-model="weeksFromCRL" -->
                   <!-- v-model="weeksCRL" -->
               </div>
               <div>
                 <input 
                   type="number" 
-                  v-model="daysFromCRL"
                   > Giorni
+                  <!-- v-model="daysFromCRL" -->
                   <!-- v-model="daysCRL" -->
               </div>
             </div>
             <div class="delivery">
               <label>Termine eco:</label>
-              <input v-model="deliveryDateCRLInput" type="date">
+              <!-- <input v-model="deliveryDateCRLInput" type="date"> -->
               <!-- <input v-model="deliveryDateCRL" type="date"> -->
             </div>
           </div>
