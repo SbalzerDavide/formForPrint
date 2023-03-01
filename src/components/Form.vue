@@ -14,7 +14,7 @@ export default {
       name: "",
       surname: "",
       dateOfBirth: "",
-      age:"",
+      age: 0,
       height: 0,
       normalWeight: 0,
       actualWeight: 0,
@@ -389,13 +389,15 @@ export default {
       pregnancy: {},
       startDate: "",
       deliveryDate: "",
-      deliveryDateCRL: "",
-      deliveryDateCRLInput: "",
       deliveryDateFormatting: "",
-      deliveryDateCRLFormatting: "",
       epocaGestazionale: "",
       decimalWeeks: 0,
       decimalWeeksFromCRL: 0,
+      crlWeeks: 0,
+      crlDays: 0,
+      deliveryDateFromCRL: "",
+      deliveryDateFromCRLFormatting: "",
+      crlDaysDiff: 0,
       patientMore: false,
       pregnancyMore: false,
       ecoMore: false,
@@ -409,10 +411,6 @@ export default {
       conclusion: "",
       redatingPanel: false,
       enableCRLReDate: false,
-      daysFromCRL: 0,
-      weeksFromCRL: 0,
-      // weeksCRL: 0,
-      // daysCRL: 0,
     }
   },
   created(){
@@ -424,10 +422,6 @@ export default {
     deliveryDate(val) {
       this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY');
     },
-    // deliveryDateCRL(val){
-    //   console.log(val);
-    //   // this.deliveryDateCRLFormatting = dayjs(val).format('DD/MM/YYYY');
-    // },
     enableCRLReDate(){
       // cambiata l'epoca gestazionale aggiorno tutti i valori dei percentili 
       let vue = this;
@@ -440,23 +434,14 @@ export default {
         }
       });
     },
-    // weeksFromCRL(val){
-    //   this.decimalWeeksFromCRL = val + (this.daysFromCRL/7);
-    //   // aggiorno anche data a calendario
-    // },
-    // daysFromCRL(val){
-    //   this.decimalWeeksFromCRL = this.weeksFromCRL + (val/7);
-    //   // aggiorno anche data a calendario
-    // },
-    // deliveryDateCRLInput(val){
-    //   // aggiorno anche weeksFromCRL, daysFromCRL e deliveryDateCRL
-    // }
+    deliveryDateFromCRL(val){
+      this.deliveryDateFromCRLFormatting = dayjs(val).format('DD/MM/YYYY');
+    },
   },
   methods:{
     changeBirth(){
       let today = dayjs();
       let dateOfBirth = dayjs(this.dateOfBirth);
-      // let b = dayjs();
       this.age = today.diff(dateOfBirth, "year");
     },
     calcBMI(){
@@ -549,6 +534,8 @@ export default {
         sd = 0.040292 * ga + 1.3464;
       } else if(this.biometriaFetale[index].name === "CRL"){
         // calcolo CRL
+        // disabilito applicazione diretta nuova data
+        // this.enableCRLReDate = false;
         ga = ga * 7;
         mean = -50.6562 + (0.815118 * ga) + (0.00535302 * (ga ** 2));
         sd = -2.21626 + (0.0984894 * ga);
@@ -558,34 +545,15 @@ export default {
         let meanGa = (40.9041 + (3.21585 * (crl ** 0.5)) + (0.348956 * crl))/7;
         this.decimalWeeksFromCRL = meanGa;
 
-
-
-
         // modifica per calcolo crl date da qui
         this.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL);
-        this.crlWeeks = getWeeksFromDecimal(this.decimalWeeksFromCRL);
-        this.crlDays = getDaysFromDecimal(this.decimalWeeksFromCRL);
-        // let decimal = meanGa - Math.floor(meanGa);
-        // let days = (decimal * 7).toFixed(0);
-        // if(days == 7){
-        //   days = 0;
-        //   meanGa++;
-        // }
-        // let uniqueCrlDate = 
-        // this.daysFromCRL = parseInt(days);
-        // console.log(`${Number.parseInt(meanGa)} weeks  + ${days} days`)
-        // this.decimalWeeksFromCRL = Number.parseInt(meanGa) + (days/7);
-        // this.weeksFromCRL = parseInt(this.decimalWeeksFromCRL);
+        this.crlWeeks = this.getWeeksFromDecimal(this.decimalWeeksFromCRL);
+        this.crlDays = this.getDaysFromDecimal(this.decimalWeeksFromCRL);
+        this.pregnancy.reDateFromCrl = `${this.crlWeeks} settimane + ${this.crlDays} giorni`;
 
-        if(this.decimalWeeks - meanGa < -0.714 || this.decimalWeeks - meanGa > 0.714){
-          console.log("proporre ridatazione perché differenza maggiore di 4 giorni");
-          // this.redatingPanel = true;
-          // capire se far aprire direttamente pannello o meno. Sembrerebbe che dia problemi quando triggero ricalcolo tutti i parametri attivando la ridatazione. 
-          // in quel caso succede che passi da questa funzione facendo uscire il pannello di modifica anche se non lo vorrei in questo caso
-        }
+        this.crlDaysDiff = Math.round((this.decimalWeeksFromCRL - this.decimalWeeks) * 7);
 
         let sdGa = 2.39102 + (0.0193474 * crl);
-        // console.log(meanGa / 7);
       } else if(this.biometriaFetale[index].name === "NT"){
         // calcolo NT
       } else if(this.biometriaFetale[index].name === "FCF"){
@@ -610,9 +578,6 @@ export default {
       } 
       if(mean && sd){
         const normDist = new NormalDistribution(mean, sd);
-        console.log(ga);
-        console.log(mean);
-        console.log(sd);
         let percentile = normDist.cdf(this.biometriaFetale[index].value) * 100;
         this.biometriaFetale[index].percentile = percentile.toFixed(0)
       }
@@ -685,26 +650,44 @@ export default {
     },
     getDeliveryDateFromDecimalWeeks(decimal){
       let daysToDeliveryFromCRL = 280 - (decimal * 7);
-      return dayjs().add(daysToDeliveryFromCRL).format('YYYY-MM-DD');
+      return dayjs().add(daysToDeliveryFromCRL, "day").format('YYYY-MM-DD');
     },
     getWeeksFromDecimal(decimal){
       return Number.parseInt(decimal)
     },
     getDaysFromDecimal(decimal){
         let decimalDays = decimal - Math.floor(decimal);
-        return days = (decimalDays * 7).toFixed(0);
+        return (decimalDays * 7).toFixed(0);
+    },
+    setManuallyCrlReDate(type){
+      if(type == "weeks"){
+        // sto modificando le settimane 
+        // calcolo primo decimalWeeks
+        this.decimalWeeksFromCRL = this.crlWeeks + (this.crlDays/7); 
+        // dopo calcolo le variabili derivate, cioè quelle a loro volta modificabili
+        this.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL);
+        
+      } else if(type == "date"){
+        // sto modificando la data
+        // calcolo primo decimalWeeks
+        let pregancyStart = dayjs(this.deliveryDateFromCRL).subtract(280, 'day');
+        console.log(pregancyStart);
+        let diff = dayjs().diff(pregancyStart, 'week', true);
+        console.log(diff);
+        this.decimalWeeksFromCRL = diff;
+        // dopo calcolo le variabili derivate, cioè quelle a loro volta modificabili
+
+        this.crlWeeks = this.getWeeksFromDecimal(this.decimalWeeksFromCRL);
+        this.crlDays = this.getDaysFromDecimal(this.decimalWeeksFromCRL);
+
+      }
+      this.pregnancy.reDateFromCrl = `${this.crlWeeks} settimane + ${this.crlDays} giorni`;
+
     },
     reDateCRL(){
       this.enableCRLReDate = true;
       this.redatingPanel = false;
-      // this.pregnancy.reDateFromCrl = `${parseInt(this.decimalWeeksFromCRL)} settimane + ${((this.decimalWeeksFromCRL -  parseInt(this.decimalWeeksFromCRL)) * 7).toFixed(0)} giorni`;
-      // let daysDiff = parseInt(((this.decimalWeeks - this.decimalWeeksFromCRL) * 7).toFixed(0));
-      // this.pregnancy.deliveryCrl = dayjs(this.deliveryDate).add(daysDiff, 'day');
-      // this.deliveryDateCRL = this.pregnancy.deliveryCrl;
-      // console.log(this.pregnancy.deliveryCrl);
-      // console.log(this.pregnancy.reDateFromCrl);
-      // this.deliveryDateCRLInput = dayjs(this.deliveryDateCRL).format('YYYY-MM-DD');
-      // {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni 
+      this.pregnancy.deliveryDateFromCRL = this.deliveryDateFromCRL;
     }, 
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
@@ -908,11 +891,11 @@ export default {
           type="date"
         >
         <div class="calc-date">
-          Data prevista per il parto:
+          Data prevista per il parto da U.M.:
           {{ deliveryDateFormatting }}
         </div>
         <div class="epoca-gestazionale">
-          Epoca gestazionale: 
+          Epoca gestazionale da U.M.: 
           {{ epocaGestazionale }}
         </div>
         <div class="epoca-gestazionale-CRL">
@@ -929,12 +912,12 @@ export default {
             </div>
             <div v-show="enableCRLReDate" class="re-date-show">
               <div class="ga-crl">
-                Ridatazione CRL: 
-                <!-- {{ pregnancy.reDateFromCrl }} -->
+                Epoca gestazionale da eco: 
+                {{ pregnancy.reDateFromCrl }}
               </div>
               <div class="delivery-crl">
                 Data prevista per il parto da eco:
-                  <!-- {{ deliveryDateCRLFormatting }} -->
+                  {{ deliveryDateFromCRLFormatting }}
               </div>
               <!-- {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni -->
             </div>
@@ -1027,10 +1010,8 @@ export default {
         v-show="checkShowBiometria(item)"
         :key="index"
         >
-        <!-- v-show="item.ecoType.includes(ecoType.value)" -->
         <label :for="'b-' + index">{{ item.text }}</label>
         <div v-if="item.calc" class="calc">{{ item.value }}</div>
-        <!-- <div v-if="item.calc" class="calc">{{ item.value !== '' && item.value !== 0 ? item.value.toFixed(2) : '' }}</div> -->
         <input v-else @change="manageBiometriaFetale(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
         <div class="percentile">
@@ -1040,7 +1021,13 @@ export default {
             <div v-else class="right-not-ok"></div>
           </div>
         </div>
-        <button @click="redatingPanel = true" v-if="item.name === 'CRL' && item.value">Imposta Ridatazione</button>
+        <!-- <button @click="redatingPanel = true" v-if="item.name === 'CRL' && item.value">Imposta Ridatazione</button> -->
+        <div 
+          class="crl-diff"
+          v-if="item.name === 'CRL' && item.value"
+        >
+          {{ crlDaysDiff }} gg
+        </div>
       </div>
       <div class="more-info">
         <div v-if="!biometriaMore" class="add-more" @click="biometriaMore = true">
@@ -1075,22 +1062,25 @@ export default {
               <div>
                 <input 
                 type="number" 
+                v-model="crlWeeks"
+                @change="setManuallyCrlReDate('weeks')"
                 > Settimane +
-                <!-- v-model="weeksFromCRL" -->
-                  <!-- v-model="weeksCRL" -->
               </div>
               <div>
                 <input 
                   type="number" 
+                  v-model="crlDays"
+                  @change="setManuallyCrlReDate('weeks')"
                   > Giorni
-                  <!-- v-model="daysFromCRL" -->
-                  <!-- v-model="daysCRL" -->
               </div>
             </div>
             <div class="delivery">
               <label>Termine eco:</label>
-              <!-- <input v-model="deliveryDateCRLInput" type="date"> -->
-              <!-- <input v-model="deliveryDateCRL" type="date"> -->
+              <input 
+                type="date"
+                v-model="deliveryDateFromCRL"
+                @change="setManuallyCrlReDate('date')"
+              >
             </div>
           </div>
         </div>
@@ -1259,8 +1249,8 @@ export default {
     :decimalWeeks="decimalWeeks"
     :enableCRLReDate="enableCRLReDate"
     :decimalWeeksFromCRL="decimalWeeksFromCRL"
-    :ecoType="ecoType.name"
-    :ecoMethod="ecoMethodz"
+    :ecoType="ecoType"
+    :ecoMethod="ecoMethod"
     :ecoTool="ecoTool != 'altro' ? ecoTool : otherTool"
     :ecoNumber="ecoNumber"
     :fetusNumber="fetusNumber"
@@ -1283,461 +1273,5 @@ export default {
 
 
 <style lang="scss" scoped>
-  .form{
-    display: flex;
-    flex-direction: column;
-    .double{
-      display: flex;
-      justify-content: space-between;
-      section{
-        width: 48%;
-        // flex-grow: 1;
-        // flex-basis: 300px;
-      }
-    }
-    section{
-      text-align: left;
-      width: 100%;
-      background-color: rgba(255,255,255,.04);
-      border-radius: 8px;
-      margin: 18px 0;
-      padding: 10px;
-      &.office{
-        display: flex;
-        align-items: center;
-        .title{
-          // display: flex;
-          // align-items: center;
-          vertical-align: middle;
-          margin-bottom: 0;
-          height: 100%;
-          margin-right: 10px;
-        }
-        select{
-          height: 25px;
-        }
-      }
-      .more-info{
-        margin-top: 8px;
-        .add-more{
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 30px;
-          height: 30px;
-          font-weight: 700;
-          border-radius: 8px;
-          border: 1px solid transparent;
-          background-color: #1a1a1a;
-          cursor: pointer;
-          transition: border-color 0.25s;
-          &:hover{
-            border-color: #646cff;
-          }
-        }
-        textarea{
-          width: 100%;
-          resize: none;
-        }
-      }
-      &.patient{
-        .section-content{
-          display: flex;
-          .left, .right{
-            flex-grow: 1;
-          }
-        }
-      }
-      .title{
-        font-weight: bold;
-        margin-bottom: 10px;
-        span{
-          font-weight: normal;
-        }
-      }
-      label{
-        display: inline-block;
-        width: 150px;
-      }
-      input{
-        width: 200px;
-      }
-      &.pregnancy{
-        input{
-          width: 150px;
-        }
-        .epoca-gestazionale-CRL{
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          user-select: none;
-          .checkbox{
-            display: flex;
-            align-items: center;
-            input{
-              width: auto;
-              margin-right: 10px;
-            }
-            label{
-              width: auto;
-            }
-          }
-          .action{
-            display: flex;
-            justify-content: flex-end;
-          }
-          button{
-            padding: 3px 8px;
-          }
-        }
-      }
-      .switch{
-        display: flex;
-        position: relative;
-        &>.selStart, &>.selEnd{
-          margin: 5px 15px 10px 5px;
-          padding-bottom: 5px;
-          color: #888;
-          cursor: pointer;
-          &.act{
-            color: rgba(255, 255, 255, 0.87);
-          }
-        }
-        .active{
-          position: absolute;
-          bottom: 10px;
-          height: 2px;
-          background-color: rgb(133, 133, 133);
-          transition: all .3s;
-          &.start{
-            width: 135px;
-            left: 10px;
-          }
-          &.end{
-            width: 128px;
-            left: 175px;
-          }
-        }
-
-        // justify-content: space-between;
-        // width: 280px;
-        // padding: 5px 10px;
-        // border-radius: 25px;
-        // border: 1px solid rgb(133, 133, 133);
-      }
-      &.eco{
-        select, input{
-          width: 250px;
-        }
-        .other-tool{
-          margin-left: 150px;
-        }
-      }
-      &.biometria-fetale{
-        .biometria-item{
-          display: flex;
-          align-items: center;
-        }
-        label{
-          width: 35%;
-        }
-        input, .calc{
-          width: 15%;
-          margin-right: 10px;
-        }
-        .unit{
-          width: 30px;
-          margin-right: 30px;
-        }
-        .percentile{
-          min-width: 50px;
-        }
-        .right{
-          display: flex;
-          align-items: center;
-          .right-ok{
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: green;
-          }
-          .right-not-ok{
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: red;
-          }
-        }
-        button{
-          margin-left: 10px;
-          padding: 3px 8px;
-        }
-      }
-      &.re-dating-panel{
-        margin: 0;
-        padding: 0;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        backdrop-filter: blur(4px);
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        .re-dating-background{
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          z-index: 1;
-          
-        }
-        .re-dating-container{
-          padding: 20px;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.87);
-          background-color: #242424;
-          z-index: 2;
-          span{
-            display: inline-block;
-            width: 200px;
-            font-weight: bold;
-          }
-          .old-date{
-            margin: 12px 0;
-            padding: 8px 0;
-            border-bottom: 1px solid #d9d9d9;
-          }
-          .new-date{
-            display: flex;
-            // align-items: center;
-            margin: 8px 0;
-          }
-          .panel-title{
-            text-align: center;
-          }
-          .re-dating-input{
-            display: flex;
-            flex-direction: column;
-          }
-          .number{
-            display: flex;
-            input{
-              width: 40px;
-              margin: 5px;
-            }
-          }
-          .delivery{
-            display: flex;
-            margin-top: 8px;
-            label{
-              width: auto;
-            }
-            input{
-              margin-left: 8px;
-              flex-grow: 1;
-              width: auto;
-            }
-          }
-          .action{
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 30px;
-          }
-        }
-      }
-      &.anatomy{
-        .anatomy-container{
-          display: flex;
-          flex-wrap: wrap;
-          user-select: none;
-        }
-        .anatomy-more{
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 20px;
-          height: 20px;
-          margin-right: 8px;
-          font-weight: 700;
-          border-radius: 8px;
-          border: 1px solid transparent;
-          background-color: #1a1a1a;
-          cursor: pointer;
-          transition: border-color 0.25s;
-          &:hover{
-            border-color: #646cff;
-          }
-        }
-        .left{
-          display: flex;
-          align-items: center;
-        }
-        .anatomy-element{
-          width: 33%;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          margin-bottom: 8px;
-          label{
-            width: 240px;
-            &.anatomy-checked{
-              font-weight: bold;
-            }
-          }
-          input[type=checkbox]{
-            width: auto;
-            margin-right: 40px;
-          }
-          input[type=text]{
-            margin-top: 5px;
-            width: 87%;
-          }
-        }
-      }
-      &.doppler{
-        .doppler-item{
-          display: flex;
-        }
-        label{
-          width: 35%;
-        }
-        input, .calc{
-          width: 15%;
-          margin-right: 10px;
-        }
-        .unit{
-          width: 30px;
-          margin-right: 30px;
-        }
-        .percentile{
-          width: 80px;
-        }
-        .check-doppler{
-          display: flex;
-          align-items: center;
-          label{
-            width: 100px;
-          }
-        }
-        .chart-percentile{
-          display: flex;
-          align-items: center;
-          width: 16%;
-          margin-right: 10px;        
-          & > div{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .base{
-            position: relative;
-            width: 100px;
-            height: 1.5px;
-            background: rgba(255, 255, 255, 0.87);;
-            .middle{
-              position: absolute;
-              left: 50px;
-              top: -4px;
-              width: 1.5px;
-              height: 9px;
-              background: rgba(255, 255, 255, 0.87);;
-            }
-            .point{
-              position: absolute;
-              top: -3px;
-              width: 7px;
-              height: 7px;
-              transform: rotate(-45deg);
-              background: rgba(255, 255, 255, 0.87);;
-            }
-          }
-          .line{
-            height: 12px;
-            width: 1.5px;
-            background: rgba(255, 255, 255, 0.87);;
-          }
-        }
-      }
-      &.conclusion{
-        textarea{
-          width: 100%;
-          resize: none;
-        }
-      }
-      &.more{
-        &>div{
-          margin: 5px 0;
-        }
-        .att-card{
-          display: flex;
-          height: 30px;
-          align-items: center;
-          input{
-            width: 25px;
-          }
-          label{
-            width: 100px;
-          }
-        }
-        .presentazione, .liq-amn, .placenta{
-          display: flex;
-          select{
-            width: 200px;
-            margin-left: 10px;
-          }
-          input{
-            width: 300px;
-            margin-left: 10px;
-          }
-        }
-        .name{
-          width: 20%;
-        }
-      }
-
-    }
-    button.print{
-      background: #55917F;
-
-    }
-  }
-  @media (prefers-color-scheme: light) {
-    .form{
-      section{
-        background-color: rgba(0, 0, 0, .04);
-        .more-info{
-          .add-more{
-            background-color: rgba(0, 0, 0, .1);
-
-          }
-        }
-        &.anatomy{
-          .anatomy-more{
-            background-color: rgba(0, 0, 0, .1);
-          }
-        }
-        .chart-percentile{
-          .line, .base .middle, .base .point, .base{
-            background-color: #1a1a1a !important;
-          }
-        }  
-      }
-
-
-      input, select{
-        background-color: rgba(0, 0, 0, .04);
-        border: 1px solid #1a1a1a
-      }
-      textarea{
-        background-color: rgba(0, 0, 0, .04);
-      }
-    }
-
-  }
-
+  @import "../assets/form";
 </style>

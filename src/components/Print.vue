@@ -38,10 +38,7 @@ export default {
       default: 0
     },
     pregnancy: Object,
-    ecoType: {
-      type: String,
-      defalut: ""
-    },
+    ecoType: Object,
     ecoTool:{
       type: String,
       default: ""
@@ -138,14 +135,9 @@ export default {
     this.calcYPosHc();
     this.formattingDateOfBirth = dayjs(this.dateOfBirth).format('DD/MM/YYYY');
     if(this.enableCRLReDate && this.pregnancy.reDateFromCrl){
-      console.log(this.pregnancy);
-      // sbagliato ma inserire data fine in base a ridatazione
-      // this.formattingPregnancyEnd = dayjs(this.pregnancy?.delivery).format('DD/MM/YYYY');
       this.formattingPregnancyEnd = this.pregnancy?.delivery.format('DD/MM/YYYY');
-      // this.formattingDeliveryCRL = dayjs(this.pregnancy?.deliveryCRL).format('DD/MM/YYYY');
-      this.formattingDeliveryCRL = this.pregnancy?.deliveryCrl.format('DD/MM/YYYY');
+      this.formattingDeliveryCRL = dayjs(this.pregnancy?.deliveryDateFromCRL).format('DD/MM/YYYY');
     } else{
-      // this.formattingPregnancyEnd = dayjs(this.pregnancy?.delivery).format('DD/MM/YYYY');
       this.formattingPregnancyEnd = this.pregnancy?.delivery?.format('DD/MM/YYYY');
     }
     this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
@@ -184,8 +176,14 @@ export default {
       let hc = this.biometriaFetale.filter(el=>{
         el.name === "Circonferenza cranica (CC)"
       })
-      // console.log(hc);
-      // let pos = 50 + ()
+    },
+    checkShowBiometria(item){
+      // mostro se il valore è stato inserito, cioè se è presente il valore percentile, e se è richiesto per il tipo di visita che sto facendo
+      let show = false;
+      if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right)){
+        show = true;
+      }
+      return show;
     },
     calcPercentileUterine(index){
       let uterine = this.doppler[index];
@@ -241,9 +239,6 @@ export default {
         <img class="img-dese" v-if="office === 'Desenzano'" src="/headerDese.jpg">
         <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="/headerPralboino.jpg">
       </div>
-      <!-- <h2>Ambulartorio di {{ office }}</h2> -->
-      <!-- <h3>Presidio ospedaliero di Chiara Beluzzi</h3>
-      <h4>Unità operativa per smaltimento feti vivi</h4> -->
       <div class="date">Data: {{ date }}</div>
     </header>
 
@@ -257,22 +252,44 @@ export default {
         Età materna: {{ age }} anni, Altezza {{ height }}cm, Peso normale {{ normalWeight }}kg, Peso attuale {{ actualWeight }}kg, (BMI {{ bmi }})
       </section>
       <section class="pregnancy-date">
-        <div v-show="pregnancy?.start" class="title-par">Data ultime mestruazioni: {{ formattingPregnancyStart }}</div>
-        <div class="title-par">Data prevista per il parto da U.M.: {{ formattingPregnancyEnd }}</div>
-        <div v-if="enableCRLReDate" class="title-par">Data prevista per il parto da eco: {{ formattingDeliveryCRL }}</div>
-        <div class="title-par">
+        <div v-show="pregnancy?.start" class="row active-pregnancy">Data ultime mestruazioni: {{ formattingPregnancyStart }}</div>
+        <div class="row date">
+          <div 
+            :class="enableCRLReDate ? '' : 'active-pregnancy'"
+          >
+            Data prevista per il parto da U.M.: {{ formattingPregnancyEnd }}
+          </div>
+          <div 
+            v-if="enableCRLReDate" 
+            :class="enableCRLReDate ? 'active-pregnancy' : ''"
+          >
+            Data prevista per il parto da eco: {{ formattingDeliveryCRL }}
+          </div>
+        </div>
+        <div 
+          class="row"
+          :class="enableCRLReDate ? '' : 'active-pregnancy'"
+        >
           Epoca gestazionale 
-          <span class="original-re-date" v-if="enableCRLReDate && pregnancy.reDateFromCrl">
-          (da U.M.)</span>
+          <span 
+            v-if="enableCRLReDate && pregnancy.reDateFromCrl"
+            class="original-re-date" 
+          >
+            &nbsp;da U.M.
+          </span>
           : {{ pregnancy?.epocaGestazionale }}
         </div>
-        <div v-if="enableCRLReDate && pregnancy.reDateFromCrl" class="title-par">
-          Epoca gestazionale(da eco): {{ pregnancy?.reDateFromCrl }}
+        <div 
+          v-if="enableCRLReDate && pregnancy.reDateFromCrl" 
+          class="row"
+          :class="enableCRLReDate ? 'active-pregnancy' : ''"
+        >
+          Epoca gestazionale da eco: {{ pregnancy?.reDateFromCrl }}
         </div>
         <p v-if="pregnancyMore!==''">{{ pregnancyMore }}</p>
       </section>
       <section class="eco">
-        <div class="title-par">{{ ecoType }}</div>
+        <div class="title-par">{{ ecoType.name }}</div>
         <div>
           <span v-if="ecoMethod" class="eco-method">Metodo ecografico: {{ ecoMethod }}, </span>
           <span v-if="ecoTool" class="tool">Strumento utilizzato: {{ ecoTool }}</span>
@@ -293,7 +310,11 @@ export default {
             v-for="(item, index) in biometriaFetale"
             :key="index"
           >
-          <div v-if="item.percentile" class="biometria-box">
+          <!-- v-if="item.percentile"  -->
+          <div 
+            v-show="checkShowBiometria(item)"
+            class="biometria-box"
+          >
             <div class="name">
               {{ item.text }}
             </div>
@@ -303,7 +324,7 @@ export default {
             <div class="unit">
               {{ item.unit }}
             </div>
-            <div class="chart-percentile">
+            <div v-if="item.percentile" class="chart-percentile">
               <div class="line"></div>
               <div class="base">
                 <div class="middle"></div>
@@ -314,7 +335,8 @@ export default {
               </div>
               <div class="line"></div>
             </div>
-            <div class="percentile">
+            <div v-else-if="item.right" class="right">OK</div>
+            <div v-if="item.percentile" class="percentile">
               {{ item.percentile }}°p
             </div>
           </div>
@@ -323,7 +345,7 @@ export default {
         <p v-if="biometriaMore!==''">{{ biometriaMore }}</p>
 
       </section>
-      <section v-if="showAnatomy" class="anatomy">
+      <section v-if="showAnatomia" class="anatomy">
         <div class="title-par">Anatomia</div>
         <div class="anatomy-container">
           <div 
@@ -445,224 +467,5 @@ export default {
 
 
 <style lang="scss" scoped>
-  .print{
-    width: 210mm;
-    min-height: calc(100vh - 40px);
-    margin: 0 auto;
-    padding: 15px 30px;
-    background-color: #fff;
-    color: #1a1a1a;
-    position: relative;
-    button{
-      position: absolute;
-      background: #55917F;
-      right: -150px;
-      width: 140px;
-    }
-    .confirm{
-      top: 30px;
-    }
-    .come-back-to-form{
-      top: 84px;
-    }
-    h1{
-      margin: 10px 0;
-    }
-    h2, h3, h4{
-      margin: 8px 0;
-    }
-    header{
-      .img{
-        display: flex;
-      }
-      .img-dese{
-        height: 250px;
-      }
-      .img-pralboino{
-        height: 90px;
-      }
-    }
-    .title-par{
-      display: flex;
-      align-items: center;
-      font-weight: bold;
-      height: 20px;
-      span:not(.original-re-date){
-        margin-left: 5px;
-        font-weight: normal;
-      }
-    }
-    .date{
-      text-align: right;
-    }
-    main{
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-      section{
-        margin: 18px 0;
-      }
-      .charts{
-        display: flex;
-        &>div{
-          flex-basis: 200px;
-          flex-grow: 1;
-          position: relative;
-          img{
-            margin-left: 5%;
-            width: 95%;
-          }
-        }
-        .title{
-          text-align: center;
-        }
-        .y-axis{
-          position: absolute;
-          transform: rotate(-90deg);
-          top: 40%;
-
-        }
-        .x-axis{
-          text-align: center;
-        }
-        .my-val{
-          position: absolute;
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background: red;
-          bottom: 50px;
-        }
-      }
-      .medical-history{
-        h4{
-          margin-bottom: 5px;
-        }
-      }
-      .anatomy{
-        .anatomy-container{
-          display: flex;
-          flex-wrap: wrap;
-          .anatomy-el{
-            margin-right: 5px;
-          }
-        }
-      }
-      .biometria-box, .doppler-box{
-        display: flex;
-        width: 100%;
-        .name{
-          width: 35%;
-        }
-        .value{
-          width: 70px;
-        }
-        .unit{
-          width: 8%;
-        }
-        .chart-percentile{
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 20%;
-          margin-right: 10px;
-          .base{
-            position: relative;
-            width: 100px;
-            height: 1.5px;
-            background: #1a1a1a;
-            .middle{
-              position: absolute;
-              left: 50px;
-              top: -4px;
-              width: 1.5px;
-              height: 9px;
-              background: #1a1a1a;
-            }
-            .point{
-              position: absolute;
-              top: -3px;
-              width: 7px;
-              height: 7px;
-              transform: rotate(-45deg);
-              background: #1a1a1a;
-            }
-          }
-          .line{
-            height: 12px;
-            width: 1.5px;
-            background: #1a1a1a;
-          }
-        }
-      }
-      .more-doppler{
-        margin-left: 100px;
-        font-weight: bold;
-      }
-      .container-signature{
-        display: flex;
-        justify-content: flex-end;
-        .empty-space{
-          // width: 200px;
-          width: 100%;
-          height: 1px;
-          background: black;
-          margin-bottom: 5px;
-          margin-top: 40px;
-        }
-      }
-    }
-    footer{
-      .footer-pralboino{
-        width: 90%;
-      }
-      // display: none;
-    }
-  }
-
-  @media (prefers-color-scheme: light) {
-    .print{
-      border: 1px solid #242424;
-    }
-  }
-  @page {
-    size: A4;
-    margin: 0;
-    margin-top: 30px;
-    margin-bottom: 30px;
-  }
-
-  @media print {
-  html, body {
-      width: 210mm;
-      height: 297mm;        
-  }
-  .print{
-      margin: 0;
-      padding-top: 0;
-      border: initial;
-      border-radius: initial;
-      width: initial;
-      min-height: initial;
-      box-shadow: initial;
-      background: initial;
-      page-break-after: always;
-  }
-  .hide-print{
-    display: none;
-  }
-  footer{
-    display: block;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-      .footer-pralboino{
-        width: 90%;
-      }
-    }
-}
-
+  @import "../assets/print";
 </style>

@@ -1,0 +1,236 @@
+.print{
+  width: 210mm;
+  min-height: calc(100vh - 40px);
+  margin: 0 auto;
+  padding: 15px 30px;
+  background-color: #fff;
+  color: #1a1a1a;
+  position: relative;
+  button{
+    position: absolute;
+    background: #55917F;
+    right: -150px;
+    width: 140px;
+  }
+  .confirm{
+    top: 30px;
+  }
+  .come-back-to-form{
+    top: 84px;
+  }
+  h1{
+    margin: 10px 0;
+  }
+  h2, h3, h4{
+    margin: 8px 0;
+  }
+  header{
+    .img{
+      display: flex;
+    }
+    .img-dese{
+      height: 250px;
+    }
+    .img-pralboino{
+      height: 90px;
+    }
+  }
+  .title-par{
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    height: 20px;
+    span:not(.original-re-date){
+      margin-left: 5px;
+      font-weight: normal;
+    }
+  }
+  .date{
+    text-align: right;
+  }
+  main{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    section{
+      margin: 18px 0;
+    }
+    .charts{
+      display: flex;
+      &>div{
+        flex-basis: 200px;
+        flex-grow: 1;
+        position: relative;
+        img{
+          margin-left: 5%;
+          width: 95%;
+        }
+      }
+      .title{
+        text-align: center;
+      }
+      .y-axis{
+        position: absolute;
+        transform: rotate(-90deg);
+        top: 40%;
+
+      }
+      .x-axis{
+        text-align: center;
+      }
+      .my-val{
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: red;
+        bottom: 50px;
+      }
+    }
+    .medical-history{
+      h4{
+        margin-bottom: 5px;
+      }
+    }
+    .pregnancy-date{
+      .row{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        height: 20px;
+        &.active-pregnancy{
+          font-weight: bold;
+        }
+        & > *{
+          margin-right: 10px;
+        }
+        .active-pregnancy{
+          font-weight: bold;
+        }
+      }
+    }
+    .anatomy{
+      .anatomy-container{
+        display: flex;
+        flex-wrap: wrap;
+        .anatomy-el{
+          margin-right: 5px;
+        }
+      }
+    }
+    .biometria-box, .doppler-box{
+      display: flex;
+      width: 100%;
+      .name{
+        width: 35%;
+      }
+      .value{
+        width: 70px;
+      }
+      .unit{
+        width: 8%;
+      }
+      .chart-percentile{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20%;
+        margin-right: 10px;
+        .base{
+          position: relative;
+          width: 100px;
+          height: 1.5px;
+          background: #1a1a1a;
+          .middle{
+            position: absolute;
+            left: 50px;
+            top: -4px;
+            width: 1.5px;
+            height: 9px;
+            background: #1a1a1a;
+          }
+          .point{
+            position: absolute;
+            top: -3px;
+            width: 7px;
+            height: 7px;
+            transform: rotate(-45deg);
+            background: #1a1a1a;
+          }
+        }
+        .line{
+          height: 12px;
+          width: 1.5px;
+          background: #1a1a1a;
+        }
+      }
+    }
+    .more-doppler{
+      margin-left: 100px;
+      font-weight: bold;
+    }
+    .container-signature{
+      display: flex;
+      justify-content: flex-end;
+      .empty-space{
+        // width: 200px;
+        width: 100%;
+        height: 1px;
+        background: black;
+        margin-bottom: 5px;
+        margin-top: 40px;
+      }
+    }
+  }
+  footer{
+    .footer-pralboino{
+      width: 90%;
+    }
+    // display: none;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .print{
+    border: 1px solid #242424;
+  }
+}
+@page {
+  size: A4;
+  margin: 0;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+@media print {
+html, body {
+    width: 210mm;
+    height: 297mm;        
+}
+.print{
+    margin: 0;
+    padding-top: 0;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+}
+.hide-print{
+  display: none;
+}
+footer{
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+    .footer-pralboino{
+      width: 90%;
+    }
+  }
+}
