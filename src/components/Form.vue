@@ -738,15 +738,30 @@ export default {
       });
     },
     Hadlock(){
+      // version 1 con ha, ac, fl, e bpd
+      // version 4 con ha, ac, e fl
+      let version = 1;
       let hc = this.biometriaFetale.find(el=> el.name == "CC").value * 0.1;
       let ac = this.biometriaFetale.find(el=> el.name == "CA").value * 0.1;
       let fl = this.biometriaFetale.find(el=> el.name == "LF").value * 0.1;
+      let bpd = this.biometriaFetale.find(el=> el.name == "BPD").value * 0.1;
       // let hc = this.biometriaFetale["CC"].value * 0.1;
       // let ac = this.biometriaFetale["CA"].value * 0.1;
       // let fl = this.biometriaFetale["LF"].value * 0.1;
-      let esponente = 1.326 + (0.0107 * hc) + (0.0438 * ac) + (0.158 * fl) - (0.00326 * ac * fl);
-      let efw = 10 ** (esponente);
+      let esponente;
+      let efw;
+      if(version === 4){
+        esponente = 1.326 + (0.0107 * hc) + (0.0438 * ac) + (0.158 * fl) - (0.00326 * ac * fl);
+      } else if(version === 1){
+        if(bpd){
+          esponente = 1.3596 + (0.0064 * hc) + (0.0424 * ac) + (0.174 * fl) + (0.00061 * bpd * ac) - (0.00386 * ac * fl)
+        } else{
+          return;
+        }
+      }
+      efw = 10 ** (esponente);
       this.biometriaFetale[this.biometriaFetale.length -1].value = efw.toFixed(2);
+
       // console.log(efw);
       // calcolo percentile stima peso
       let ga;
