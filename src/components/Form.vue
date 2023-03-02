@@ -688,7 +688,29 @@ export default {
       this.enableCRLReDate = true;
       this.redatingPanel = false;
       this.pregnancy.deliveryDateFromCRL = this.deliveryDateFromCRL;
-    }, 
+    },
+    reDateHcFl(){
+      // let hc = 250;
+      // let fl = 55;
+      let hc = this.biometriaFetale.find(el=> el.name == "CC").value;
+      let fl = this.biometriaFetale.find(el=> el.name == "LF").value;
+
+      if(hc && fl){
+        let gaDays = Math.exp(0.03243 * (Math.log(hc)) ** 2 + 0.001644 * fl * Math.log(hc) + 3.813);
+        console.log(gaDays);
+        this.decimalWeeksFromCRL = gaDays / 7;
+        this.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL);
+        this.crlWeeks = this.getWeeksFromDecimal(this.decimalWeeksFromCRL);
+        this.crlDays = this.getDaysFromDecimal(this.decimalWeeksFromCRL);
+        this.pregnancy.reDateFromCrl = `${this.crlWeeks} settimane + ${this.crlDays} giorni`;
+
+      } else{
+        console.log("non hai i dati per calcolarlo");
+      }
+
+
+      // GA = exp [0.03243 × (loge(250))2 + 0.001644 × 55 × loge(250) + 3.813] = exp [5.300929] = 200.5 days
+    },  
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
         // ho settato l'ultima mestruazione
@@ -1100,6 +1122,7 @@ export default {
           </div>
         </div>
         <div class="action">
+          <button @click="reDateHcFl">Calcola GA da HC e FL</button>
           <button @click="reDateCRL">Ridata</button>
         </div>
         
