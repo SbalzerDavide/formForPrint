@@ -126,16 +126,22 @@ export default {
       showDoppler: false,
       showAnatomia: false,
       uterineStd95: {},
-      ombellicaleStd95:{}
+      ombelicaleStd95:{}
     }
   },
   created(){
     this.date = dayjs().format('DD/MM/YYYY')
-    this.xPosition = 60.5 + ((this.decimalWeeks - 15) * 286.5 / 25)
+    let weeks;
+    if(this.enableCRLReDate){
+        weeks = this.decimalWeeksFromCRL;
+      } else{
+        weeks = this.decimalWeeks;
+      }
+    this.xPosition = 60.5 + ((weeks - 15) * 286.5 / 25)
     this.calcYPosHc();
     this.formattingDateOfBirth = dayjs(this.dateOfBirth).format('DD/MM/YYYY');
     if(this.enableCRLReDate && this.pregnancy.reDateFromCrl){
-      this.formattingPregnancyEnd = this.pregnancy?.delivery.format('DD/MM/YYYY');
+      this.formattingPregnancyEnd = this.pregnancy?.delivery?.format('DD/MM/YYYY');
       this.formattingDeliveryCRL = dayjs(this.pregnancy?.deliveryDateFromCRL).format('DD/MM/YYYY');
     } else{
       this.formattingPregnancyEnd = this.pregnancy?.delivery?.format('DD/MM/YYYY');
@@ -143,7 +149,7 @@ export default {
     this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
 
     this.uterineStd95 = window.uterineStd95;
-    this.ombellicaleStd95 = window.ombellicaleStd95;
+    this.ombelicaleStd95 = window.ombelicaleStd95;
     
     // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
     for(let i = 0; i < this.biometriaFetale.length; ++i){
@@ -187,18 +193,24 @@ export default {
     },
     calcPercentileUterine(index){
       let uterine = this.doppler[index];
-      let weeks = parseInt(this.decimalWeeks);
+      let weeks;
+      if(this.enableCRLReDate){
+        weeks = parseInt(this.decimalWeeksFromCRL);
+      } else{
+        weeks = parseInt(this.decimalWeeks);
+      }
       if(this.doppler[index].name == "PIUDX" || this.doppler[index].name == "PIUSX"){
         if(this.uterineStd95[weeks] < uterine.value){
           return true;
         } else{
-          if(uterine.percentile >= 96){
-            uterine.percentile = 94;
-          }
+          // serviva per simulare valore più verosimile su grafico ma si rompe se faccio avanti e inetro tra form e print
+          // if(uterine.percentile >= 96){
+          //   uterine.percentile = 94;
+          // }
           return false;
         }
       } else if(this.doppler[index].name == "PIO" ){
-        if(this.ombellicaleStd95[weeks] < uterine.value){
+        if(this.ombelicaleStd95[weeks] < uterine.value){
           return true;
         } else{
           if(uterine.percentile >= 96){
@@ -255,6 +267,7 @@ export default {
         <div v-show="pregnancy?.start" class="row active-pregnancy">Data ultime mestruazioni: {{ formattingPregnancyStart }}</div>
         <div class="row date">
           <div 
+          v-if="formattingPregnancyEnd"
             :class="enableCRLReDate ? '' : 'active-pregnancy'"
           >
             Data prevista per il parto da U.M.: {{ formattingPregnancyEnd }}
@@ -267,6 +280,7 @@ export default {
           </div>
         </div>
         <div 
+          v-if="pregnancy?.epocaGestazionale"
           class="row"
           :class="enableCRLReDate ? '' : 'active-pregnancy'"
         >
@@ -373,7 +387,7 @@ export default {
             v-for="(item, index) in doppler"
             :key="index"
           >
-            <div v-if="item.percentile" class="doppler-box">
+            <div v-if="item.percentile || item.MoM" class="doppler-box">
               <div class="name">
                 {{ item.text }}
               </div>
@@ -384,24 +398,29 @@ export default {
                 {{ item.unit }}
               </div>
               <div class="chart-percentile">
-                <div class="line"></div>
-                <div class="base">
-                  <div class="middle"></div>
-                  <div 
-                    class="point"
-                    :style="pointPercentile(item.percentile)"
-                  ></div>
+                <div v-if="item.name !=='MCA'" >
+                  <div class="line"></div>
+                  <div class="base">
+                    <div class="middle"></div>
+                    <div 
+                      class="point"
+                      :style="pointPercentile(item.percentile)"
+                    ></div>
+                  </div>
+                  <div class="line"></div>
                 </div>
-                <div class="line"></div>
               </div>
-              <div v-if="calcPercentileUterine(index)" class="percentile">
+              <div v-if="item.MoM" class="uterine-mom">
+                {{ item.MoM }} MoM
+              </div>
+              <div v-else-if="calcPercentileUterine(index)" class="percentile">
                 > 95°p
                 <!-- {{ item.percentile }}°p -->
               </div>
             </div>
             <div class="more-doppler">
-              <div v-if="(item.name == 'PIUDX' ||  item.name == 'PIUSX') && item.incisura" class="incisura">EDF positivo</div>
-              <div v-else-if="item.name == 'PIO' && item.incisura == true" class="incisura">Incisura presente</div>
+              <div v-if="(item.name == 'PIUDX' ||  item.name == 'PIUSX') && item.incisura" class="incisura">notch presente</div>
+              <div v-else-if="item.name == 'PIO' && item.incisura == true" class="incisura">EDF positivo</div>
               <div v-else-if="item.name == 'PIO' && item.incisura == false" class="incisura">Incisura assente</div>
             </div>
           </div>

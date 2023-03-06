@@ -133,9 +133,14 @@
       .chart-percentile{
         display: flex;
         align-items: center;
-        justify-content: center;
+        // justify-content: center;
         width: 20%;
         margin-right: 10px;
+        & > div{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
         .base{
           position: relative;
           width: 100px;

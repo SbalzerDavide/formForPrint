@@ -1,12 +1,12 @@
 <script>
-import { isVoidTag } from '@vue/shared';
 import Print from './Print.vue';
-
+import PopupMessage from "./PopupMessage.vue";
 
 export default {
   name: 'Form',
   components: {
-    Print
+    Print,
+    PopupMessage
   },
   data(){
     return{
@@ -71,6 +71,7 @@ export default {
           value: "",
           unit: "mm",
           percentile: null,
+          delta: 0,
           ecoType: ["1T"]
         },
         {
@@ -129,15 +130,6 @@ export default {
           percentile: null,
           ecoType: ["2T", "3T", "CA"]
         },
-        // {
-        //   text: "Circ. cranica/ cird. addominale",
-        //   name: "CC/CA",
-        //   calc: true,
-        //   value: "",
-        //   unit: "",
-        //   percentile: null,
-        //   ecoType: ["1T", "2T", "3T", "CA"]
-        // },
         {
           text: "Cervelletto",
           name: "TCD",
@@ -380,7 +372,7 @@ export default {
         },
       ],
       uterineStd95: {},
-      ombellicaleStd95:{},
+      ombelicaleStd95:{},
       heart: true,
       liquid: "normale",
       direction: "cefalica",
@@ -411,12 +403,16 @@ export default {
       conclusion: "",
       redatingPanel: false,
       enableCRLReDate: false,
+      // popupMessage
+      popupMessage: "",
+      popupType: "",
+      triggerPopup: false 
     }
   },
   created(){
     this.changeEcoType();
     this.uterineStd95 = window.uterineStd95;
-    this.ombellicaleStd95 = window.ombellicaleStd95;
+    this.ombelicaleStd95 = window.ombelicaleStd95;
   },
   watch: {
     deliveryDate(val) {
@@ -476,16 +472,6 @@ export default {
           circonferenzaAValue = el.value;
         }
       })
-      // if(circonferenzaC && circonferenzaA){
-      //   this.biometriaFetale.forEach((el,i)=>{
-      //     if(el.name === "CC/CA"){
-      //       el.value = (circonferenzaCValue / circonferenzaAValue).toFixed(2);
-      //       // calcolo percentile
-      //       this.calcPercentile(i);
-      //     }
-      //   })
-      // }
-
       if(femore && circonferenzaC && circonferenzaA){
         let weeks;
         if(this.enableCRLReDate){
@@ -513,6 +499,11 @@ export default {
       } else{
         ga = this.decimalWeeks;
       }
+      if(ga === 0){
+        this.triggerPopup = true;
+        this.popupMessage = "Inserisci una data relativa all'epoca gestazionale per poter visualizzare i percentili";
+        this.popupType = "warning";      
+      }
       let mean;
       let sd;
       if(this.biometriaFetale[index].name === "CC"){
@@ -520,7 +511,6 @@ export default {
         sd = 1.98735 + 0.0136772 * (ga ** 3) - 0.00726264 * (ga ** 3) * Math.log(ga) + 0.000976253 * (ga ** 3) * (Math.log(ga) ** 2);
       } else if(this.biometriaFetale[index].name === "BPD"){
         mean = 5.60878 + 0.158369 * (ga ** 2) - 0.00256379 * (ga ** 3);
-        // 5·60878 + 0·158369 × GA2 − 0·00256379 × GA3
         sd = Math.exp(0.101242 + 0.00150557 * (ga ** 3) - 0.000771535 * (ga ** 3) * Math.log(ga) + 0.0000999638 * (ga ** 3) * (Math.log(ga) ** 2));
       } else if(this.biometriaFetale[index].name === "CA"){
         mean = - 81.3243 + 11.6772 * ga - 0.000561865 * (ga ** 3);
@@ -534,13 +524,10 @@ export default {
         sd = 0.040292 * ga + 1.3464;
       } else if(this.biometriaFetale[index].name === "CRL"){
         // calcolo CRL
-        // disabilito applicazione diretta nuova data
-        // this.enableCRLReDate = false;
         ga = ga * 7;
         mean = -50.6562 + (0.815118 * ga) + (0.00535302 * (ga ** 2));
         sd = -2.21626 + (0.0984894 * ga);
         
-        // -2.21626 + (0.0984894 * ga);
         let crl = this.biometriaFetale[index].value;
         let meanGa = (40.9041 + (3.21585 * (crl ** 0.5)) + (0.348956 * crl))/7;
         this.decimalWeeksFromCRL = meanGa;
@@ -549,16 +536,30 @@ export default {
         this.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL);
         this.crlWeeks = this.getWeeksFromDecimal(this.decimalWeeksFromCRL);
         this.crlDays = this.getDaysFromDecimal(this.decimalWeeksFromCRL);
+        if(this.crlDays == 7){
+          this.crlDays = 0;
+          this.crlWeeks++;
+        }
         this.pregnancy.reDateFromCrl = `${this.crlWeeks} settimane + ${this.crlDays} giorni`;
 
         this.crlDaysDiff = Math.round((this.decimalWeeksFromCRL - this.decimalWeeks) * 7);
 
-        let sdGa = 2.39102 + (0.0193474 * crl);
+        // let sdGa = 2.39102 + (0.0193474 * crl);
       } else if(this.biometriaFetale[index].name === "NT"){
         // calcolo NT
+        let crl = this.biometriaFetale.find(el=> el.name == "CRL").value;
+        if(crl){
+          let nt = this.biometriaFetale[index].value;
+  
+          let estimatedMean = -0.8951 + (0.02940 * crl) - (0.0001812 * (crl ** 2));
+          mean = 10 ** estimatedMean;
+          let mom = nt / mean;
+          this.biometriaFetale[index].delta = (nt - mean).toFixed(2);
+          let log10nt = Math.log10(nt)
+          sd = log10nt;
+        }
       } else if(this.biometriaFetale[index].name === "FCF"){
         // calcolo frequenza cardiaca fetale
-        // limitare calcolo tra la 10 e la 14 settimana 
         mean = 208.8 - (3.178 * ga);
         sd = 6.93;
       } else if(this.biometriaFetale[index].name === "TCD"){
@@ -589,10 +590,14 @@ export default {
       } else{
         weeks = this.decimalWeeks;
       }
+      if(weeks === 0){
+        this.triggerPopup = true;
+        this.popupMessage = "Inserisci una data relativa all'epoca gestazionale per poter visualizzare i percentili";
+        this.popupType = "warning";      
+      }
       if(this.doppler[index].name === "PIO"){
         let pi = this.doppler[index].value;
         let zScore = -(0.0768617 ** -1) * (Math.exp((pi - (1.02944 + 77.7456 * (weeks ** -2) - 0.000004455 * (weeks ** 3))) * -0.0768617 * (-0.00645693 + 254.885 * Math.log(weeks) * (weeks ** - 2) - 715.949 * (weeks ** -2)) ** - 1) -1);
-        // console.log(zScore);
         const normDist = new NormalDistribution(0, 1);
         let percentile = normDist.cdf(zScore) * 100
         this.doppler[index].percentile = percentile.toFixed(0);
@@ -606,15 +611,9 @@ export default {
         let percentile = normDist.cdf(pi) * 100;
         this.doppler[index].percentile = percentile.toFixed(0);
       } else if(this.doppler[index].name === "MCA"){
-        // prova mca
-        // let esponente = 2.31 + 0.046 * weeks;
-        // e(2.31+0.046 GA) = mca
         let mean = Math.exp(2.31 + 0.046 * weeks);
-        // calcolare mean in questo modo oppure prendere i dati nella tabella?
-        console.log(mean);
         // dell'mca non si calcolano i percentili ma lo scostamento rispetto al valore atteso
         this.doppler[index].MoM = (this.doppler[index].value / mean).toFixed(2);
-
       }
     },
     pointPercentile(value){
@@ -627,18 +626,20 @@ export default {
       } else{
         weeks = parseInt(this.decimalWeeks);
       }
+
       let uterine = this.doppler[index];
       if(this.doppler[index].name == "PIUDX" || this.doppler[index].name == "PIUSX"){
         if(this.uterineStd95[weeks] < uterine.value){
           return true;
         } else{
-          if(uterine.percentile >= 96){
-            uterine.percentile = 94;
-          }
+          // serviva per simulare valore più verosimile su grafico ma si rompe se faccio avanti e inetro tra form e print
+          // if(uterine.percentile >= 96){
+          //   uterine.percentile = 94;
+          // }
           return false;
         }
       } else if(this.doppler[index].name == "PIO" ){
-        if(this.ombellicaleStd95[weeks] < uterine.value){
+        if(this.ombelicaleStd95[weeks] < uterine.value){
           return true;
         } else{
           if(uterine.percentile >= 96){
@@ -661,25 +662,23 @@ export default {
     },
     setManuallyCrlReDate(type){
       if(type == "weeks"){
+        if(this.crlDays >= 7){
+          this.crlDays = 6
+        }
         // sto modificando le settimane 
         // calcolo primo decimalWeeks
         this.decimalWeeksFromCRL = this.crlWeeks + (this.crlDays/7); 
         // dopo calcolo le variabili derivate, cioè quelle a loro volta modificabili
         this.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL);
-        
       } else if(type == "date"){
         // sto modificando la data
         // calcolo primo decimalWeeks
         let pregancyStart = dayjs(this.deliveryDateFromCRL).subtract(280, 'day');
-        console.log(pregancyStart);
         let diff = dayjs().diff(pregancyStart, 'week', true);
-        console.log(diff);
         this.decimalWeeksFromCRL = diff;
         // dopo calcolo le variabili derivate, cioè quelle a loro volta modificabili
-
         this.crlWeeks = this.getWeeksFromDecimal(this.decimalWeeksFromCRL);
         this.crlDays = this.getDaysFromDecimal(this.decimalWeeksFromCRL);
-
       }
       this.pregnancy.reDateFromCrl = `${this.crlWeeks} settimane + ${this.crlDays} giorni`;
 
@@ -688,16 +687,18 @@ export default {
       this.enableCRLReDate = true;
       this.redatingPanel = false;
       this.pregnancy.deliveryDateFromCRL = this.deliveryDateFromCRL;
+      // ricalcolo tutti i percentili
+      // non lo ricalcolo perchè mi sballa tutti i dati sulla nuova data
+      this.triggerPopup = true;
+      this.popupMessage = "Varifica i dati inseriti";
+      this.popupType = "warning";      
     },
     reDateHcFl(){
-      // let hc = 250;
-      // let fl = 55;
       let hc = this.biometriaFetale.find(el=> el.name == "CC").value;
       let fl = this.biometriaFetale.find(el=> el.name == "LF").value;
 
       if(hc && fl){
         let gaDays = Math.exp(0.03243 * (Math.log(hc)) ** 2 + 0.001644 * fl * Math.log(hc) + 3.813);
-        console.log(gaDays);
         this.decimalWeeksFromCRL = gaDays / 7;
         this.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL);
         this.crlWeeks = this.getWeeksFromDecimal(this.decimalWeeksFromCRL);
@@ -705,25 +706,21 @@ export default {
         this.pregnancy.reDateFromCrl = `${this.crlWeeks} settimane + ${this.crlDays} giorni`;
 
       } else{
-        console.log("non hai i dati per calcolarlo");
+        this.triggerPopup = true;
+        this.popupMessage = "Non hai abbastanza dati per eseguire il calcolo";
+        this.popupType = "warning";      
       }
-
-
-      // GA = exp [0.03243 × (loge(250))2 + 0.001644 × 55 × loge(250) + 3.813] = exp [5.300929] = 200.5 days
     },  
     calcPregnancyDate(){
       if(this.activeDateSelection === "start"){
         // ho settato l'ultima mestruazione
-        // this.deliveryDate = dayjs(this.startDate).add(280, 'day').format('DD/MM/YYYY');
         this.deliveryDate = dayjs(this.startDate).add(280, 'day');
         this.pregnancy.start = this.startDate;
         this.pregnancy.delivery = this.deliveryDate;
       } else if(this.activeDateSelection === "end"){
         // ho settato data presunta parto
-        // this.startDate = dayjs(this.deliveryDate).subtract(280, 'day').format('DD/MM/YYYY');
         this.startDate = dayjs(this.deliveryDate).subtract(280, 'day');
         this.pregnancy.delivery = this.deliveryDate;
-        // this.deliveryDate = dayjs(this.deliveryDate).format('DD/MM/YYYY');
       }
       let today = dayjs();
       let dayDiff = (today.diff(this.startDate, 'day')) % 7;
@@ -760,16 +757,13 @@ export default {
       });
     },
     Hadlock(){
-      // version 1 con ha, ac, fl, e bpd
-      // version 4 con ha, ac, e fl
+      // version 1 con hc, ac, fl, e bpd
+      // version 4 con hc, ac, e fl
       let version = 1;
       let hc = this.biometriaFetale.find(el=> el.name == "CC").value * 0.1;
       let ac = this.biometriaFetale.find(el=> el.name == "CA").value * 0.1;
       let fl = this.biometriaFetale.find(el=> el.name == "LF").value * 0.1;
       let bpd = this.biometriaFetale.find(el=> el.name == "BPD").value * 0.1;
-      // let hc = this.biometriaFetale["CC"].value * 0.1;
-      // let ac = this.biometriaFetale["CA"].value * 0.1;
-      // let fl = this.biometriaFetale["LF"].value * 0.1;
       let esponente;
       let efw;
       if(version === 4){
@@ -784,7 +778,6 @@ export default {
       efw = 10 ** (esponente);
       this.biometriaFetale[this.biometriaFetale.length -1].value = efw.toFixed(2);
 
-      // console.log(efw);
       // calcolo percentile stima peso
       let ga;
       if(this.enableCRLReDate){
@@ -805,14 +798,18 @@ export default {
     checkShowBiometria(item){
       let show = false;
       if(item.ecoType.includes(this.ecoType.value)){
+        let weeks;
+        if(this.enableCRLReDate){
+          weeks = this.decimalWeeksFromCRL;
+        } else{
+          weeks = this.decimalWeeks;
+        }
         if(item.name === "FCF"){
-          let weeks;
-          if(this.enableCRLReDate){
-            weeks = this.decimalWeeksFromCRL;
-          } else{
-            weeks = this.decimalWeeks;
-          }
           if(weeks >= 10 && weeks < 15){
+            show = true;
+          }
+        } else if(item.name === "NT"){
+          if(weeks >= 11 && weeks < 14){
             show = true;
           }
         } else{
@@ -825,21 +822,33 @@ export default {
       this.showPrint = true;
     },
     comeBack(e){
-      console.log(e);
       this.showPrint = false;
-    }
+    },
   }
 }
 </script>
 
 <template>
   <div v-if="!showPrint" class="form">
+    <PopupMessage 
+      :content="popupMessage" 
+      position="bottom"
+      :type="popupType" 
+      :show="triggerPopup" 
+      @showBack="triggerPopup=false"
+    />
+
     <section class="office">
-      <div class="title">Ambulatorio</div>
-      <select v-model="office">
-        <option value="Desenzano">Desenzano</option>
-        <option value="Pralboino">Pralboino</option>
-      </select>
+      <div class="d-flex">
+        <div class="title">Ambulatorio</div>
+        <select v-model="office">
+          <option value="Desenzano">Desenzano</option>
+          <option value="Pralboino">Pralboino</option>
+        </select>
+      </div>
+      <button class="print" @click="print">
+        Print
+      </button>
     </section>
     <section class="patient">
       <div class="title">Dati Paziente</div>
@@ -1060,10 +1069,16 @@ export default {
         </div>
         <!-- <button @click="redatingPanel = true" v-if="item.name === 'CRL' && item.value">Imposta Ridatazione</button> -->
         <div 
-          class="crl-diff"
           v-if="item.name === 'CRL' && item.value"
+          class="crl-diff"
         >
-          {{ crlDaysDiff }} gg
+          delta: {{ crlDaysDiff }} gg
+        </div>
+        <div 
+          v-if="item.name === 'NT' && item.delta"
+          class="nt-delta"
+        >
+          delta: {{ item.delta }}mm
         </div>
       </div>
       <div class="more-info">
@@ -1306,9 +1321,7 @@ export default {
     :lastMore=lastMoreText
     :conclusion="conclusion"
   />
-
 </template>
-
 
 <style lang="scss" scoped>
   @import "../assets/form";
