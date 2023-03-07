@@ -249,7 +249,7 @@ export default {
     <header>
       <div class="img">
         <img class="img-dese" v-if="office === 'Desenzano'" src="/headerDese.jpg">
-        <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="/headerPralboino.jpg">
+        <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="./headerPralboino.jpg">
       </div>
       <div class="date">Data: {{ date }}</div>
     </header>
