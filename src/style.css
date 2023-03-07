@@ -15,8 +15,8 @@
   -webkit-text-size-adjust: 100%;
 }
 
-:root{
-  /* :root .theme-dark{ */
+/* :root{ */
+:root .theme-dark{
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 }
@@ -111,10 +111,11 @@ button:focus-visible {
     background-color: #d9d9d9;
   }
 } */
-  :root{
-    /* :root .theme-light{ */
+  /* :root{ */
+  :root .theme-light{
     color: #213547;
-    background-color: rgba(0, 0, 0, .04);
+    /* background-color: rgba(0, 0, 0, .04); */
+    background-color: #fff;
   }
   .theme-light a:hover {
     color: #747bff;
