@@ -186,7 +186,7 @@ export default {
     checkShowBiometria(item){
       // mostro se il valore è stato inserito, cioè se è presente il valore percentile, e se è richiesto per il tipo di visita che sto facendo
       let show = false;
-      if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right)){
+      if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right != null)){
         show = true;
       }
       return show;
@@ -349,7 +349,8 @@ export default {
               </div>
               <div class="line"></div>
             </div>
-            <div v-else-if="item.right" class="right">OK</div>
+            <div v-else-if="item.right === true" class="right">OK</div>
+            <div v-else-if="item.right === false" class="right">NO</div>
             <div v-if="item.percentile" class="percentile">
               {{ item.percentile }}°p
             </div>

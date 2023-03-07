@@ -821,7 +821,7 @@ export default {
     print(){
       this.showPrint = true;
     },
-    comeBack(e){
+    comeBack(){
       this.showPrint = false;
     },
   }
@@ -1093,7 +1093,9 @@ export default {
         </textarea>
       </div>
     </section>
-    <section v-show="redatingPanel" class="re-dating-panel"
+    <section 
+      v-show="redatingPanel"
+      class="re-dating-panel"
     >
       <div 
         class="re-dating-background"

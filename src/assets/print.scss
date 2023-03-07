@@ -54,6 +54,7 @@
     text-align: left;
     section{
       margin: 18px 0;
+      page-break-inside: avoid;
     }
     .charts{
       display: flex;
@@ -208,11 +209,11 @@
 }
 
 @media print {
-html, body {
+  html, body {
     width: 210mm;
-    height: 297mm;        
-}
-.print{
+    height: 297mm;    
+  }
+  .print{
     margin: 0;
     padding-top: 0;
     border: initial;
@@ -220,20 +221,20 @@ html, body {
     width: initial;
     min-height: initial;
     box-shadow: initial;
-    background: initial;
+    // background-color: yellowgreen !important;
     page-break-after: always;
-}
-.hide-print{
-  display: none;
-}
-footer{
-  display: block;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  }
+  .hide-print{
+    display: none;
+  }
+  footer{
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
     .footer-pralboino{
       width: 90%;
     }
