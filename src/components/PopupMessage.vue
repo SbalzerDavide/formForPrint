@@ -121,7 +121,8 @@ export default {
       color: #721c24;
     }
   }
-  @media (prefers-color-scheme: light) {
+  // @media (prefers-color-scheme: light) {
+  .theme-light{
     .popup-message{
       background-color: white;
       border: 1px solid #444;

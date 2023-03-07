@@ -196,7 +196,8 @@
   }
 }
 
-@media (prefers-color-scheme: light) {
+// @media (prefers-color-scheme: light) {
+.theme-light{
   .print{
     border: 1px solid #242424;
   }

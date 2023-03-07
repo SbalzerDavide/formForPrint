@@ -424,14 +424,16 @@
     background: #55917F;
   }
 }
-@media (prefers-color-scheme: light) {
+// @media (prefers-color-scheme: light) {
+.theme-light{
   .form{
     section{
-      background-color: rgba(0, 0, 0, .04);
+      // background-color: rgba(0, 0, 0, .04);
+      background-color: rgba(230, 175, 46, .15);
       .more-info{
         .add-more{
-          background-color: rgba(0, 0, 0, .1);
-
+          // background-color: rgba(0, 0, 0, .1);s
+          background-color: rgba(229, 190, 237, .5);
         }
       }
       &.anatomy{
