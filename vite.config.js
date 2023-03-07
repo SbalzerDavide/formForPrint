@@ -11,5 +11,5 @@ export default defineConfig({
       template: 'index.html'
     },
   },
-  indexPath: 'index.html',
+  // indexPath: 'index.html',
 })

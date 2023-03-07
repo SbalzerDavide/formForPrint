@@ -1,0 +1,480 @@
+.form{
+  display: flex;
+  flex-direction: column;
+  .double{
+    display: flex;
+    justify-content: space-between;
+    section{
+      width: 48%;
+      // flex-grow: 1;
+      // flex-basis: 300px;
+    }
+  }
+  section{
+    text-align: left;
+    width: 100%;
+    background-color: rgba(255,255,255,.04);
+    border-radius: 8px;
+    margin: 18px 0;
+    padding: 10px;
+    &.office{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .title{
+        // display: flex;
+        // align-items: center;
+        vertical-align: middle;
+        margin-bottom: 0;
+        height: 100%;
+        margin-right: 10px;
+      }
+      select{
+        height: 25px;
+      }
+    }
+    .more-info{
+      margin-top: 8px;
+      .add-more{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        font-weight: 700;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background-color: #1a1a1a;
+        cursor: pointer;
+        transition: border-color 0.25s;
+        &:hover{
+          border-color: #646cff;
+        }
+      }
+      textarea{
+        width: 100%;
+        resize: none;
+      }
+    }
+    &.patient{
+      .section-content{
+        display: flex;
+        .left, .right{
+          flex-grow: 1;
+        }
+      }
+    }
+    .title{
+      font-weight: bold;
+      margin-bottom: 10px;
+      span{
+        font-weight: normal;
+      }
+    }
+    label{
+      display: inline-block;
+      width: 150px;
+    }
+    input{
+      width: 200px;
+    }
+    &.pregnancy{
+      input{
+        width: 150px;
+      }
+      .epoca-gestazionale-CRL{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        user-select: none;
+        .checkbox{
+          display: flex;
+          align-items: center;
+          input{
+            width: auto;
+            margin-right: 10px;
+          }
+          label{
+            width: auto;
+          }
+        }
+        .action{
+          display: flex;
+          justify-content: flex-end;
+        }
+        button{
+          padding: 3px 8px;
+        }
+      }
+    }
+    .switch{
+      display: flex;
+      position: relative;
+      &>.selStart, &>.selEnd{
+        margin: 5px 15px 10px 5px;
+        padding-bottom: 5px;
+        color: #888;
+        cursor: pointer;
+        &.act{
+          color: rgba(255, 255, 255, 0.87);
+        }
+      }
+      .active{
+        position: absolute;
+        bottom: 10px;
+        height: 2px;
+        background-color: rgb(133, 133, 133);
+        transition: all .3s;
+        &.start{
+          width: 135px;
+          left: 10px;
+        }
+        &.end{
+          width: 128px;
+          left: 175px;
+        }
+      }
+
+      // justify-content: space-between;
+      // width: 280px;
+      // padding: 5px 10px;
+      // border-radius: 25px;
+      // border: 1px solid rgb(133, 133, 133);
+    }
+    &.eco{
+      select, input{
+        width: 250px;
+      }
+      .other-tool{
+        margin-left: 150px;
+      }
+    }
+    &.biometria-fetale{
+      .biometria-item{
+        display: flex;
+        align-items: center;
+      }
+      label{
+        width: 35%;
+      }
+      input, .calc{
+        width: 15%;
+        margin-right: 10px;
+      }
+      .unit{
+        width: 30px;
+        margin-right: 30px;
+      }
+      .percentile{
+        min-width: 50px;
+      }
+      .right{
+        display: flex;
+        align-items: center;
+        .right-ok{
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: green;
+        }
+        .right-not-ok{
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: red;
+        }
+      }
+      button{
+        margin-left: 10px;
+        padding: 3px 8px;
+      }
+      .crl-diff, .nt-delta{
+        margin-left: 10px;
+      }
+    }
+    &.re-dating-panel{
+      margin: 0;
+      padding: 0;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      backdrop-filter: blur(4px);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .re-dating-background{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        
+      }
+      .re-dating-container{
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.87);
+        background-color: #242424;
+        z-index: 2;
+        span{
+          display: inline-block;
+          width: 200px;
+          font-weight: bold;
+        }
+        .old-date{
+          margin: 12px 0;
+          padding: 8px 0;
+          border-bottom: 1px solid #d9d9d9;
+        }
+        .new-date{
+          display: flex;
+          // align-items: center;
+          margin: 8px 0;
+        }
+        .panel-title{
+          text-align: center;
+        }
+        .re-dating-input{
+          display: flex;
+          flex-direction: column;
+        }
+        .number{
+          display: flex;
+          input{
+            width: 40px;
+            margin: 5px;
+          }
+        }
+        .delivery{
+          display: flex;
+          margin-top: 8px;
+          label{
+            width: auto;
+          }
+          input{
+            margin-left: 8px;
+            flex-grow: 1;
+            width: auto;
+          }
+        }
+        .action{
+          display: flex;
+          justify-content: space-between;
+          margin-top: 30px;
+        }
+      }
+    }
+    &.anatomy{
+      .anatomy-container{
+        display: flex;
+        flex-wrap: wrap;
+        user-select: none;
+      }
+      .anatomy-more{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+        font-weight: 700;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background-color: #1a1a1a;
+        cursor: pointer;
+        transition: border-color 0.25s;
+        &:hover{
+          border-color: #646cff;
+        }
+      }
+      .left{
+        display: flex;
+        align-items: center;
+      }
+      .anatomy-element{
+        width: 33%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+        label{
+          width: 240px;
+          &.anatomy-checked{
+            font-weight: bold;
+          }
+        }
+        input[type=checkbox]{
+          width: auto;
+          margin-right: 40px;
+        }
+        input[type=text]{
+          margin-top: 5px;
+          width: 87%;
+        }
+      }
+    }
+    &.doppler{
+      .doppler-item{
+        display: flex;
+      }
+      label{
+        width: 35%;
+      }
+      input, .calc{
+        width: 15%;
+        margin-right: 10px;
+      }
+      .unit{
+        width: 30px;
+        margin-right: 30px;
+      }
+      .percentile{
+        width: 80px;
+      }
+      .check-doppler{
+        display: flex;
+        align-items: center;
+        label{
+          width: 100px;
+        }
+      }
+      .chart-percentile{
+        display: flex;
+        align-items: center;
+        width: 16%;
+        margin-right: 10px;        
+        & > div{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .base{
+          position: relative;
+          width: 100px;
+          height: 1.5px;
+          background: rgba(255, 255, 255, 0.87);;
+          .middle{
+            position: absolute;
+            left: 50px;
+            top: -4px;
+            width: 1.5px;
+            height: 9px;
+            background: rgba(255, 255, 255, 0.87);;
+          }
+          .point{
+            position: absolute;
+            top: -3px;
+            width: 7px;
+            height: 7px;
+            transform: rotate(-45deg);
+            background: rgba(255, 255, 255, 0.87);;
+          }
+        }
+        .line{
+          height: 12px;
+          width: 1.5px;
+          background: rgba(255, 255, 255, 0.87);;
+        }
+      }
+    }
+    &.conclusion{
+      textarea{
+        width: 100%;
+        resize: none;
+      }
+    }
+    &.more{
+      &>div{
+        margin: 5px 0;
+      }
+      .att-card{
+        display: flex;
+        height: 30px;
+        align-items: center;
+        input{
+          width: 25px;
+        }
+        label{
+          width: 100px;
+        }
+      }
+      .presentazione, .liq-amn, .placenta{
+        display: flex;
+        select{
+          width: 200px;
+          margin-left: 10px;
+        }
+        input{
+          width: 300px;
+          margin-left: 10px;
+        }
+      }
+      .name{
+        width: 20%;
+      }
+    }
+
+  }
+  button.print{
+    background: #55917F;
+  }
+}
+@media (prefers-color-scheme: light) {
+  .form{
+    section{
+      background-color: rgba(0, 0, 0, .04);
+      .more-info{
+        .add-more{
+          background-color: rgba(0, 0, 0, .1);
+
+        }
+      }
+      &.anatomy{
+        .anatomy-more{
+          background-color: rgba(0, 0, 0, .1);
+        }
+      }
+      .chart-percentile{
+        .line, .base .middle, .base .point, .base{
+          background-color: #1a1a1a !important;
+        }
+      }
+      &.re-dating-panel{
+        .re-dating-container{
+          border: 1px solid rgba(0, 0, 0, 0.87);
+          background-color: #d9d9d9;
+          .old-date{
+            border-bottom: 1px solid #242424;
+          }
+          button{
+            background-color: rgba(0, 0, 0, .1);
+          }
+          .action{
+            
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+          }
+        }
+      }
+    
+    }
+    .act{
+      color: rgba(0, 0, 0, 0.87) !important;
+    }
+
+
+    input, select{
+      background-color: rgba(0, 0, 0, .04);
+      border: 1px solid #1a1a1a
+    }
+    textarea{
+      background-color: rgba(0, 0, 0, .04);
+    }
+  }
+}
