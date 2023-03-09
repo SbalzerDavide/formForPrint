@@ -1,12 +1,14 @@
 <script>
 import Print from './Print.vue';
 import PopupMessage from "./PopupMessage.vue";
+import ThemeSwitch from "./ThemeSwitch.vue";
 
 export default {
   name: 'Form',
   components: {
     Print,
-    PopupMessage
+    PopupMessage,
+    ThemeSwitch
   },
   data(){
     return{
@@ -435,17 +437,17 @@ export default {
     },
   },
   methods:{
-    changeTheme(){
-      if(document.body.classList.contains("theme-light")){
-        document.body.classList.remove("theme-light");
-        document.body.classList.add("theme-dark");
-        localStorage.setItem("theme", "dark")
-      } else if(document.body.classList.contains("theme-dark")){
-        document.body.classList.remove("theme-dark");
-        document.body.classList.add("theme-light");
-        localStorage.setItem("theme", "light")
-      }
-    },
+    // changeTheme(){
+    //   if(document.body.classList.contains("theme-light")){
+    //     document.body.classList.remove("theme-light");
+    //     document.body.classList.add("theme-dark");
+    //     localStorage.setItem("theme", "dark")
+    //   } else if(document.body.classList.contains("theme-dark")){
+    //     document.body.classList.remove("theme-dark");
+    //     document.body.classList.add("theme-light");
+    //     localStorage.setItem("theme", "light")
+    //   }
+    // },
     changeBirth(){
       let today = dayjs();
       let dateOfBirth = dayjs(this.dateOfBirth);
@@ -857,10 +859,13 @@ export default {
           <option value="Pralboino">Pralboino</option>
         </select>
       </div>
-      <div @click="changeTheme" class="theme">change theme</div>
-      <button class="print" @click="print">
-        Print
-      </button>
+      <div class="right-top">
+        <ThemeSwitch />
+        <!-- <div @click="changeTheme" class="theme">change theme</div> -->
+        <button class="print" @click="print">
+          Print
+        </button>
+      </div>
     </section>
     <section class="patient">
       <div class="title">Dati Paziente</div>

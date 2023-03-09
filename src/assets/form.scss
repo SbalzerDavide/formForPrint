@@ -32,6 +32,13 @@
       select{
         height: 25px;
       }
+      .right-top{
+        display: flex;
+        align-items: center;
+        button{
+          margin-left: 20px;
+        }
+      }
     }
     .more-info{
       margin-top: 8px;
@@ -449,7 +456,7 @@
       &.re-dating-panel{
         .re-dating-container{
           border: 1px solid rgba(0, 0, 0, 0.87);
-          background-color: #d9d9d9;
+          background-color: #DDD5DF;
           .old-date{
             border-bottom: 1px solid #242424;
           }

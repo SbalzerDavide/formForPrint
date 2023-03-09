@@ -16,6 +16,8 @@ export default {
       document.body.classList.add("theme-dark");
     } else if(theme === "light"){
       document.body.classList.add("theme-light");
+    } else{
+      document.body.classList.add("theme-dark");
     }
     this.$refs.openApp.focus();
   },
