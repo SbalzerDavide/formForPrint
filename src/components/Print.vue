@@ -248,8 +248,8 @@ export default {
     </button>
     <header>
       <div class="img">
-        <img class="img-dese" v-if="office === 'Desenzano'" src="/headerDese.jpg">
-        <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="./headerPralboino.jpg">
+        <img class="img-dese" v-if="office === 'Desenzano'" src="@/img/headerDese.jpg">
+        <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="@/img/headerPralboino.jpg">
       </div>
       <div class="date">Data: {{ date }}</div>
     </header>
@@ -480,7 +480,7 @@ export default {
 
     </main>
     <footer>
-      <img class="footer-pralboino" v-if="office === 'Pralboino'" src="/footerPralboino.jpg">
+      <img class="footer-pralboino" v-if="office === 'Pralboino'" src="@/img/footerPralboino.jpg">
     </footer>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <script>
-import Print from './Print.vue';
-import PopupMessage from "./PopupMessage.vue";
-import ThemeSwitch from "./ThemeSwitch.vue";
+import Print from '@/components/Print.vue';
+import PopupMessage from "@/components/PopupMessage.vue";
+import ThemeSwitch from "@/components/ThemeSwitch.vue";
 
 export default {
   name: 'Form',
@@ -1343,5 +1343,5 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-  @import "../assets/form";
+  @import "@/assets/form";
 </style>
