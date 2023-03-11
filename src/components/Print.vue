@@ -1,5 +1,5 @@
 <script>
-// import HeaderPralboino from '@public/img/headerPralboino.jpg'
+import HeaderPralboino from '@/img/headerPralboino.jpg'
 
 export default {
   name: 'Print',
@@ -128,10 +128,13 @@ export default {
       showDoppler: false,
       showAnatomia: false,
       uterineStd95: {},
-      ombelicaleStd95:{}
+      ombelicaleStd95:{},
+      srcHeaderPralboino: ""
     }
   },
   created(){
+    console.log(HeaderPralboino);
+    this.srcHeaderPralboino = HeaderPralboino;
     this.date = dayjs().format('DD/MM/YYYY')
     let weeks;
     if(this.enableCRLReDate){
@@ -253,14 +256,14 @@ export default {
         <img 
           v-if="office === 'Desenzano'" 
           class="img-dese" 
-          src="/img/headerDese.jpg"
-        >
+          >
+          <!-- src="./img/headerDese.jpg"s -->
         <img 
           v-else-if="office === 'Pralboino'" 
           class="img-pralboino" 
-          src="/img/headerPralboino.jpg"
+          :src="srcHeaderPralboino"
           >
-          <!-- :src="HeaderPralboino" -->
+          <!-- src="/img/headerPralboino.jpg" -->
       </div>
       <div class="date">Data: {{ date }}</div>
     </header>
