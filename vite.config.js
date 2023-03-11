@@ -11,7 +11,7 @@ export default defineConfig({
       '@public': path.resolve(__dirname, './public'),
     },
   },
-  publicPath: "",
+  publicPath: ".",
   pages: {
     index:{
       entry: 'src/main.js',
