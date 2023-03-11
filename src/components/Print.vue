@@ -1,8 +1,10 @@
 <script>
+// import HeaderPralboino from '@public/img/headerPralboino.jpg'
 
 export default {
   name: 'Print',
   components: {
+    // HeaderPralboino
   },
   props: {
     office: {
@@ -248,8 +250,17 @@ export default {
     </button>
     <header>
       <div class="img">
-        <img class="img-dese" v-if="office === 'Desenzano'" src="@/img/headerDese.jpg">
-        <img class="img-pralboino" v-else-if="office === 'Pralboino'" src="@/img/headerPralboino.jpg">
+        <img 
+          v-if="office === 'Desenzano'" 
+          class="img-dese" 
+          src="/img/headerDese.jpg"
+        >
+        <img 
+          v-else-if="office === 'Pralboino'" 
+          class="img-pralboino" 
+          src="/img/headerPralboino.jpg"
+          >
+          <!-- :src="HeaderPralboino" -->
       </div>
       <div class="date">Data: {{ date }}</div>
     </header>
@@ -480,7 +491,11 @@ export default {
 
     </main>
     <footer>
-      <img class="footer-pralboino" v-if="office === 'Pralboino'" src="@/img/footerPralboino.jpg">
+      <img 
+        v-if="office === 'Pralboino'" 
+        class="footer-pralboino" 
+        src="/img/footerPralboino.jpg"
+      >
     </footer>
   </div>
 </template>
