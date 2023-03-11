@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
 import './style.css'
-import './dayjs.min.js'
-import './percentile.js'
-import './uterineVal.js'
+// import './dayjs.min.js'
+// import './percentile.js'
+// import './uterineVal.js'
 import App from './App.vue'
 
 import NormalDistribution from 'normal-distribution';
