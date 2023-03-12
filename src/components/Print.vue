@@ -261,7 +261,7 @@ export default {
         <img 
           v-else-if="office === 'Pralboino'" 
           class="img-pralboino" 
-          :src="srcHeaderPralboino"
+          src="@/img/headerPralboino.jpg"
           >
           <!-- src="/img/headerPralboino.jpg" -->
       </div>
@@ -497,7 +497,7 @@ export default {
       <img 
         v-if="office === 'Pralboino'" 
         class="footer-pralboino" 
-        src="/img/footerPralboino.jpg"
+        src="@/img/footerPralboino.jpg"
       >
     </footer>
   </div>
