@@ -13,6 +13,13 @@ export default {
       theme: "light"
     }
   },
+  created(){
+    if(document.body.classList.contains("theme-light")){
+      this.theme = "light"
+    } else if(document.body.classList.contains("theme-dark")){
+      this.theme = "dark"
+    }
+  },
   methods:{
     changeTheme(theme){
       if(theme !== ""){
@@ -20,8 +27,11 @@ export default {
       } else{
         if(this.theme === "light"){
           this.theme = "dark";
+          localStorage.setItem("theme", "dark")
+
         } else if(this.theme === "dark"){
           this.theme = "light";
+          localStorage.setItem("theme", "light")
         }
       }
       document.body.classList.forEach((el, index, array)=>{

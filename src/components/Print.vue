@@ -1,11 +1,7 @@
 <script>
-import HeaderPralboino from '@/img/headerPralboino.jpg'
 
 export default {
   name: 'Print',
-  components: {
-    // HeaderPralboino
-  },
   props: {
     office: {
       type: String,
@@ -129,12 +125,11 @@ export default {
       showAnatomia: false,
       uterineStd95: {},
       ombelicaleStd95:{},
-      srcHeaderPralboino: ""
     }
   },
   created(){
-    console.log(HeaderPralboino);
-    this.srcHeaderPralboino = HeaderPralboino;
+    let app = document.getElementById("app");
+    app.classList.add("appOnPrint");
     this.date = dayjs().format('DD/MM/YYYY')
     let weeks;
     if(this.enableCRLReDate){
@@ -229,6 +224,8 @@ export default {
       window.print();
     },
     comeBack(){
+      let app = document.getElementById("app");
+      app.classList.remove("appOnPrint");
       this.$emit('comeBack', {
         save: true
       })
