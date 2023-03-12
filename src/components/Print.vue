@@ -256,8 +256,8 @@ export default {
         <img 
           v-if="office === 'Desenzano'" 
           class="img-dese" 
+          src="@/img/headerDese.jpg"
           >
-          <!-- src="./img/headerDese.jpg"s -->
         <img 
           v-else-if="office === 'Pralboino'" 
           class="img-pralboino" 
