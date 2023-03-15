@@ -4,8 +4,8 @@
   line-height: 24px;
   font-weight: 400;
 
-  /* color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color-scheme: light dark;
+  /* color: rgba(255, 255, 255, 0.87);
   background-color: #242424; */
 
   font-synthesis: none;
@@ -29,9 +29,9 @@
   color: rgba(255, 255, 255, 0.87);
   
 }
-:root .theme-dark ::-webkit-calendar-picker-indicator {
+/* :root .theme-dark ::-webkit-calendar-picker-indicator {
   filter: invert(1);
-}
+} */
 
 *{
   box-sizing: border-box;
@@ -142,3 +142,27 @@ button:focus-visible {
     color: #1a1a1a;
     background-color: #d9d9d9;
   }
+
+.system-dark input,
+.system-dark select,
+.system-dark textarea{
+  color: #1a1a1a;
+}
+
+.system-dark.theme-light ::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.system-dark.theme-light input[type="checkbox"],
+.system-dark.theme-light input[type="radio"]{
+  filter: invert();
+}
+
+.system-light.theme-dark ::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.system-light.theme-dark input[type="checkbox"],
+.system-light.theme-dark input[type="radio"]{
+  filter: invert();
+}
