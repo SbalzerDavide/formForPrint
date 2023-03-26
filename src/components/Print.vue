@@ -360,8 +360,8 @@ export default {
               </div>
               <div class="line"></div>
             </div>
-            <div v-else-if="item.right === true" class="right">OK</div>
-            <div v-else-if="item.right === false" class="right">NO</div>
+            <!-- <div v-else-if="item.right === true" class="right">OK</div>
+            <div v-else-if="item.right === false" class="right">NO</div> -->
             <div v-if="item.percentile" class="percentile">
               {{ item.percentile }}°p
             </div>
@@ -442,6 +442,7 @@ export default {
       </section>
       <section class="more">
         <span v-if="heart">Attività cardiaca presente, </span>
+        <span v-else-if="heart == false">Attività cardiaca assente, </span>
         <span>Presentazione: {{ direction }}, </span>
         <span>Liquido amniotico: {{ liquid }}, </span>
         <span v-if="placenta">Placenta: {{ placenta }}, </span>

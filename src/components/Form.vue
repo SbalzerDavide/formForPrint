@@ -136,7 +136,7 @@ export default {
           text: "Cervelletto",
           name: "TCD",
           value: "",
-          unit: "mm",
+          unit: "cm",
           percentile: null,
           ecoType: ["2T", "3T", "CA"]
         },
@@ -577,6 +577,25 @@ export default {
         sd = 6.93;
       } else if(this.biometriaFetale[index].name === "TCD"){
         // calcolo cervelletto
+        let method = 1;
+        // method 1 from cervelletto giusto.pdf
+        // method 2 from bpd1.pdf
+        if(method === 1){
+          mean = 2.2451 -(0.1880 * ga) + (0.0125 * (ga ** 2)) -(0.00011 * (ga ** 3));
+          sd = -0.2088 + (0.0383 * ga) -(0.0015 * (ga ** 2)) + (0.00003 * (ga ** 3));
+          let a = (0.1880 * ga);
+          console.log(a);
+          let b = (0.0125 * (ga ** 2));
+          console.log(b);
+          let c = (0.00011 * (ga ** 3));
+          console.log(c);
+          console.log(sd);
+
+        } else if(method === 2){
+          mean = 6.9519 + 0.03327 * (ga ** 2);
+          sd = -0.5177 + 0.0772 * ga;
+        }
+
       } else if(this.biometriaFetale[index].name === "CM"){
         if(this.biometriaFetale[index].value >= 2 && this.biometriaFetale[index].value <= 10){
           this.biometriaFetale[index].right = true;
