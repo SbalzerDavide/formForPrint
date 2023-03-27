@@ -118,6 +118,11 @@
           margin-right: 5px;
         }
       }
+      .anatomy-footer{
+        font-size: 12px;
+        font-style: italic;
+        line-height: 16px;
+      }
     }
     .biometria-box, .doppler-box{
       display: flex;
@@ -175,6 +180,11 @@
       margin-left: 100px;
       font-weight: bold;
     }
+    .informativa{
+      font-size: 12px;
+      font-style: italic;
+      line-height: 16px;
+    }
     .container-signature{
       display: flex;
       justify-content: flex-end;
@@ -213,6 +223,9 @@
   html, body {
     width: 210mm;
     height: 297mm;    
+  }
+  #app{
+    background-color: #fff !important;
   }
   .print{
     margin: 0;

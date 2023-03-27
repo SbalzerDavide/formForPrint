@@ -16,10 +16,19 @@
 }
 
 /* :root{ */
+@media not print{
+  :root .theme-dark{
+    background-color: #242424;
+  }  
+  .theme-light #app.appOnPrint{
+    background-color: rgba(221, 213, 223, .3);
+  }
+
+}
 :root .theme-dark{
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 }
+
 :root .theme-dark input,
 :root .theme-dark select,
 :root .theme-dark textarea{
@@ -131,7 +140,7 @@ button:focus-visible {
     background-color: #fff;
   }
   .theme-light #app.appOnPrint{
-    background-color: rgba(221, 213, 223, .3);
+    /* background-color: rgba(221, 213, 223, .3); */
     width: 100vw;
     max-width: none;
   }

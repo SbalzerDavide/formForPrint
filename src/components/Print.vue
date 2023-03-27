@@ -386,6 +386,9 @@ export default {
             </div>
 
           </div>
+          <div class="anatomy-footer">
+            Per “visualizzato” si intende che l'organo o apparato indagato presenta caratteristiche ecografiche regolari per l'età gestazionale 
+          </div>
 
         </div>
       </section>
@@ -481,6 +484,10 @@ export default {
         </div>
 
       </section> -->
+      <section class="informativa">
+        La Persona assistita ha avuto modo di ricevere una adeguata informazione su scopi e limiti dell’esame ecografico attraverso il colloquio con il proprio Ginecologo /Ostetrica / Medico ecografista (al quale ha avuto la possibilità di rivolgere eventuali quesiti), e attraverso la lettura di un foglio informativo allegato al presente referto. Su esplicita richiesta del Medico Ecografista la persona assistita riferisce di aver compreso tutte informazioni ricevute.
+        Si informa la persona assistita /Coppia degli esiti dell'esame ecografico effettuato e dei suoi limiti nella individuazione delle anomalie fetali.
+      </section>
       <section class="container-signature">
         <div class="signature">
           <div class="empty-space"></div>
