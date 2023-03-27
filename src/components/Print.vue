@@ -186,8 +186,24 @@ export default {
     checkShowBiometria(item){
       // mostro se il valore è stato inserito, cioè se è presente il valore percentile, e se è richiesto per il tipo di visita che sto facendo
       let show = false;
+      let weeks;
+      if(this.enableCRLReDate){
+        weeks = parseInt(this.decimalWeeksFromCRL);
+      } else{
+        weeks = parseInt(this.decimalWeeks);
+      }
       if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right != null)){
-        show = true;
+        if(item.name === "FCF"){
+          if(weeks >= 10 && weeks < 15){
+            show = true;
+          }
+        } else if(item.name === "NT"){
+          if(weeks >= 11 && weeks < 14){
+            show = true;
+          }
+        } else{
+          show = true;
+        }
       }
       return show;
     },
@@ -360,8 +376,6 @@ export default {
               </div>
               <div class="line"></div>
             </div>
-            <!-- <div v-else-if="item.right === true" class="right">OK</div>
-            <div v-else-if="item.right === false" class="right">NO</div> -->
             <div v-if="item.percentile" class="percentile">
               {{ item.percentile }}°p
             </div>
@@ -374,15 +388,29 @@ export default {
       <section v-if="showAnatomia" class="anatomy">
         <div class="title-par">Anatomia</div>
         <div class="anatomy-container">
-          <div 
-            class="anatomy-box"
-            v-for="(element, index) in anatomy"
-            :key="index"
-          >
-            <div class="anatomy-el"  v-if="element.checked || element.comment">
-              {{ element.name }}
-              <span v-if="element.comment">{{ element.comment }},</span>
-              <span v-else-if="element.checked">normale,</span>
+          <div class="anatomy-shown">
+            Visualizzati:
+            <div 
+              class="anatomy-box"
+              v-for="(element, index) in anatomy"
+              :key="index"
+            >
+              <div v-if="element.checked && element.comment === ''" class="anatomy-el" >
+                &nbsp;{{ element.name }},
+              </div>  
+            </div>
+          </div>
+          <div class="anatomy-comment">
+            <div 
+              class="anatomy-box"
+              v-for="(element, index) in anatomy"
+              :key="index"
+            >
+              <div v-if="element.comment" class="anatomy-el" >
+                {{ element.name }}
+                <span>{{ element.comment }},&nbsp;</span>
+              </div>
+
             </div>
 
           </div>
@@ -435,6 +463,8 @@ export default {
             </div>
             <div class="more-doppler">
               <div v-if="(item.name == 'PIUDX' ||  item.name == 'PIUSX') && item.incisura" class="incisura">notch presente</div>
+              <div v-else-if="(item.name == 'PIUDX' ||  item.name == 'PIUSX') && !item.incisura" class="incisura">notch assente</div>
+
               <div v-else-if="item.name == 'PIO' && item.incisura == true" class="incisura">EDF positivo</div>
               <div v-else-if="item.name == 'PIO' && item.incisura == false" class="incisura">Incisura assente</div>
             </div>

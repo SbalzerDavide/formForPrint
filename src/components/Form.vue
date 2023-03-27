@@ -573,7 +573,7 @@ export default {
         }
       } else if(this.biometriaFetale[index].name === "FCF"){
         // calcolo frequenza cardiaca fetale
-        mean = 208.8 - (3.178 * ga);
+        mean = 208.8 - (3.78 * ga);
         sd = 6.93;
       } else if(this.biometriaFetale[index].name === "TCD"){
         // calcolo cervelletto

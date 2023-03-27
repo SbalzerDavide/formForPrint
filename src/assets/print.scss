@@ -111,14 +111,19 @@
       }
     }
     .anatomy{
-      .anatomy-container{
+      .anatomy-shown, .anatomy-comment{
         display: flex;
         flex-wrap: wrap;
+      }
+      .anatomy-container{
+        // display: flex;
+        // flex-wrap: wrap;
         .anatomy-el{
           margin-right: 5px;
         }
       }
       .anatomy-footer{
+        margin-top: 8px;
         font-size: 12px;
         font-style: italic;
         line-height: 16px;
