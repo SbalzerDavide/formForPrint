@@ -523,8 +523,15 @@ export default {
         mean = -28.2849 + 1.69267 * (ga ** 2) - 0.397485 * (ga ** 2) * Math.log(ga);
         sd = 1.98735 + 0.0136772 * (ga ** 3) - 0.00726264 * (ga ** 3) * Math.log(ga) + 0.000976253 * (ga ** 3) * (Math.log(ga) ** 2);
       } else if(this.biometriaFetale[index].name === "BPD"){
-        mean = 5.60878 + 0.158369 * (ga ** 2) - 0.00256379 * (ga ** 3);
-        sd = Math.exp(0.101242 + 0.00150557 * (ga ** 3) - 0.000771535 * (ga ** 3) * Math.log(ga) + 0.0000999638 * (ga ** 3) * (Math.log(ga) ** 2));
+        if(ga < 14){
+          // uso formula in BPD1
+          mean = -28.2805 + (4.0352 * ga) - (0.0005024 * (ga ** 3));
+          sd = 0.2388 + (0.0940 * ga);
+        } else if(ga >= 14){
+          // uso formula intergrowth
+          mean = 5.60878 + 0.158369 * (ga ** 2) - 0.00256379 * (ga ** 3);
+          sd = Math.exp(0.101242 + 0.00150557 * (ga ** 3) - 0.000771535 * (ga ** 3) * Math.log(ga) + 0.0000999638 * (ga ** 3) * (Math.log(ga) ** 2));
+        }
       } else if(this.biometriaFetale[index].name === "CA"){
         mean = - 81.3243 + 11.6772 * ga - 0.000561865 * (ga ** 3);
         sd = - 4.36302 + 0.121445 * (ga ** 2) - 0.0130256 * (ga ** 3) + 0.00282143 * (ga ** 3) * Math.log(ga);
