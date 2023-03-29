@@ -176,7 +176,7 @@ export default {
   },
   methods:{
     pointPercentile(value){
-      return `left: ${value}px`;
+      return `left: ${value - 4}px`;
     },
     calcYPosHc(){
       let hc = this.biometriaFetale.filter(el=>{
@@ -192,7 +192,7 @@ export default {
       } else{
         weeks = parseInt(this.decimalWeeks);
       }
-      if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right != null)){
+      if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right != null || item.over95)){
         if(item.name === "FCF"){
           if(weeks >= 10 && weeks < 15){
             show = true;
@@ -379,6 +379,7 @@ export default {
             <div v-if="item.percentile" class="percentile">
               {{ item.percentile }}°p
             </div>
+            <div v-else-if="item.over95">> 95° p</div>
           </div>
           </div>
         <!-- </div> -->

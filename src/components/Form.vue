@@ -73,6 +73,7 @@ export default {
           value: "",
           unit: "mm",
           percentile: null,
+          over95: false,
           delta: 0,
           ecoType: ["1T"]
         },
@@ -365,7 +366,7 @@ export default {
           incisura: null
         },
         {
-          text: "Celebrale media (MCA)",
+          text: "Cerebrale media (MCA)",
           name: "MCA",
           value: "",
           unit: "",
@@ -568,15 +569,20 @@ export default {
       } else if(this.biometriaFetale[index].name === "NT"){
         // calcolo NT
         let crl = this.biometriaFetale.find(el=> el.name == "CRL").value;
-        if(crl){
+        if(crl && crl >= 45 && crl < 85){
+          // il calcolo dell'NT, richiedendo anche il valore di crl, 
+          // è valido solo entor questi valori in mm di crl
           let nt = this.biometriaFetale[index].value;
+          if(nt >= window.rangeValues.nt[crl]){
+            console.log("sono oltre il 95 percentile");
+            this.biometriaFetale[index].over95 = true;
+          } else{
+            this.biometriaFetale[index].over95 = false;
+          }
   
           let estimatedMean = -0.8951 + (0.02940 * crl) - (0.0001812 * (crl ** 2));
           mean = 10 ** estimatedMean;
-          let mom = nt / mean;
           this.biometriaFetale[index].delta = (nt - mean).toFixed(2);
-          let log10nt = Math.log10(nt)
-          sd = log10nt;
         }
       } else if(this.biometriaFetale[index].name === "FCF"){
         // calcolo frequenza cardiaca fetale
@@ -1109,6 +1115,7 @@ export default {
             <div v-if="item.right" class="right-ok"></div>
             <div v-else class="right-not-ok"></div>
           </div>
+          <div v-else-if="item.name ==='NT' && item.over95">> 95° p</div>
         </div>
         <!-- <button @click="redatingPanel = true" v-if="item.name === 'CRL' && item.value">Imposta Ridatazione</button> -->
         <div 
