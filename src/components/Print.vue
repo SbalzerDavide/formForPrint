@@ -3,6 +3,9 @@
 export default {
   name: 'Print',
   props: {
+    user: {
+      type: Object
+    },
     office: {
       type: String,
       default: ""
@@ -523,7 +526,11 @@ export default {
         <div class="signature">
           <div class="empty-space"></div>
           <div class="doctor">
-            Dott.ssa Giorgia Mazzoni
+            <span v-if="user.gender=='F'">Dott.ssa&nbsp;</span>
+            <span v-else-if="user.gender=='M'">Dott.&nbsp;</span>
+            <span>
+              {{ user.name }} {{ user.surname }}
+            </span>
           </div>
         </div>
       </section>

@@ -12,6 +12,38 @@ export default {
   },
   data(){
     return{
+      // I dati su user sono temporanei perché poi arriveranno da server
+      users: [
+      {
+          name: "Giorgia",
+          surname: "Mazzoni",
+          gender: "F",
+          signature: "", 
+          email: "",
+          id: "", 
+          operatorId: "221235"
+        },
+        {
+          name: "Claudia",
+          surname: "Maggi",
+          gender: "F",
+          signature: "", 
+          email: "",
+          id: "", 
+          operatorId: "221235"
+        }
+      ],
+      user: {},
+      activeUser: 0,
+      // user: {
+      //   name: "Giorgia",
+      //   surname: "Mazzoni",
+      //   gender: "F",
+      //   signature: "", 
+      //   email: "",
+      //   id: "", 
+      //   operatorId: "221235" 
+      // },
       showPrint: false,
       name: "",
       surname: "",
@@ -416,6 +448,7 @@ export default {
     this.changeEcoType();
     this.uterineStd95 = window.uterineStd95;
     this.ombelicaleStd95 = window.ombelicaleStd95;
+    this.user = this.users[this.activeUser];
   },
   watch: {
     deliveryDate(val) {
@@ -449,6 +482,9 @@ export default {
     //     localStorage.setItem("theme", "light")
     //   }
     // },
+    changeOperator(){
+      this.user = this.users[this.activeUser]
+    },  
     changeBirth(){
       let today = dayjs();
       let dateOfBirth = dayjs(this.dateOfBirth);
@@ -460,7 +496,7 @@ export default {
     },
     changeEcoType(){
       if(this.ecoType.value === "1T"){
-        this.conclusion = "Gravidanza intrauterina in regolare evoluzione, CRL corrispondente all’amenorrea. Ovaie regolari allegati al referto n°Operatore accreditato FMF ID: 221235"
+        this.conclusion = `Gravidanza intrauterina in regolare evoluzione, CRL corrispondente all’amenorrea. Ovaie regolari allegati al referto n°Operatore accreditato FMF ID: ${this.user.operatorId}`
       } else if(this.ecoType.value === "2T"){
         this.conclusion = "Biometria fetale nella norma per epoca gestazionale. Morfologia indagabile secondo linee guida SIEOG del II trimestre nella norma. Velocimetria Doppler delle arterie uterine nella norma. Fotogrammi allegati al referto n°"
       } else if(this.ecoType.value === "3T"){
@@ -885,11 +921,20 @@ export default {
 
     <section class="office">
       <div class="d-flex">
-        <div class="title">Ambulatorio</div>
-        <select v-model="office">
-          <option value="Desenzano">Desenzano</option>
-          <option value="Pralboino">Pralboino</option>
-        </select>
+        <div class="d-flex operator">
+          <select @change="changeOperator" v-model="activeUser">
+            <option value="0">Giorga Mazzoni</option>
+            <option value="1">Claudia Maggi</option>
+          </select>
+        </div>
+  
+        <div class="d-flex">
+          <div class="title">Ambulatorio</div>
+          <select v-model="office">
+            <option value="Desenzano">Desenzano</option>
+            <option value="Pralboino">Pralboino</option>
+          </select>
+        </div>
       </div>
       <div class="right-top">
         <ThemeSwitch />
@@ -1341,6 +1386,7 @@ export default {
     </button>
   </div>
   <Print v-else
+    :user="user"
     @comeBack="comeBack"
     :office="office"
     :patient="name + ' ' + surname"
