@@ -151,8 +151,8 @@ export default {
     }
     this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
 
-    this.uterineStd95 = window.uterineStd95;
-    this.ombelicaleStd95 = window.ombelicaleStd95;
+    this.uterineStd95 = window.rangeValues?.uterineStd95;
+    this.ombelicaleStd95 = window.rangeValues?.ombelicaleStd95;
     
     // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
     for(let i = 0; i < this.biometriaFetale.length; ++i){
@@ -434,7 +434,7 @@ export default {
             v-for="(item, index) in doppler"
             :key="index"
           >
-            <div v-if="item.percentile || item.MoM" class="doppler-box">
+            <div v-if="item.percentile || item.MoM || item.mean" class="doppler-box">
               <div class="name">
                 {{ item.text }}
               </div>
@@ -445,7 +445,7 @@ export default {
                 {{ item.unit }}
               </div>
               <div class="chart-percentile">
-                <div v-if="item.name !=='MCA'" >
+                <div v-if="item.name !=='MCA' && item.name !=='MCAPI'" >
                   <div class="line"></div>
                   <div class="base">
                     <div class="middle"></div>
@@ -465,7 +465,7 @@ export default {
                 <!-- {{ item.percentile }}°p -->
               </div>
             </div>
-            <div class="more-doppler">
+            <div v-if="item.value" class="more-doppler">
               <div v-if="(item.name == 'PIUDX' ||  item.name == 'PIUSX') && item.incisura" class="incisura">notch presente</div>
               <div v-else-if="(item.name == 'PIUDX' ||  item.name == 'PIUSX') && !item.incisura" class="incisura">notch assente</div>
 
@@ -474,7 +474,7 @@ export default {
             </div>
           </div>
         <!-- </div> -->
-        <p v-if="dopplerMore!==''">{{ dopplerMore }}</p>
+        <!-- <p v-if="dopplerMore!==''">{{ dopplerMore }}</p> -->
 
       </section>
       <section class="more">

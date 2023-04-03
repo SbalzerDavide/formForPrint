@@ -405,6 +405,15 @@ export default {
           MoM: null,
           ecoType: ["1T", "2T", "3T", "CA"]
         },
+        {
+          text: "Cerebrale media (MCA) - PI",
+          name: "MCAPI",
+          value: "",
+          unit: "",
+          percentile: null,
+          mean: null,
+          ecoType: ["2T", "3T", "CA"]
+        },
       ],
       uterineStd95: {},
       ombelicaleStd95:{},
@@ -445,10 +454,10 @@ export default {
     }
   },
   created(){
-    this.changeEcoType();
-    this.uterineStd95 = window.uterineStd95;
-    this.ombelicaleStd95 = window.ombelicaleStd95;
     this.user = this.users[this.activeUser];
+    this.changeEcoType();
+    this.uterineStd95 = window.rangeValues?.uterineStd95;
+    this.ombelicaleStd95 = window.rangeValues?.ombelicaleStd95;
   },
   watch: {
     deliveryDate(val) {
@@ -626,22 +635,24 @@ export default {
         sd = 6.93;
       } else if(this.biometriaFetale[index].name === "TCD"){
         // calcolo cervelletto
-        let method = 1;
+        let method = 2;
         // method 1 from cervelletto giusto.pdf
         // method 2 from bpd1.pdf
         if(method === 1){
           mean = 2.2451 -(0.1880 * ga) + (0.0125 * (ga ** 2)) -(0.00011 * (ga ** 3));
           sd = -0.2088 + (0.0383 * ga) -(0.0015 * (ga ** 2)) + (0.00003 * (ga ** 3));
-          let a = (0.1880 * ga);
-          console.log(a);
-          let b = (0.0125 * (ga ** 2));
-          console.log(b);
-          let c = (0.00011 * (ga ** 3));
-          console.log(c);
+          console.log(mean);
+          // let a = (0.1880 * ga);
+          // console.log(a);
+          // let b = (0.0125 * (ga ** 2));
+          // console.log(b);
+          // let c = (0.00011 * (ga ** 3));
+          // console.log(c);
           console.log(sd);
 
         } else if(method === 2){
           mean = 6.9519 + 0.03327 * (ga ** 2);
+          console.log(mean);
           sd = -0.5177 + 0.0772 * ga;
         }
 
@@ -695,6 +706,13 @@ export default {
         let mean = Math.exp(2.31 + 0.046 * weeks);
         // dell'mca non si calcolano i percentili ma lo scostamento rispetto al valore atteso
         this.doppler[index].MoM = (this.doppler[index].value / mean).toFixed(2);
+      } else if(this.doppler[index].name === "MCAPI"){
+        // percentile
+        let z;
+        let mcaPi = -7.9753 + (0.34522 * z) + (0.029215 * (z ** 2)) + (0.90777 * weeks) - (0.00169 * weeks * z) - (0.02574 * (weeks ** 2)) + (0.00022 * (weeks ** 3));
+        z = 0;
+        let mean = -7.9753 + (0.34522 * z) + (0.029215 * (z ** 2)) + (0.90777 * weeks) - (0.00169 * weeks * z) - (0.02574 * (weeks ** 2)) + (0.00022 * (weeks ** 3));
+        this.doppler[index].mean = mean.toFixed(2);
       }
     },
     pointPercentile(value){
@@ -1284,7 +1302,7 @@ export default {
         <input @change="manageDopler(index)" v-model="item.value" type="number">
         <div class="unit">{{ item.unit }}</div>
         <div class="chart-percentile">
-          <div v-if="item.name !=='MCA'">
+          <div v-if="item.name !=='MCA' && item.name != 'MCAPI'">
             <div class="line"></div>
             <div class="base">
               <div class="middle"></div>
@@ -1298,6 +1316,7 @@ export default {
         </div>
         <div class="percentile">
           <span v-if="item.MoM">{{ item.MoM }} MoM</span>
+          <span v-else-if="item.mean">mean: {{ item.mean }}</span>
           <span v-else-if="calcPercentileUterine(index)">> 95°p</span>
             <!-- {{ item.percentile }}°p -->
           </div>
@@ -1306,7 +1325,7 @@ export default {
             ° p
           </span>
         </div> -->
-        <div v-if="item.name != 'MCA'" class="check-doppler">
+        <div v-if="item.name != 'MCA' && item.name != 'MCAPI'" class="check-doppler">
           <input 
             :name="item.name" 
             :id="item.name" 
