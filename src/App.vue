@@ -41,7 +41,7 @@ export default {
 <template>
   <div v-if="!showForm" class="home">
     <h1>
-      App per chiarella 
+      Form For Print 
     </h1>
     <button ref="openApp" class="create-new" @click="openForm">Crea nuovo</button>
   </div>

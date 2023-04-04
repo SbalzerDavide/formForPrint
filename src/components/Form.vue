@@ -169,7 +169,7 @@ export default {
           text: "Cervelletto",
           name: "TCD",
           value: "",
-          unit: "cm",
+          unit: "mm",
           percentile: null,
           ecoType: ["2T", "3T", "CA"]
         },
