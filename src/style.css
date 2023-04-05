@@ -15,20 +15,6 @@
   -webkit-text-size-adjust: 100%;
 }
 
-/* :root{ */
-@media not print{
-  :root .theme-dark{
-    background-color: #242424;
-  }  
-  .theme-light #app.appOnPrint{
-    background-color: rgba(221, 213, 223, .3);
-  }
-
-}
-:root .theme-dark{
-  color: rgba(255, 255, 255, 0.87);
-}
-
 :root .theme-dark input,
 :root .theme-dark select,
 :root .theme-dark textarea{
@@ -38,9 +24,11 @@
   color: rgba(255, 255, 255, 0.87);
   
 }
-/* :root .theme-dark ::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-} */
+
+.system-light.theme-dark ::-webkit-calendar-picker-indicator {
+  filter: invert();
+}
+
 
 *{
   box-sizing: border-box;
@@ -73,14 +61,6 @@ p{
   margin: 5px 0;
 }
 
-body {
-  margin: 0;
-  /* display: flex;
-  place-items: center; */
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -110,68 +90,3 @@ button:focus-visible {
   padding: 2em;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
-}
-
-.d-flex{
-  display: flex;
-}
-
-/* @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: rgba(0, 0, 0, .04);
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #d9d9d9;
-  }
-} */
-  /* :root{ */
-  :root .theme-light{
-    color: #213547;
-    /* background-color: rgba(0, 0, 0, .04); */
-    background-color: #fff;
-  }
-  .theme-light #app.appOnPrint{
-    /* background-color: rgba(221, 213, 223, .3); */
-    width: 100vw;
-    max-width: none;
-  }
-  .theme-light a:hover {
-    color: #747bff;
-  }
-  .theme-light button {
-    color: #1a1a1a;
-    background-color: #d9d9d9;
-  }
-
-.system-dark input,
-.system-dark select,
-.system-dark textarea{
-  color: #1a1a1a;
-}
-
-.system-dark.theme-light ::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-}
-
-.system-dark.theme-light input[type="checkbox"],
-.system-dark.theme-light input[type="radio"]{
-  filter: invert();
-}
-
-.system-light.theme-dark ::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-}
-
-.system-light.theme-dark input[type="checkbox"],
-.system-light.theme-dark input[type="radio"]{
-  filter: invert();
-}

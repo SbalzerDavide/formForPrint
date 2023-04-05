@@ -89,7 +89,9 @@ export default {
   <Form v-else/>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
+  @import "@/assets/main";
+
   button.create-new{
     background: #55917F;
   }
@@ -100,7 +102,7 @@ export default {
       display: flex;
       flex-direction: column;
       margin: 20px;
-      padding: 30px;
+      padding: 20px;
       background-color: rgba(255,255,255,.04);
       border-radius: 8px;
       transition: all .2s;
@@ -118,10 +120,10 @@ export default {
         font-size: 30px;
       }
       h4{
-        margin: 10px 0;
+        margin: 0 0 10px 0;
       }
       button{
-        margin: 10px 0;
+        margin-top: 10px;
       }
       &:hover{
         transform: scale(1.08);
