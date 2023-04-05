@@ -635,7 +635,7 @@ export default {
         sd = 6.93;
       } else if(this.biometriaFetale[index].name === "TCD"){
         // calcolo cervelletto
-        let method = 2;
+        let method = 1;
         // method 1 from cervelletto giusto.pdf
         // method 2 from bpd1.pdf
         if(method === 1){
