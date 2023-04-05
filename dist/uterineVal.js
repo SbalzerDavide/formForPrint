@@ -1,4 +1,6 @@
-window.ombelicaleStd95 = {
+window.rangeValues ??= {};
+
+window.rangeValues.ombelicaleStd95 = {
   "19": 1.66,
   "20": 1.62,
   "21": 1.58,
@@ -24,7 +26,7 @@ window.ombelicaleStd95 = {
   "41": 1.07,
 }
 
-window.uterineStd95 = {
+window.rangeValues.uterineStd95 = {
   "11": 2.70,
   "12": 2.53,
   "13": 2.38,
