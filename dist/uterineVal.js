@@ -1,6 +1,6 @@
 window.rangeValues ??= {};
 
-window.rangeValues.ombelicaleStd95 = {
+window.ombelicaleStd95 = {
   "19": 1.66,
   "20": 1.62,
   "21": 1.58,
