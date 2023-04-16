@@ -1352,7 +1352,7 @@ export default {
         <input v-model="heart" type="radio" name="att-card" id="att-card-ass" :value="false">
         <label for="att-card-ass">Assente</label>
       </div>
-      <div class="presentazione">
+      <div v-show="ecoType.value !== '1T'" class="presentazione">
         <div class="name">Presentazione</div>
         <select v-model="direction">
           <option value="cefalica">Cefalica</option>
@@ -1428,7 +1428,7 @@ export default {
     :anatomy="anatomy"
     :doppler="doppler"
     :heart="heart"
-    :direction="direction"
+    :direction="ecoType.value !== '1T' ? direction : ''"
     :liquid="liquid"
     :placenta="placenta"
     :patientMore= "patientMoreText"

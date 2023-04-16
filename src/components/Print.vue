@@ -84,7 +84,7 @@ export default {
     },
     direction:{
       type: String,
-      default: "cefalica"
+      default: ""
     },
     placenta:{
       type: String,
@@ -480,7 +480,7 @@ export default {
       <section class="more">
         <span v-if="heart">Attività cardiaca presente, </span>
         <span v-else-if="heart == false">Attività cardiaca assente, </span>
-        <span>Presentazione: {{ direction }}, </span>
+        <span v-if="direction !== ''">Presentazione: {{ direction }}, </span>
         <span>Liquido amniotico: {{ liquid }}, </span>
         <span v-if="placenta">Placenta: {{ placenta }}, </span>
         <p v-if="lastMore!==''">{{ lastMore }}</p>
