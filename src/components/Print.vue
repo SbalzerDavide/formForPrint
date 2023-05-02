@@ -195,7 +195,8 @@ export default {
       } else{
         weeks = parseInt(this.decimalWeeks);
       }
-      if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right != null || item.over95)){
+      // if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right != null || item.over95)){
+      if(item.ecoType.includes(this.ecoType.value) && (item.percentile || item.right != null)){
         if(item.name === "FCF"){
           if(weeks >= 10 && weeks < 15){
             show = true;
@@ -207,6 +208,8 @@ export default {
         } else{
           show = true;
         }
+      } else if(item.ecoType.includes(this.ecoType.value) && item.name ==="NT" && item.value){
+        show = true;
       }
       return show;
     },
