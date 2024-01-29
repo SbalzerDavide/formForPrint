@@ -73,7 +73,7 @@ export default {
         },
       ],
       ecoMethod: "transaddominale",
-      ecoTool: "Samsung HS50",
+      ecoTool: "Samsung WS80",
       otherTool: "",
       ecoType: 
         {
@@ -455,7 +455,6 @@ export default {
   },
   created(){
     this.user = this.users[this.activeUser];
-    this.changeEcoType();
     this.uterineStd95 = window.rangeValues?.uterineStd95;
     this.ombelicaleStd95 = window.rangeValues?.ombelicaleStd95;
   },
@@ -477,7 +476,20 @@ export default {
     },
     deliveryDateFromCRL(val){
       this.deliveryDateFromCRLFormatting = dayjs(val).format('DD/MM/YYYY');
+      this.pregnancy.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL);
+
     },
+    ecoType(ecoType){
+      if(ecoType.value === "1T"){
+        this.conclusion = `Gravidanza intrauterina in regolare evoluzione, CRL corrispondente all’amenorrea. Ovaie regolari allegati al referto n°Operatore accreditato FMF ID: ${this.user.operatorId}`
+      } else if(ecoType.value === "2T"){
+        this.conclusion = "Biometria fetale nella norma per epoca gestazionale. Morfologia indagabile secondo linee guida SIEOG del II trimestre nella norma. Velocimetria Doppler delle arterie uterine nella norma. Fotogrammi allegati al referto n°"
+      } else if(ecoType.value === "3T"){
+        this.conclusion = "Biometria fetale nella norma per epoca gestazionale. Morfologia indagabile secondo linee guida SIEOG del III trimestre nella norma. Fotogrammi allegati al referto n° "
+      } else if(ecoType.value === "CA"){
+        this.conclusion = "Biometria fetale regolare"
+      }
+    }
   },
   methods:{
     // changeTheme(){
@@ -503,17 +515,6 @@ export default {
       let meterHeight = this.height/100;
       this.bmi = parseFloat(this.actualWeight / (meterHeight * meterHeight)).toFixed(2)
     },
-    changeEcoType(){
-      if(this.ecoType.value === "1T"){
-        this.conclusion = `Gravidanza intrauterina in regolare evoluzione, CRL corrispondente all’amenorrea. Ovaie regolari allegati al referto n°Operatore accreditato FMF ID: ${this.user.operatorId}`
-      } else if(this.ecoType.value === "2T"){
-        this.conclusion = "Biometria fetale nella norma per epoca gestazionale. Morfologia indagabile secondo linee guida SIEOG del II trimestre nella norma. Velocimetria Doppler delle arterie uterine nella norma. Fotogrammi allegati al referto n°"
-      } else if(this.ecoType.value === "3T"){
-        this.conclusion = "Biometria fetale nella norma per epoca gestazionale. Morfologia indagabile secondo linee guida SIEOG del III trimestre nella norma. Fotogrammi allegati al referto n° "
-      } else if(this.ecoType.value === "CA"){
-        this.conclusion = "Biometria fetale regolare"
-      }
-    }, 
     manageBiometriaFetale(index){
       let femore = false;
       let circonferenzaC = false;
@@ -789,7 +790,7 @@ export default {
       // ricalcolo tutti i percentili
       // non lo ricalcolo perchè mi sballa tutti i dati sulla nuova data
       this.triggerPopup = true;
-      this.popupMessage = "Varifica i dati inseriti";
+      this.popupMessage = "Verifica i dati inseriti";
       this.popupType = "warning";      
     },
     reDateHcFl(){
@@ -917,6 +918,13 @@ export default {
       }
       return show;
     },
+    changeOffice(){
+      if(this.office === "Pralboino"){
+        this.ecoTool = "Samsung HS50";
+      } else if(this.office === "Desenzano"){
+        this.ecoTool = "Samsung WS80"
+      }
+    },
     print(){
       this.showPrint = true;
     },
@@ -948,7 +956,7 @@ export default {
   
         <div class="d-flex">
           <div class="title">Ambulatorio</div>
-          <select v-model="office">
+          <select @change="changeOffice" v-model="office">
             <option value="Desenzano">Desenzano</option>
             <option value="Pralboino">Pralboino</option>
           </select>
@@ -1110,8 +1118,8 @@ export default {
         <div class="tool">
           <label for="type">Strumento ecografico</label>
           <select v-model="ecoTool">
-            <option value="Samsung HS50">Samsung HS50</option>
             <option value="Samsung WS80">Samsung WS80</option>
+            <option value="Samsung HS50">Samsung HS50</option>
             <option value="altro">altro</option>
           </select>
           <input 
@@ -1124,7 +1132,7 @@ export default {
         </div>
         <div class="type">
           <label for="type">Tipo</label>
-          <select @change="changeEcoType" v-model="ecoType">
+          <select v-model="ecoType">
             <option
               v-for="(type, index) in ecoTypesList"
               :key="index" 
