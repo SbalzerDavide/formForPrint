@@ -1,4 +1,4 @@
-.print{
+.print {
   width: 210mm;
   min-height: calc(100vh - 40px);
   margin: 0 auto;
@@ -6,80 +6,99 @@
   background-color: #fff;
   color: #1a1a1a;
   position: relative;
-  button{
+  button {
     position: absolute;
-    background: #55917F;
+    background: #55917f;
     right: -150px;
     width: 140px;
   }
-  .confirm{
+  .confirm {
     top: 30px;
   }
-  .come-back-to-form{
+  .come-back-to-form {
     top: 84px;
   }
-  h1{
+  h1 {
     margin: 10px 0;
   }
-  h2, h3, h4{
+  h2,
+  h3,
+  h4 {
     margin: 8px 0;
   }
-  header{
-    .img{
+  header {
+    text-align: left;
+    line-height: 16px;
+
+    .img {
       display: flex;
     }
-    .img-dese{
+    .img-dese {
       height: 250px;
     }
-    .img-pralboino{
+    .img-pralboino {
       height: 90px;
     }
+    .section-logo-dese {
+      .img-logo-dese {
+        padding-left: 20px;
+        height: 90px;
+      }
+      p {
+        font-weight: 500;
+      }
+    }
+    .user-info {
+      text-align: right;
+      // align-self: flex-end;
+      font-weight: 500;
+      margin-top: 20px;
+    }
   }
-  .title-par{
+  .title-par {
     display: flex;
     align-items: center;
     font-weight: bold;
     height: 20px;
-    span:not(.original-re-date){
+    span:not(.original-re-date) {
       margin-left: 5px;
       font-weight: normal;
     }
   }
-  .date{
+  .date {
     text-align: right;
   }
-  main{
+  main {
     display: flex;
     flex-direction: column;
     text-align: left;
-    section{
+    section {
       margin: 18px 0;
       page-break-inside: avoid;
     }
-    .charts{
+    .charts {
       display: flex;
-      &>div{
+      & > div {
         flex-basis: 200px;
         flex-grow: 1;
         position: relative;
-        img{
+        img {
           margin-left: 5%;
           width: 95%;
         }
       }
-      .title{
+      .title {
         text-align: center;
       }
-      .y-axis{
+      .y-axis {
         position: absolute;
         transform: rotate(-90deg);
         top: 40%;
-
       }
-      .x-axis{
+      .x-axis {
         text-align: center;
       }
-      .my-val{
+      .my-val {
         position: absolute;
         width: 5px;
         height: 5px;
@@ -88,76 +107,78 @@
         bottom: 50px;
       }
     }
-    .medical-history{
-      h4{
+    .medical-history {
+      h4 {
         margin-bottom: 5px;
       }
     }
-    .pregnancy-date{
-      .row{
+    .pregnancy-date {
+      .row {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         height: 20px;
-        &.active-pregnancy{
+        &.active-pregnancy {
           font-weight: bold;
         }
-        & > *{
+        & > * {
           margin-right: 10px;
         }
-        .active-pregnancy{
+        .active-pregnancy {
           font-weight: bold;
         }
       }
     }
-    .anatomy{
-      .anatomy-shown, .anatomy-comment{
+    .anatomy {
+      .anatomy-shown,
+      .anatomy-comment {
         display: flex;
         flex-wrap: wrap;
       }
-      .anatomy-container{
+      .anatomy-container {
         // display: flex;
         // flex-wrap: wrap;
-        .anatomy-el{
+        .anatomy-el {
           margin-right: 5px;
         }
       }
-      .anatomy-footer{
+      .anatomy-footer {
         margin-top: 8px;
         font-size: 12px;
         font-style: italic;
         line-height: 16px;
       }
     }
-    .biometria-box, .doppler-box{
+    .biometria-box,
+    .doppler-box {
       display: flex;
       width: 100%;
-      .name{
+      .name {
         width: 35%;
       }
-      .value{
+      .value {
         width: 70px;
       }
-      .unit{
+      .unit {
         width: 8%;
       }
-      .chart-percentile{
+      .chart-percentile {
         display: flex;
         align-items: center;
         // justify-content: center;
         width: 20%;
         margin-right: 10px;
-        & > div{
+        & > div {
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .base{
+        .base {
           position: relative;
           width: 100px;
           height: 1.5px;
           background: #1a1a1a;
-          .middle{
+          .middle {
             position: absolute;
             left: 50px;
             top: -4px;
@@ -165,7 +186,7 @@
             height: 9px;
             background: #1a1a1a;
           }
-          .point{
+          .point {
             position: absolute;
             top: -3px;
             width: 7px;
@@ -174,26 +195,26 @@
             background: #1a1a1a;
           }
         }
-        .line{
+        .line {
           height: 12px;
           width: 1.5px;
           background: #1a1a1a;
         }
       }
     }
-    .more-doppler{
+    .more-doppler {
       margin-left: 100px;
       font-weight: bold;
     }
-    .informativa{
+    .informativa {
       font-size: 12px;
       font-style: italic;
       line-height: 16px;
     }
-    .container-signature{
+    .container-signature {
       display: flex;
       justify-content: flex-end;
-      .empty-space{
+      .empty-space {
         // width: 200px;
         width: 100%;
         height: 1px;
@@ -203,8 +224,8 @@
       }
     }
   }
-  footer{
-    .footer-pralboino{
+  footer {
+    .footer-pralboino {
       width: 90%;
     }
     // display: none;
@@ -212,8 +233,8 @@
 }
 
 // @media (prefers-color-scheme: light) {
-.theme-light{
-  .print{
+.theme-light {
+  .print {
     border: 1px solid #242424;
   }
 }
@@ -225,14 +246,15 @@
 }
 
 @media print {
-  html, body {
+  html,
+  body {
     width: 210mm;
-    height: 297mm;    
+    height: 297mm;
   }
-  #app{
+  #app {
     background-color: #fff !important;
   }
-  .print{
+  .print {
     margin: 0;
     padding-top: 0;
     border: initial !important;
@@ -243,10 +265,10 @@
     // background-color: yellowgreen !important;
     page-break-after: always;
   }
-  .hide-print{
+  .hide-print {
     display: none;
   }
-  footer{
+  footer {
     display: block;
     position: fixed;
     bottom: 0;
@@ -254,7 +276,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    .footer-pralboino{
+    .footer-pralboino {
       width: 90%;
     }
   }
