@@ -43,12 +43,22 @@ export default {
     <h1>
       Form For Print 
     </h1>
-    <button ref="openApp" class="create-new" @click="openForm">Crea nuovo</button>
+    <div class="first-selection d-flex">
+      <button ref="openApp" class="create-new" @click="openForm">Ecografia ostetrica</button>
+      <button ref="openApp" class="create-new" @click="openForm">Visita ginecologica</button>
+      <button ref="openApp" class="create-new" @click="openForm">Visita ostetrica</button>
+
+    </div>
   </div>
   <Form v-else/>
 </template>
 
 <style lang="scss" scoped>
+.first-selection{
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
   button.create-new{
     background: #55917F;
   }
