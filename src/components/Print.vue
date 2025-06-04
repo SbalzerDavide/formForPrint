@@ -493,7 +493,7 @@ export default {
         </div>
 
       </section> -->
-      <section class="informativa">
+      <section class="print-note">
         <p>La Persona assistita ha avuto modo di ricevere una adeguata informazione su scopi e limiti dell’esame
           ecografico
           attraverso il colloquio con il proprio Ginecologo /Ostetrica / Medico ecografista (al quale ha avuto la
