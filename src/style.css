@@ -120,6 +120,15 @@ button:focus-visible {
 .d-flex{
   display: flex;
 }
+.justify-center{
+  justify-content: center;
+}
+.align-center{
+  align-items: center;
+}
+.justify-between{
+  justify-content: space-between;
+}
 
 /* @media (prefers-color-scheme: light) {
   :root {
