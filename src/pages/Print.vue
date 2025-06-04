@@ -1,4 +1,5 @@
 <script>
+import Informations from '../components/Informations.vue';
 
 export default {
   name: 'Print',
@@ -507,6 +508,7 @@ export default {
         <p v-if="ecoType.value === '2T'">Si informa la persona assistita/coppia degli esiti dell'esame ecografico
           effettuato e dei suoi limiti nell'individuazione delle anomalie fetali.</p>
       </section>
+      <Informations :ecoType="ecoType" />
       <section class="container-signature">
         <div class="signature">
           <div class="empty-space"></div>
