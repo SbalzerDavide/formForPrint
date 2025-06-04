@@ -1,5 +1,5 @@
 <script>
-import Print from '@/components/Print.vue';
+import Print from '@/pages/Print.vue';
 import PopupMessage from "@/components/PopupMessage.vue";
 import ThemeSwitch from "@/components/ThemeSwitch.vue";
 

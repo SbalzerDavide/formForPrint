@@ -1,5 +1,5 @@
 <script>
-import Form from '@/components/Form.vue';
+import Form from '@/pages/Form.vue';
 
 export default {
   components: {
