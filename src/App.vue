@@ -47,7 +47,6 @@ export default {
       <button ref="openApp" class="create-new" @click="openForm">Ecografia ostetrica</button>
       <button ref="openApp" class="create-new" @click="openForm">Visita ginecologica</button>
       <button ref="openApp" class="create-new" @click="openForm">Visita ostetrica</button>
-
     </div>
   </div>
   <Form v-else/>
