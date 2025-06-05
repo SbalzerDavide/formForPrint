@@ -353,7 +353,7 @@ export default {
           showComment: false
         },
         {
-          name: "Mani e piedi",
+          name: "Mani e piedi presenti",
           value: "maniPiedi",
           checked: false,
           ecoType: ["2T", "3T", "CA"],
