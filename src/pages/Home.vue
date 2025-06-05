@@ -1,11 +1,6 @@
 <script>
-import Form from '@/pages/Form.vue';
-
 export default {
   name: 'Home',
-  components: {
-    Form
-  },
   data(){
     return{
       showForm: false,
@@ -24,6 +19,7 @@ export default {
       Form For Print 
     </h1>
     <div class="first-selection d-flex">
+      <router-link class="create-new" to="/visita-ginecologica">Go to Foo</router-link>
       <button ref="openApp" class="create-new" @click="openForm">Ecografia ostetrica</button>
       <button ref="openApp" class="create-new" @click="openForm">Visita ginecologica</button>
       <button ref="openApp" class="create-new" @click="openForm">Visita ostetrica</button>
@@ -37,7 +33,7 @@ export default {
   justify-content: center;
   gap: 15px;
 }
-  button.create-new{
+  .create-new{
     background: #55917F;
   }
 </style>
