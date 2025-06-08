@@ -466,7 +466,9 @@ export default {
       } else if (this.activeDateSelection === "end") {
         // ho settato data presunta parto
         this.startDate = dayjs(this.deliveryDate).subtract(280, 'day');
-        this.pregnancy.delivery = this.deliveryDate;
+        const deliveryDate = dayjs(this.deliveryDate);
+        this.pregnancy.delivery = deliveryDate;
+        
       }
       let today = dayjs();
       let dayDiff = (today.diff(this.startDate, 'day')) % 7;
