@@ -1,5 +1,4 @@
-window.rangeValues ??= {};
-window.rangeValues.nt = {
+export const ntRangeValues = {
   45: 2.18,
   46: 2.15,
   47: 2.13,

@@ -7,6 +7,7 @@ import { biometriaFetale } from '@/const/biometriaFetale.js';
 import { anatomy } from '@/const/anatomy.js';
 import { doppler } from '@/const/doppler.js';
 import { estimateCerebelarPercentile } from '@/utils/cerebellar.js';
+import { ntRangeValues } from '@/utils/nt.js'
 
 export default {
   name: 'EcografiaOstetrica',
@@ -267,8 +268,8 @@ export default {
           // il calcolo dell'NT, richiedendo anche il valore di crl, 
           // è valido solo entor questi valori in mm di crl
           let nt = this.biometriaFetale[index].value;
-          if (nt >= window.rangeValues.nt[crl]) {
-            console.log("sono oltre il 95 percentile");
+          
+          if (nt >= ntRangeValues[crl]) {
             this.biometriaFetale[index].over95 = true;
           } else {
             this.biometriaFetale[index].over95 = false;
@@ -291,32 +292,16 @@ export default {
         if (method === 1) {
           mean = 2.2451 - (0.1880 * ga) + (0.0125 * (ga ** 2)) - (0.00011 * (ga ** 3));
           sd = -0.2088 + (0.0383 * ga) - (0.0015 * (ga ** 2)) + (0.00003 * (ga ** 3));
-          console.log(mean);
-          // let a = (0.1880 * ga);
-          // console.log(a);
-          // let b = (0.0125 * (ga ** 2));
-          // console.log(b);
-          // let c = (0.00011 * (ga ** 3));
-          // console.log(c);
-          console.log(sd);
-
         } else if (method === 2) {
           mean = 6.9519 + 0.03327 * (ga ** 2);
-          console.log(mean);
           sd = -0.5177 + 0.0772 * ga;
         }
         let today = dayjs();
         let dayDiff = (today.diff(this.startDate, 'day')) % 7;
         let weekDiff = today.diff(this.startDate, 'week');
-        console.log(dayDiff, weekDiff);
-        
-        
         
         const result = estimateCerebelarPercentile(weekDiff, dayDiff, this.biometriaFetale[index].value); // 22 settimane + 3 giorni, misura = 22 mm
-        console.log(result);
         this.biometriaFetale[index].percentile = result.percentile.toFixed(0)
-
-
       } else if (this.biometriaFetale[index].name === "CM") {
         if (this.biometriaFetale[index].value >= 2 && this.biometriaFetale[index].value <= 10) {
           this.biometriaFetale[index].right = true;
