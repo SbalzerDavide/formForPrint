@@ -6,9 +6,11 @@ import { users } from '@/const/users.js';
 import { biometriaFetale } from '@/const/biometriaFetale.js';
 import { anatomy } from '@/const/anatomy.js';
 import { doppler } from '@/const/doppler.js';
+
 import { estimateCerebelarPercentile } from '@/utils/cerebellar.js';
 import { ntRangeValues } from '@/utils/nt.js'
 import { ombelicaleStd95RangeValues, uterineStd95RangeValues } from '@/utils/uterineVal.js';
+import { getExpectedMeans, getCV, getSkewness, getZScore } from '@/utils/percentile.js';
 
 
 export default {
