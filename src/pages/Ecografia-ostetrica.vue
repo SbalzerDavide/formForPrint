@@ -8,6 +8,8 @@ import { anatomy } from '@/const/anatomy.js';
 import { doppler } from '@/const/doppler.js';
 import { estimateCerebelarPercentile } from '@/utils/cerebellar.js';
 import { ntRangeValues } from '@/utils/nt.js'
+import { ombelicaleStd95RangeValues, uterineStd95RangeValues } from '@/utils/uterineVal.js';
+
 
 export default {
   name: 'EcografiaOstetrica',
@@ -63,8 +65,6 @@ export default {
       biometriaFetale: biometriaFetale,
       anatomy: anatomy,
       doppler: doppler,
-      uterineStd95: {},
-      ombelicaleStd95: {},
       heart: true,
       liquid: "normale",
       direction: "cefalica",
@@ -103,8 +103,6 @@ export default {
   },
   created() {
     this.user = this.users[this.activeUser];
-    this.uterineStd95 = window.rangeValues?.uterineStd95;
-    this.ombelicaleStd95 = window.rangeValues?.ombelicaleStd95;
   },
   watch: {
     deliveryDate(val) {
@@ -374,7 +372,7 @@ export default {
 
       let uterine = this.doppler[index];
       if (this.doppler[index].name == "PIUDX" || this.doppler[index].name == "PIUSX") {
-        if (this.uterineStd95[weeks] < uterine.value) {
+        if (uterineStd95RangeValues[weeks] < uterine.value) {
           return true;
         } else {
           // serviva per simulare valore più verosimile su grafico ma si rompe se faccio avanti e inetro tra form e print
@@ -384,7 +382,7 @@ export default {
           return false;
         }
       } else if (this.doppler[index].name == "PIO") {
-        if (this.ombelicaleStd95[weeks] < uterine.value) {
+        if (ombelicaleStd95RangeValues[weeks] < uterine.value) {
           return true;
         } else {
           if (uterine.percentile >= 96) {

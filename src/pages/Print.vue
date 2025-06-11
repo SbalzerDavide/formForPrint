@@ -1,5 +1,7 @@
 <script>
 import Informations from '../components/Informations.vue';
+import { ombelicaleStd95RangeValues, uterineStd95RangeValues } from '@/utils/uterineVal.js';
+
 
 export default {
   name: 'Print',
@@ -127,8 +129,6 @@ export default {
       showBiometria: false,
       showDoppler: false,
       showAnatomia: false,
-      uterineStd95: {},
-      ombelicaleStd95: {},
     }
   },
   created() {
@@ -151,9 +151,6 @@ export default {
       this.formattingPregnancyEnd = this.pregnancy?.delivery?.format('DD/MM/YYYY');
     }
     this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY');
-
-    this.uterineStd95 = window.rangeValues?.uterineStd95;
-    this.ombelicaleStd95 = window.rangeValues?.ombelicaleStd95;
 
     // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
     for (let i = 0; i < this.biometriaFetale.length; ++i) {
@@ -223,7 +220,7 @@ export default {
         weeks = parseInt(this.decimalWeeks);
       }
       if (this.doppler[index].name == "PIUDX" || this.doppler[index].name == "PIUSX") {
-        if (this.uterineStd95[weeks] < uterine.value) {
+        if (uterineStd95RangeValues[weeks] < uterine.value) {
           return true;
         } else {
           // serviva per simulare valore più verosimile su grafico ma si rompe se faccio avanti e inetro tra form e print
@@ -233,7 +230,7 @@ export default {
           return false;
         }
       } else if (this.doppler[index].name == "PIO") {
-        if (this.ombelicaleStd95[weeks] < uterine.value) {
+        if (ombelicaleStd95RangeValues[weeks] < uterine.value) {
           return true;
         } else {
           if (uterine.percentile >= 96) {
