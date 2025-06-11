@@ -7,9 +7,9 @@ import VisitaOstetrica from '@/pages/Visita-ostetrica.vue'
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/ecografia-ostetrica', component: EcografiaOstetrica },
-  { path: '/visita-ginecologica', component: VisitaGinecologica },
-  { path: '/visita-ostetrica', component: VisitaOstetrica },
+  { path: '/ecografia-ostetrica', name: 'EcografiaOstetrica', component: EcografiaOstetrica },
+  { path: '/visita-ginecologica', name: 'VisitaGinecologica', component: VisitaGinecologica },
+  { path: '/visita-ostetrica', name: 'VisitaOstetrica', component: VisitaOstetrica },
 ]
 
 export const router = createRouter({

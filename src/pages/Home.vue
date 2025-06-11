@@ -8,7 +8,12 @@ export default {
   },
   mounted() {
     this.$refs.openApp.focus();
-  }
+  },
+  methods: {
+    goTo(route) {
+      this.$router.push({ name: route });
+    }
+  },
 }
 
 </script>
@@ -19,10 +24,9 @@ export default {
       Form For Print 
     </h1>
     <div class="first-selection d-flex">
-      <router-link class="create-new" to="/visita-ginecologica">Go to Foo</router-link>
-      <button ref="openApp" class="create-new" @click="openForm">Ecografia ostetrica</button>
-      <button ref="openApp" class="create-new" @click="openForm">Visita ginecologica</button>
-      <button ref="openApp" class="create-new" @click="openForm">Visita ostetrica</button>
+      <button ref="openApp" class="create-new" @click="goTo('EcografiaOstetrica')">Ecografia ostetrica</button>
+      <button ref="openApp" class="create-new" @click="goTo('VisitaGinecologica')">Visita ginecologica</button>
+      <button ref="openApp" class="create-new" @click="goTo('VisitaOstetrica')">Visita ostetrica</button>
     </div>
   </div>
 </template>
