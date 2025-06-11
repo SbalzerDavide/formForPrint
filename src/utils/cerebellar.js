@@ -255,7 +255,7 @@ function normalCDF(z) {
   return 0.5 * (1 + erf(z / Math.sqrt(2)));
 }
 
-window.estimateCerebelarPercentile = function(weeks, days, measurement) {
+export const estimateCerebelarPercentile = function(weeks, days, measurement) {
   const totalDays = weeks * 7 + days;
   const mu = interpolate(totalDays, 1);     // mediana
   const p95 = interpolate(totalDays, 2);    // 95°
@@ -268,7 +268,3 @@ window.estimateCerebelarPercentile = function(weeks, days, measurement) {
     sigma: Math.round(sigma * 100) / 100
   };
 }
-
-// Esempio di utilizzo
-const result = estimateCerebelarPercentile(22, 3, 22); // 22 settimane + 3 giorni, misura = 22 mm
-console.log(result);

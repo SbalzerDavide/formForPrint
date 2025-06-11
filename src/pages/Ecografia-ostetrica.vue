@@ -6,6 +6,7 @@ import { users } from '@/const/users.js';
 import { biometriaFetale } from '@/const/biometriaFetale.js';
 import { anatomy } from '@/const/anatomy.js';
 import { doppler } from '@/const/doppler.js';
+import { estimateCerebelarPercentile } from '@/utils/cerebellar.js';
 
 export default {
   name: 'EcografiaOstetrica',
@@ -311,7 +312,7 @@ export default {
         
         
         
-        const result = window.estimateCerebelarPercentile(weekDiff, dayDiff, this.biometriaFetale[index].value); // 22 settimane + 3 giorni, misura = 22 mm
+        const result = estimateCerebelarPercentile(weekDiff, dayDiff, this.biometriaFetale[index].value); // 22 settimane + 3 giorni, misura = 22 mm
         console.log(result);
         this.biometriaFetale[index].percentile = result.percentile.toFixed(0)
 
