@@ -212,6 +212,7 @@ export default {
       }
       let mean;
       let sd;
+      let value = this.biometriaFetale[index].value;
       if (this.biometriaFetale[index].name === "CC") {
         mean = -28.2849 + 1.69267 * (ga ** 2) - 0.397485 * (ga ** 2) * Math.log(ga);
         sd = 1.98735 + 0.0136772 * (ga ** 3) - 0.00726264 * (ga ** 3) * Math.log(ga) + 0.000976253 * (ga ** 3) * (Math.log(ga) ** 2);
@@ -281,8 +282,9 @@ export default {
         mean = 208.8 - (3.78 * ga);
         sd = 6.93;
       } else if (this.biometriaFetale[index].name === "TCD") {
+        value = value * 0.1; // convert to cm
         // calcolo cervelletto
-        let method = 1;
+        let method = 0;
         // method 1 from cervelletto giusto.pdf
         // method 2 from bpd1.pdf
         if (method === 1) {
@@ -302,6 +304,17 @@ export default {
           console.log(mean);
           sd = -0.5177 + 0.0772 * ga;
         }
+        let today = dayjs();
+        let dayDiff = (today.diff(this.startDate, 'day')) % 7;
+        let weekDiff = today.diff(this.startDate, 'week');
+        console.log(dayDiff, weekDiff);
+        
+        
+        
+        const result = window.estimateCerebelarPercentile(weekDiff, dayDiff, this.biometriaFetale[index].value); // 22 settimane + 3 giorni, misura = 22 mm
+        console.log(result);
+        this.biometriaFetale[index].percentile = result.percentile.toFixed(0)
+
 
       } else if (this.biometriaFetale[index].name === "CM") {
         if (this.biometriaFetale[index].value >= 2 && this.biometriaFetale[index].value <= 10) {
@@ -318,7 +331,7 @@ export default {
       }
       if (mean && sd) {
         const normDist = new NormalDistribution(mean, sd);
-        let percentile = normDist.cdf(this.biometriaFetale[index].value) * 100;
+        let percentile = normDist.cdf(value) * 100;
         this.biometriaFetale[index].percentile = percentile.toFixed(0)
       }
     },
@@ -468,7 +481,7 @@ export default {
         this.startDate = dayjs(this.deliveryDate).subtract(280, 'day');
         const deliveryDate = dayjs(this.deliveryDate);
         this.pregnancy.delivery = deliveryDate;
-        
+
       }
       let today = dayjs();
       let dayDiff = (today.diff(this.startDate, 'day')) % 7;
