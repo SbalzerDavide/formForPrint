@@ -17,7 +17,10 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@prettier/plugin-pug": "^3.4.0",
     "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "prettier": "^3.5.3",
     "sass": "^1.57.1",
     "vite": "^4.0.0"
   }
