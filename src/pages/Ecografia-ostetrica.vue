@@ -97,6 +97,7 @@ export default {
       conclusion: "",
       redatingPanel: false,
       enableCRLReDate: false,
+      externalCRLReDate: false,
       // popupMessage
       popupMessage: "",
       popupType: "",
@@ -688,9 +689,13 @@ export default {
           <div class="show">
             <div class="checkbox">
               <input type="checkbox" name="enableReDating" id="enableReDating" v-model="enableCRLReDate">
-              <!-- @change="enableCRLReDate = !enableCRLReDate" -->
               <label for="enableReDating">Applica ridatazione CRL</label>
             </div>
+            <div v-show="enableCRLReDate" class="checkbox">
+              <input type="checkbox" name="externalReDating" id="externalReDating" v-model="externalCRLReDate">
+              <label for="externalReDating">Effettuata in precedenza in altra sede</label>
+            </div>
+
             <div v-show="enableCRLReDate" class="re-date-show">
               <div class="ga-crl">
                 Epoca gestazionale da eco:
@@ -955,7 +960,7 @@ export default {
   </div>
   <Print v-else :user="user" @comeBack="comeBack" :office="office" :patient="name + ' ' + surname"
     :dateOfBirth="dateOfBirth" :age="age" :height="height" :normalWeight="normalWeight" :actualWeight="actualWeight"
-    :bmi="bmi" :pregnancy="pregnancy" :decimalWeeks="decimalWeeks" :enableCRLReDate="enableCRLReDate"
+    :bmi="bmi" :pregnancy="pregnancy" :decimalWeeks="decimalWeeks" :enableCRLReDate="enableCRLReDate" :externalCRLReDate="externalCRLReDate"
     :decimalWeeksFromCRL="decimalWeeksFromCRL" :ecoType="ecoType" :ecoMethod="ecoMethod"
     :ecoTool="ecoTool != 'altro' ? ecoTool : otherTool" :ecoNumber="ecoNumber" :fetusNumber="fetusNumber"
     :biometriaFetale="biometriaFetale" :anatomy="anatomy" :doppler="doppler" :heart="heart"

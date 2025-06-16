@@ -64,6 +64,10 @@ export default {
       type: Boolean,
       default: false
     },
+    externalCRLReDate: {
+      type: Boolean,
+      default: false
+    },
     decimalWeeksFromCRL: Number,
     biometriaFetale: {
       type: Array,
@@ -325,6 +329,7 @@ export default {
           :class="enableCRLReDate ? 'active-pregnancy' : ''">
           Epoca gestazionale da eco: {{ pregnancy?.reDateFromCrl }}
         </div>
+        <span v-if="externalCRLReDate">(ridatazione effettuata in precedenza in altra sede)</span>
         <p v-if="pregnancyMore !== ''">{{ pregnancyMore }}</p>
       </section>
       <section class="eco">
