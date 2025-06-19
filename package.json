@@ -14,7 +14,8 @@
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "normal-distribution": "^1.1.1",
     "vue": "^3.2.45",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@prettier/plugin-pug": "^3.4.0",
