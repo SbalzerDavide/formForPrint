@@ -6,6 +6,8 @@ import './style.css'
 // import './uterineVal.js'
 import App from './App.vue'
 
+import { commonStore } from './store/common.store.js';
+
 import NormalDistribution from 'normal-distribution';
 window.NormalDistribution = NormalDistribution;
 
@@ -15,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(fas)
 
 createApp(App)
-.use(router)
-.component('font-awesome-icon', FontAwesomeIcon)
-.mount('#app');
+  .use(router)
+  .use(commonStore)
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .mount('#app');
