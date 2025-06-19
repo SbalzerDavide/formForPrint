@@ -1,5 +1,9 @@
 <script>
+  import CommunContents from './CommunContents.vue'
   export default {
+    components: {
+      CommunContents
+    },
     name: 'Concents11_13Weeks',
     props: {}
   }
@@ -7,6 +11,7 @@
 
 <template>
   <div class="consent">
+    <h2>INFORMAZIONI SULL’ECOGRAFIA DEL I TRIMESTRE DI GRAVIDANZA (TRA 11+0 -13+6 SETTIMANE)</h2>
     <h3>Che cos’è l’ecografia?</h3>
     <p>
       L’ecografia è una tecnica che consente di vedere gli organi del nostro corpo con l’utilizzo di
@@ -74,24 +79,7 @@
       </li>
     </ul>
     <h4>CONSENSO INFORMATO ALL’ESAME DEL I TRIMESTRE (TRA 11+0-13+6 SETTIMANE)</h4>
-    <h4>Io sottoscritta _____________________________________ dichiaro:</h4>
-
-    <ul>
-      <li>
-        di essere stata dettagliatamente informata sull'Ecografia del I trimestre tra 11+0-13+6
-        settimane e di aver compreso i contenuti dell'informazione.
-      </li>
-      <li>
-        Di aver avuto la possibilità di rivolgere al Medico quesiti e di averne ottenuto risposte
-        soddisfacenti.
-      </li>
-      <li>
-        consapevole del fatto che tale accertamento è consigliato ma non obbligatorio, di volerlo
-        eseguire sapendo che all'ecografia del I trimestre tra 11+0-13+6 settimane possono emergere
-        quadri patologici fetali che richiedono approfondimenti diagnostici aggiuntivi.
-      </li>
-    </ul>
-    <h4>DATA FIRMA DELLA PAZIENTE</h4>
+    <CommunContents trimestre="I" />
   </div>
 </template>
 
