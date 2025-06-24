@@ -1,6 +1,7 @@
 <script>
   import Informations from '../components/Informations.vue'
   import { ombelicaleStd95RangeValues, uterineStd95RangeValues } from '@/utils/uterineVal.js'
+  import { storeModel } from '@/utils/storeModel.js'
 
   export default {
     name: 'Print',
@@ -8,13 +9,6 @@
       Informations
     },
     props: {
-      user: {
-        type: Object
-      },
-      office: {
-        type: String,
-        default: ''
-      },
       patient: {
         type: String,
         default: 'Pico della Mirandola'
@@ -45,10 +39,6 @@
       },
       pregnancy: Object,
       ecoType: Object,
-      ecoTool: {
-        type: String,
-        default: ''
-      },
       ecoMethod: {
         type: String,
         default: ''
@@ -138,6 +128,11 @@
         enableNT: false
       }
     },
+    computed: {
+      user: storeModel('user', 'SET_USER'),
+      office: storeModel('office', 'SET_OFFICE')
+    },
+
     created() {
       let app = document.getElementById('app')
       app.classList.add('appOnPrint')
@@ -347,7 +342,9 @@
         <div class="title-par">{{ ecoType.name }}</div>
         <div>
           <span v-if="ecoMethod" class="eco-method">Metodo ecografico: {{ ecoMethod }},</span>
-          <span v-if="ecoTool" class="tool">Strumento utilizzato: {{ ecoTool }}</span>
+          <span v-if="this.$store?.state?.ecoTool" class="tool">
+            Strumento utilizzato: {{ this.$store?.state?.ecoTool }}
+          </span>
         </div>
         <div v-if="fetusNumber === 1">Gravidanza singola</div>
         <div v-else>Gravidanza gemellare ({{ fetusNumber }} feti)</div>
