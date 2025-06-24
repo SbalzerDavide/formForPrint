@@ -2,7 +2,10 @@
   import Print from '@/pages/Print.vue'
   import PopupMessage from '@/components/PopupMessage.vue'
   import ThemeSwitch from '@/components/ThemeSwitch.vue'
-  import { Users } from '@/const/users.js'
+
+  import Patient from '@/components/sections/Patient.vue'
+  import Office from '@/components/sections/Office.vue'
+
   import { biometriaFetale } from '@/const/biometriaFetale.js'
   import { anatomy } from '@/const/anatomy.js'
   import { doppler } from '@/const/doppler.js'
@@ -17,14 +20,12 @@
     components: {
       Print,
       PopupMessage,
-      ThemeSwitch
+      ThemeSwitch,
+      Patient,
+      Office
     },
     data() {
       return {
-        // I dati su user sono temporanei perché poi arriveranno da server
-        users: Users,
-        user: {},
-        activeUser: 0,
         showPrint: false,
         name: '',
         surname: '',
@@ -34,7 +35,6 @@
         normalWeight: 0,
         actualWeight: 0,
         bmi: 0,
-        office: 'Desenzano',
         ecoTypesList: [
           {
             name: 'Ecografia di screening del I trimestre',
@@ -102,9 +102,6 @@
         triggerPopup: false
       }
     },
-    created() {
-      this.user = this.users[this.activeUser]
-    },
     watch: {
       deliveryDate(val) {
         this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY')
@@ -129,7 +126,7 @@
       },
       ecoType(ecoType) {
         if (ecoType.value === '1T') {
-          this.conclusion = `Gravidanza intrauterina in regolare evoluzione, CRL corrispondente all’amenorrea. Ovaie regolari allegati al referto n°Operatore accreditato FMF ID: ${this.user.operatorId}`
+          this.conclusion = `Gravidanza intrauterina in regolare evoluzione, CRL corrispondente all’amenorrea. Ovaie regolari allegati al referto n°Operatore accreditato FMF ID: ${this.$store?.state?.user.operatorId}`
         } else if (ecoType.value === '2T') {
           this.conclusion =
             'Biometria fetale nella norma per epoca gestazionale. Morfologia indagabile secondo linee guida SIEOG del II trimestre nella norma. Velocimetria Doppler delle arterie uterine nella norma. Fotogrammi allegati al referto n°'
@@ -142,20 +139,6 @@
       }
     },
     methods: {
-      // changeTheme(){
-      //   if(document.body.classList.contains("theme-light")){
-      //     document.body.classList.remove("theme-light");
-      //     document.body.classList.add("theme-dark");
-      //     localStorage.setItem("theme", "dark")
-      //   } else if(document.body.classList.contains("theme-dark")){
-      //     document.body.classList.remove("theme-dark");
-      //     document.body.classList.add("theme-light");
-      //     localStorage.setItem("theme", "light")
-      //   }
-      // },
-      changeOperator() {
-        this.user = this.users[this.activeUser]
-      },
       changeBirth() {
         let today = dayjs()
         let dateOfBirth = dayjs(this.dateOfBirth)
@@ -611,13 +594,6 @@
         }
         return show
       },
-      changeOffice() {
-        if (this.office === 'Pralboino') {
-          this.ecoTool = 'Samsung HS50'
-        } else if (this.office === 'Desenzano') {
-          this.ecoTool = 'Samsung WS80'
-        }
-      },
       print() {
         this.showPrint = true
       },
@@ -637,30 +613,8 @@
       :show="triggerPopup"
       @showBack="triggerPopup = false"
     />
-
-    <section class="office">
-      <div class="d-flex">
-        <div class="d-flex operator">
-          <select @change="changeOperator" v-model="activeUser">
-            <option value="0">Giorga Mazzoni</option>
-            <option value="1">Claudia Maggi</option>
-          </select>
-        </div>
-
-        <div class="d-flex">
-          <div class="title">Ambulatorio</div>
-          <select @change="changeOffice" v-model="office">
-            <option value="Desenzano">Desenzano</option>
-            <option value="Pralboino">Pralboino</option>
-          </select>
-        </div>
-      </div>
-      <div class="right-top">
-        <ThemeSwitch />
-        <!-- <div @click="changeTheme" class="theme">change theme</div> -->
-        <button class="print" @click="print">Print</button>
-      </div>
-    </section>
+    <Office @print="showPrint = true" />
+    <!-- <Patient /> -->
     <section class="patient">
       <div class="title">Dati Paziente</div>
       <div class="section-content">
@@ -1082,9 +1036,7 @@
   </div>
   <Print
     v-else
-    :user="user"
     @comeBack="comeBack"
-    :office="office"
     :patient="name + ' ' + surname"
     :dateOfBirth="dateOfBirth"
     :age="age"
