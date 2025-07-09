@@ -10,13 +10,9 @@
       ConcentsIIITrimestre
     },
     props: {
-      ecoType: {
-        name: String,
-        value: String
-      },
-      weeks: {
-        type: Number,
-        default: 0
+      policyType: {
+        type: String,
+        default: null
       }
     }
   }
@@ -25,13 +21,13 @@
 <template>
   <section class="informativa">
     <h2>Informativa</h2>
-    <div v-if="ecoType.value === '1T' && weeks >= 11 && weeks <= 13">
+    <div v-if="policyType == '1'">
       <Concents11_13Weeks />
     </div>
-    <div v-else-if="ecoType.value === '2T'">
+    <div v-else-if="policyType == '2'">
       <ConcentsIITrimestre />
     </div>
-    <div v-else-if="ecoType.value === '3T'">
+    <div v-else-if="policyType == '3'">
       <ConcentsIIITrimestre />
     </div>
   </section>

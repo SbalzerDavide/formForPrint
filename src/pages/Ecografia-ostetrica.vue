@@ -6,6 +6,8 @@
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
 
+  import { storeModel } from '@/utils/storeModel.js'
+
   import { biometriaFetale } from '@/const/biometriaFetale.js'
   import { anatomy } from '@/const/anatomy.js'
   import { doppler } from '@/const/doppler.js'
@@ -27,14 +29,6 @@
     data() {
       return {
         showPrint: false,
-        name: '',
-        surname: '',
-        dateOfBirth: '',
-        age: 0,
-        height: 0,
-        normalWeight: 0,
-        actualWeight: 0,
-        bmi: 0,
         ecoTypesList: [
           {
             name: 'Ecografia di screening del I trimestre',
@@ -54,7 +48,6 @@
           }
         ],
         ecoMethod: 'transaddominale',
-        ecoTool: 'Samsung WS80',
         otherTool: '',
         ecoType: {
           name: 'Ecografia di screening del I trimestre',
@@ -82,12 +75,10 @@
         deliveryDateFromCRL: '',
         deliveryDateFromCRLFormatting: '',
         crlDaysDiff: 0,
-        patientMore: false,
         pregnancyMore: false,
         ecoMore: false,
         biometriaMore: false,
         lastMore: false,
-        patientMoreText: '',
         pregnancyMoreText: '',
         ecoMoreText: '',
         biometriaMoreText: '',
@@ -96,12 +87,17 @@
         redatingPanel: false,
         enableCRLReDate: false,
         externalCRLReDate: false,
+        policyType: null,
         // popupMessage
         popupMessage: '',
         popupType: '',
         triggerPopup: false
       }
     },
+    computed: {
+      ecoTool: storeModel('ecoTool', 'SET_ECO_TOOL')
+    },
+
     watch: {
       deliveryDate(val) {
         this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY')
@@ -139,15 +135,6 @@
       }
     },
     methods: {
-      changeBirth() {
-        let today = dayjs()
-        let dateOfBirth = dayjs(this.dateOfBirth)
-        this.age = today.diff(dateOfBirth, 'year')
-      },
-      calcBMI() {
-        let meterHeight = this.height / 100
-        this.bmi = parseFloat(this.actualWeight / (meterHeight * meterHeight)).toFixed(2)
-      },
       manageBiometriaFetale(index) {
         let femore = false
         let circonferenzaC = false
@@ -614,80 +601,7 @@
       @showBack="triggerPopup = false"
     />
     <Office @print="showPrint = true" />
-    <!-- <Patient /> -->
-    <section class="patient">
-      <div class="title">Dati Paziente</div>
-      <div class="section-content">
-        <div class="left">
-          <div class="name">
-            <label for="name">Nome</label>
-            <input v-model="name" id="name" type="text" placeholder="Nome" />
-          </div>
-          <div class="surname">
-            <label for="surname">Cognome</label>
-            <input v-model="surname" id="surname" type="text" placeholder="Cognome" />
-          </div>
-          <div class="birth-date">
-            <label for="birthDate">Data di nascita</label>
-            <input
-              @change="changeBirth"
-              v-model="dateOfBirth"
-              id="birthDate"
-              type="date"
-              placeholder="Data di nascita"
-            />
-          </div>
-          <div class="age">
-            <label for="age">Età</label>
-            <input v-model="age" id="age" type="number" placeholder="Età" />
-          </div>
-        </div>
-        <div class="right">
-          <div class="height">
-            <label for="height">Altezza</label>
-            <input
-              @change="calcBMI"
-              v-model="height"
-              id="height"
-              type="number"
-              placeholder="Altezza"
-            />
-          </div>
-          <div class="normal-weight">
-            <label for="normalWeight">Peso Normale</label>
-            <input
-              v-model="normalWeight"
-              id="normalWeight"
-              type="number"
-              placeholder="Peso Normale"
-            />
-          </div>
-          <div class="actual-weight">
-            <label for="actualWeight">Peso Attuale</label>
-            <input
-              @change="calcBMI"
-              v-model="actualWeight"
-              id="actualWeight"
-              type="number"
-              placeholder="Peso Attuale"
-            />
-          </div>
-          <div class="bmi">
-            <label for="bmi">BMI</label>
-            <input v-model="bmi" id="bmi" type="number" placeholder="BMI" />
-          </div>
-        </div>
-      </div>
-      <div class="more-info">
-        <div v-if="!patientMore" class="add-more" @click="patientMore = true">+</div>
-        <textarea
-          v-else
-          v-model="patientMoreText"
-          placeholder="Aggiungi ulteriori informazioni"
-          rows="4"
-        ></textarea>
-      </div>
-    </section>
+    <Patient />
     <div class="double">
       <section class="pregnancy">
         <div class="title">Gravidanza</div>
@@ -1029,7 +943,18 @@
     </section>
 
     <section class="conclusion">
+      <div class="title">Conclusioni</div>
       <textarea v-model="conclusion" rows="4"></textarea>
+    </section>
+
+    <section class="policy">
+      <div class="title">Informativa</div>
+      <select v-model="policyType">
+        <option :value="null">Non inserire</option>
+        <option value="1">11-13 settimane</option>
+        <option value="2">II trimestre</option>
+        <option value="3">III trimestre</option>
+      </select>
     </section>
 
     <button class="print" @click="print">Print</button>
@@ -1037,13 +962,6 @@
   <Print
     v-else
     @comeBack="comeBack"
-    :patient="name + ' ' + surname"
-    :dateOfBirth="dateOfBirth"
-    :age="age"
-    :height="height"
-    :normalWeight="normalWeight"
-    :actualWeight="actualWeight"
-    :bmi="bmi"
     :pregnancy="pregnancy"
     :decimalWeeks="decimalWeeks"
     :enableCRLReDate="enableCRLReDate"
@@ -1061,11 +979,11 @@
     :direction="ecoType.value !== '1T' ? direction : ''"
     :liquid="liquid"
     :placenta="placenta"
-    :patientMore="patientMoreText"
     :pregnancyMore="pregnancyMoreText"
     :ecoMore="ecoMoreText"
     :biometriaMore="biometriaMoreText"
     :lastMore="lastMoreText"
     :conclusion="conclusion"
+    :policyType="policyType"
   />
 </template>

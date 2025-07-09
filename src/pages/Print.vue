@@ -83,7 +83,11 @@
       },
       conclusion: {
         type: String,
-        defalut: ''
+        default: ''
+      },
+      policyType: {
+        type: String,
+        default: null
       }
     },
     data() {
@@ -542,10 +546,7 @@
           suoi limiti nell'individuazione delle anomalie fetali.
         </p>
       </section>
-      <Informations
-        :ecoType="ecoType"
-        :weeks="enableCRLReDate ? decimalWeeksFromCRL : decimalWeeks"
-      />
+      <Informations v-if="policyType !== null" :policyType="policyType" />
       <section class="container-signature">
         <div class="signature">
           <div class="empty-space"></div>
