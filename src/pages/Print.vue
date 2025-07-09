@@ -291,7 +291,7 @@
     <header>
       <div class="top-header d-flex justify-between">
         <div class="img">
-          <div class="section-logo-dese" v-if="office === 'Desenzano'">
+          <div class="section-logo-dese" v-if="office.id === 'desenzano'">
             <img class="img-logo-dese" src="@/img/logo_sant_angela.png" />
             <p>Promises S.r.l.</p>
             <p>Via Adua n. 1</p>
@@ -306,7 +306,7 @@
             src="@/img/headerDese.png"
             > -->
           <img
-            v-else-if="office === 'Pralboino'"
+            v-else-if="office.id === 'pralboino'"
             class="img-pralboino"
             src="@/img/headerPralboino.jpg"
           />
