@@ -1,7 +1,6 @@
 <script>
   import Print from '@/pages/Print.vue'
   import PopupMessage from '@/components/PopupMessage.vue'
-  import ThemeSwitch from '@/components/ThemeSwitch.vue'
 
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
@@ -22,7 +21,6 @@
     components: {
       Print,
       PopupMessage,
-      ThemeSwitch,
       Patient,
       Office
     },

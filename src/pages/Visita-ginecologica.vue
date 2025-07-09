@@ -1,8 +1,14 @@
 <script>
+  import PopupMessage from '@/components/PopupMessage.vue'
+
+  import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
+
   export default {
     name: 'VisitaGinecologica',
     components: {
+      PopupMessage,
+      Patient,
       Office
     },
     data() {
@@ -16,8 +22,16 @@
 <template>
   <div class="visita-ginecologica form">
     <h1>Visita ginecologica</h1>
-    <p>Questa è la pagina per la visita ginecologica.</p>
-    <p>Qui puoi inserire i dati specifici per la visita ginecologica.</p>
-    <Office />
+    <div class="form">
+      <!-- <PopupMessage
+        :content="popupMessage"
+        position="bottom"
+        :type="popupType"
+        :show="triggerPopup"
+        @showBack="triggerPopup = false"
+      /> -->
+      <Office @print="showPrint = true" />
+      <Patient />
+    </div>
   </div>
 </template>

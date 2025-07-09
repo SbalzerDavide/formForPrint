@@ -1,21 +1,37 @@
 <script>
-export default {
-  name: 'VisitaOstetrica',
-  data() {
-    return {
-    };
-  },
-  mounted() {
-  },
-  methods: {
-  },
-};
+  import PopupMessage from '@/components/PopupMessage.vue'
+
+  import Patient from '@/components/sections/Patient.vue'
+  import Office from '@/components/sections/Office.vue'
+
+  export default {
+    name: 'VisitaOstetrica',
+    components: {
+      PopupMessage,
+      Patient,
+      Office
+    },
+    data() {
+      return {}
+    },
+    mounted() {},
+    methods: {}
+  }
 </script>
 
 <template>
   <div class="visita-ginecologica">
     <h1>Visita ostetrica</h1>
-    <p>Questa è la pagina per la visita ginecologica.</p>
-    <p>Qui puoi inserire i dati specifici per la visita ginecologica.</p>
+    <div class="form">
+      <!-- <PopupMessage
+        :content="popupMessage"
+        position="bottom"
+        :type="popupType"
+        :show="triggerPopup"
+        @showBack="triggerPopup = false"
+      /> -->
+      <Office @print="showPrint = true" />
+      <Patient />
+    </div>
   </div>
 </template>
