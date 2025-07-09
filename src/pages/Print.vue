@@ -9,34 +9,6 @@
       Informations
     },
     props: {
-      patient: {
-        type: String,
-        default: 'Pico della Mirandola'
-      },
-      dateOfBirth: {
-        type: String,
-        default: '24.02.1463'
-      },
-      age: {
-        type: Number,
-        default: 0
-      },
-      height: {
-        type: Number,
-        default: 0
-      },
-      normalWeight: {
-        type: Number,
-        default: 0
-      },
-      actualWeight: {
-        type: Number,
-        default: 0
-      },
-      bmi: {
-        type: Number,
-        default: 0
-      },
       pregnancy: Object,
       ecoType: Object,
       ecoMethod: {
@@ -129,8 +101,60 @@
       }
     },
     computed: {
-      user: storeModel('user', 'SET_USER'),
-      office: storeModel('office', 'SET_OFFICE')
+      user: {
+        get() {
+          return this.$store.state.user
+        }
+      },
+
+      office: {
+        get() {
+          return this.$store.state.office
+        }
+      },
+      patient: {
+        get() {
+          return this.$store.state.name + ' ' + this.$store.state.surname
+        }
+      },
+      dateOfBirth: {
+        get() {
+          return this.$store.state.dateOfBirth
+        }
+      },
+
+      age: {
+        get() {
+          return this.$store.state.age
+        }
+      },
+
+      bmi: {
+        get() {
+          return this.$store.state.bmi
+        }
+      },
+
+      height: {
+        get() {
+          return this.$store.state.height
+        }
+      },
+      normalWeight: {
+        get() {
+          return this.$store.state.normalWeight
+        }
+      },
+      actualWeight: {
+        get() {
+          return this.$store.state.actualWeight
+        }
+      },
+      patientMoreText: {
+        get() {
+          return this.$store.state.patientMoreText
+        }
+      }
     },
 
     created() {
@@ -298,7 +322,7 @@
     <main>
       <section class="patient">
         Paziente: {{ patient }}, data di nascita: {{ formattingDateOfBirth }}
-        <p v-if="patientMore !== ''">{{ patientMore }}</p>
+        <p v-if="patientMoreText !== ''">{{ patientMoreText }}</p>
       </section>
       <section class="medical-history">
         <div class="title-par">Anamnesi</div>
