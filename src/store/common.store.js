@@ -9,7 +9,7 @@ export const commonStore = new Vuex.Store({
     user: Users[0], // Default user
     office: Offices[0], // Default office
     ecoTool: 'Samsung WS80',
-
+    patients: [],
     // patient 
     name: '',
     surname: '',
@@ -26,6 +26,9 @@ export const commonStore = new Vuex.Store({
   mutations: {
     SET_USER(state, user) {
       state.user = user
+    },
+    SET_PATIENTS(state, patients) {
+      state.patients = patients
     },
     SET_OFFICE(state, office) {
       if (office.id === 'pralboino') {
@@ -49,7 +52,7 @@ export const commonStore = new Vuex.Store({
       let today = dayjs()
       let formattedDate = dayjs(dateOfBirth)
       const age = today.diff(formattedDate, 'year')
-      state.dateOfBirth = formattedDate
+      state.dateOfBirth = dateOfBirth
       state.age = age
     },
     SET_HEIGHT(state, height) {
@@ -71,8 +74,6 @@ export const commonStore = new Vuex.Store({
     },
     SET_PATIENT_MORE_TEXT(state, patientMoreText) {
       state.patientMoreText = patientMoreText
-      console.log('SET_PATIENT_MORE_TEXT', state.patientMoreText);
-
     }
   },
   // getters: {
