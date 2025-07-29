@@ -42,6 +42,7 @@
       <div class="d-flex">
         <div class="title">Ambulatorio</div>
         <select v-model="office">
+          <option disabled selected value>-- select an option --</option>
           <option v-for="office in offices" :key="office.id" :value="office">
             {{ office.label }}
           </option>
