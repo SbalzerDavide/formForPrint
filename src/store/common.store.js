@@ -2,12 +2,11 @@ import Vuex from "vuex"
 import { Users } from '@/const/users.js'
 import { Offices } from '@/const/offices.js'
 
-
 export const commonStore = new Vuex.Store({
   state: {
     // office 
     user: Users[0], // Default user
-    office: Offices[0], // Default office
+    office: null,
     ecoTool: 'Samsung WS80',
     patients: [],
     // patient 
