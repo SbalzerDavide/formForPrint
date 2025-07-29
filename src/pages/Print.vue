@@ -290,7 +290,7 @@
     <button class="come-back-to-form hide-print" @click="comeBack">Modifica dati</button>
     <header>
       <div class="top-header d-flex justify-between">
-        <div class="img">
+        <div v-if="office" class="img">
           <div class="section-logo-dese" v-if="office.id === 'desenzano'">
             <img class="img-logo-dese" src="@/img/logo_sant_angela.png" />
             <p>Promises S.r.l.</p>
@@ -312,7 +312,7 @@
           />
           <!-- src="/img/headerPralboino.jpg" -->
         </div>
-        <div class="user-info" v-if="user.name === 'Giorgia'">
+        <div class="user-info" :class="!office ? '' : 'text-right'" v-if="user.name === 'Giorgia'">
           <p>Dott.ssa Giorgia Mazzoni</p>
           <p>Medico chirurgo</p>
           <p>specialista in Ginecologia e Ostetricia</p>
