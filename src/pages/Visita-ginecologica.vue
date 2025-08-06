@@ -25,6 +25,12 @@
         pathologicalAnamneses: [],
         addMorePathologicalAnamnesis: false,
         newPathologicalAnamnesis: '',
+        paraP: 0,
+        paraX: 0,
+        paraY: 0,
+        paraZ: 0,
+        paraW: 0,
+        lastPregnancyDate: null,
         conclusion: ''
       }
     },
@@ -191,13 +197,20 @@
       </section>
       <section>
         <div class="title">Anamnesi ginecologica</div>
-        <div class="d-flex items-center gap-4">
-          <div class="w-48">Gravidanze</div>
-          <div class="d-flex gap-2">
-            <input type="number" class="custom-input w-8 h-8" />
-            <input type="number" class="custom-input w-8 h-8" />
-            <input type="number" class="custom-input w-8 h-8" />
-            <input type="number" class="custom-input w-8 h-8" />
+        <div class="d-flex flex-col gap-4">
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Gravidanze</div>
+            <div class="d-flex gap-2">
+              <input type="number" class="custom-input w-8 h-8" v-model="paraP" />
+              <input type="number" class="custom-input w-8 h-8" v-model="paraX" />
+              <input type="number" class="custom-input w-8 h-8" v-model="paraY" />
+              <input type="number" class="custom-input w-8 h-8" v-model="paraZ" />
+              <input type="number" class="custom-input w-8 h-8" v-model="paraW" />
+            </div>
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Ultima Gravidanza</div>
+            <input type="date" v-model="lastPregnancyDate" />
           </div>
         </div>
       </section>
