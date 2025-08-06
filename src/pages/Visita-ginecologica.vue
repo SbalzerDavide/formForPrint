@@ -24,7 +24,8 @@
         familyAnamnesis: '',
         pathologicalAnamneses: [],
         addMorePathologicalAnamnesis: false,
-        newPathologicalAnamnesis: ''
+        newPathologicalAnamnesis: '',
+        conclusion: ''
       }
     },
     mounted() {},
@@ -190,6 +191,27 @@
       </section>
       <section>
         <div class="title">Anamnesi ginecologica</div>
+        <div class="d-flex items-center gap-4">
+          <div class="w-48">Gravidanze</div>
+          <div class="d-flex gap-2">
+            <input type="number" class="custom-input w-8 h-8" />
+            <input type="number" class="custom-input w-8 h-8" />
+            <input type="number" class="custom-input w-8 h-8" />
+            <input type="number" class="custom-input w-8 h-8" />
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="title">Conclusioni</div>
+        <div class="description">
+          <textarea
+            class="w-full"
+            v-model="conclusion"
+            rows="8"
+            placeholder="Inserisci le conclusioni della visita"
+            style="resize: none"
+          ></textarea>
+        </div>
       </section>
     </div>
   </div>
