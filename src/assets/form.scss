@@ -1,30 +1,30 @@
-.form{
+.form {
   display: flex;
   flex-direction: column;
-  .double{
+  .double {
     display: flex;
     justify-content: space-between;
-    section{
+    section {
       width: 48%;
       // flex-grow: 1;
       // flex-basis: 300px;
     }
   }
-  section{
+  section {
     text-align: left;
     width: 100%;
-    background-color: rgba(255,255,255,.04);
+    background-color: rgba(255, 255, 255, 0.04);
     border-radius: 8px;
     margin: 18px 0;
     padding: 10px;
-    &.office{
+    &.office {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .operator{
+      .operator {
         margin-right: 10px;
       }
-      .title{
+      .title {
         // display: flex;
         // align-items: center;
         vertical-align: middle;
@@ -32,20 +32,17 @@
         height: 100%;
         margin-right: 10px;
       }
-      select{
-        height: 25px;
-      }
-      .right-top{
+      .right-top {
         display: flex;
         align-items: center;
-        button{
+        button {
           margin-left: 20px;
         }
       }
     }
-    .more-info{
+    .more-info {
       margin-top: 8px;
-      .add-more{
+      .add-more {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -57,89 +54,98 @@
         background-color: #1a1a1a;
         cursor: pointer;
         transition: border-color 0.25s;
-        &:hover{
+        &:hover {
           border-color: #646cff;
         }
       }
-      textarea{
+      textarea {
         width: 100%;
         resize: none;
       }
     }
-    &.patient{
-      .section-content{
+    &.patient {
+      .section-content {
         display: flex;
-        .left, .right{
+        .left,
+        .right {
           flex-grow: 1;
         }
       }
     }
-    .title{
+    .title {
       font-weight: bold;
       margin-bottom: 10px;
-      span{
+      span {
         font-weight: normal;
       }
     }
-    label{
+    label {
       display: inline-block;
       width: 150px;
     }
-    input{
+    input:not(.custom-input) {
       width: 200px;
+      height: 1.75rem;
+      margin-bottom: 8px;
     }
-    &.pregnancy{
-      input{
+    select {
+      width: 200px;
+      height: 1.75rem;
+      margin-bottom: 8px;
+    }
+    &.pregnancy {
+      input {
         width: 150px;
       }
-      .epoca-gestazionale-CRL{
+      .epoca-gestazionale-CRL {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         user-select: none;
-        .checkbox{
+        .checkbox {
           display: flex;
           align-items: center;
-          input{
+          input {
             width: auto;
             margin-right: 10px;
           }
-          label{
+          label {
             width: auto;
           }
         }
-        .action{
+        .action {
           display: flex;
           justify-content: flex-end;
         }
-        button{
+        button {
           padding: 3px 8px;
         }
       }
     }
-    .switch{
+    .switch {
       display: flex;
       position: relative;
-      &>.selStart, &>.selEnd{
+      & > .selStart,
+      & > .selEnd {
         margin: 5px 15px 10px 5px;
         padding-bottom: 5px;
         color: #888;
         cursor: pointer;
-        &.act{
+        &.act {
           color: rgba(255, 255, 255, 0.87);
         }
       }
-      .active{
+      .active {
         position: absolute;
         bottom: 10px;
         height: 2px;
         background-color: rgb(133, 133, 133);
-        transition: all .3s;
-        &.start{
+        transition: all 0.3s;
+        &.start {
           width: 135px;
           left: 10px;
         }
-        &.end{
+        &.end {
           width: 128px;
           left: 175px;
         }
@@ -151,58 +157,61 @@
       // border-radius: 25px;
       // border: 1px solid rgb(133, 133, 133);
     }
-    &.eco{
-      select, input{
+    &.eco {
+      select,
+      input {
         width: 250px;
       }
-      .other-tool{
+      .other-tool {
         margin-left: 150px;
       }
     }
-    &.biometria-fetale{
-      .biometria-item{
+    &.biometria-fetale {
+      .biometria-item {
         display: flex;
         align-items: center;
       }
-      label{
+      label {
         width: 35%;
       }
-      input, .calc{
+      input,
+      .calc {
         width: 15%;
         margin-right: 10px;
       }
-      .unit{
+      .unit {
         width: 30px;
         margin-right: 30px;
       }
-      .percentile{
+      .percentile {
         min-width: 50px;
       }
-      .right{
+      .right {
         display: flex;
         align-items: center;
-        .right-ok{
+        .right-ok {
           width: 18px;
           height: 18px;
           border-radius: 50%;
           background: green;
         }
-        .right-not-ok{
+        .right-not-ok {
           width: 18px;
           height: 18px;
           border-radius: 50%;
           background: red;
         }
       }
-      button{
+      button {
         margin-left: 10px;
         padding: 3px 8px;
       }
-      .crl-diff, .nt-delta{
+      .crl-diff,
+      .nt-delta {
         margin-left: 10px;
       }
     }
-    &.re-dating-panel{
+    &.re-dating-panel {
       margin: 0;
       padding: 0;
       position: fixed;
@@ -215,76 +224,75 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      .re-dating-background{
+      .re-dating-background {
         position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 1;
-        
       }
-      .re-dating-container{
+      .re-dating-container {
         padding: 20px;
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.87);
         background-color: #242424;
         z-index: 2;
-        span{
+        span {
           display: inline-block;
           width: 200px;
           font-weight: bold;
         }
-        .old-date{
+        .old-date {
           margin: 12px 0;
           padding: 8px 0;
           border-bottom: 1px solid #d9d9d9;
         }
-        .new-date{
+        .new-date {
           display: flex;
           // align-items: center;
           margin: 8px 0;
         }
-        .panel-title{
+        .panel-title {
           text-align: center;
         }
-        .re-dating-input{
+        .re-dating-input {
           display: flex;
           flex-direction: column;
         }
-        .number{
+        .number {
           display: flex;
-          input{
+          input {
             width: 40px;
             margin: 5px;
           }
         }
-        .delivery{
+        .delivery {
           display: flex;
           margin-top: 8px;
-          label{
+          label {
             width: auto;
           }
-          input{
+          input {
             margin-left: 8px;
             flex-grow: 1;
             width: auto;
           }
         }
-        .action{
+        .action {
           display: flex;
           justify-content: space-between;
           margin-top: 30px;
         }
       }
     }
-    &.anatomy{
-      .anatomy-container{
+    &.anatomy {
+      .anatomy-container {
         display: flex;
         flex-wrap: wrap;
         user-select: none;
       }
-      .anatomy-more{
+      .anatomy-more {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -297,195 +305,200 @@
         background-color: #1a1a1a;
         cursor: pointer;
         transition: border-color 0.25s;
-        &:hover{
+        &:hover {
           border-color: #646cff;
         }
       }
-      .left{
+      .left {
         display: flex;
         align-items: center;
       }
-      .anatomy-element{
+      .anatomy-element {
         width: 33%;
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
         margin-bottom: 8px;
-        label{
+        label {
           width: 240px;
-          &.anatomy-checked{
+          &.anatomy-checked {
             font-weight: bold;
           }
         }
-        input[type=checkbox]{
+        input[type='checkbox'] {
           width: auto;
           margin-right: 40px;
         }
-        input[type=text]{
+        input[type='text'] {
           margin-top: 5px;
           width: 87%;
         }
       }
     }
-    &.doppler{
-      .doppler-item{
+    &.doppler {
+      .doppler-item {
         display: flex;
       }
-      label{
+      label {
         width: 35%;
       }
-      input, .calc{
+      input,
+      .calc {
         width: 15%;
         margin-right: 10px;
       }
-      .unit{
+      .unit {
         width: 30px;
         margin-right: 30px;
       }
-      .percentile{
+      .percentile {
         width: 80px;
       }
-      .check-doppler{
+      .check-doppler {
         display: flex;
         align-items: center;
-        label{
+        label {
           width: 100px;
         }
       }
-      .chart-percentile{
+      .chart-percentile {
         display: flex;
         align-items: center;
         width: 16%;
-        margin-right: 10px;        
-        & > div{
+        margin-right: 10px;
+        & > div {
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .base{
+        .base {
           position: relative;
           width: 100px;
           height: 1.5px;
-          background: rgba(255, 255, 255, 0.87);;
-          .middle{
+          background: rgba(255, 255, 255, 0.87);
+          .middle {
             position: absolute;
             left: 50px;
             top: -4px;
             width: 1.5px;
             height: 9px;
-            background: rgba(255, 255, 255, 0.87);;
+            background: rgba(255, 255, 255, 0.87);
           }
-          .point{
+          .point {
             position: absolute;
             top: -3px;
             width: 7px;
             height: 7px;
             transform: rotate(-45deg);
-            background: rgba(255, 255, 255, 0.87);;
+            background: rgba(255, 255, 255, 0.87);
           }
         }
-        .line{
+        .line {
           height: 12px;
           width: 1.5px;
-          background: rgba(255, 255, 255, 0.87);;
+          background: rgba(255, 255, 255, 0.87);
         }
       }
     }
-    &.conclusion{
-      textarea{
+    &.conclusion {
+      textarea {
         width: 100%;
         resize: none;
       }
     }
-    &.more{
-      &>div{
+    &.more {
+      & > div {
         margin: 5px 0;
       }
-      .att-card{
+      .att-card {
         display: flex;
         height: 30px;
         align-items: center;
-        input{
+        input {
           width: 25px;
         }
-        label{
+        label {
           width: 100px;
         }
       }
-      .presentazione, .liq-amn, .placenta{
+      .presentazione,
+      .liq-amn,
+      .placenta {
         display: flex;
-        select{
+        select {
           width: 200px;
           margin-left: 10px;
         }
-        input{
+        input {
           width: 300px;
           margin-left: 10px;
         }
       }
-      .name{
+      .name {
         width: 20%;
       }
     }
-
   }
-  button.print{
-    background: #55917F;
+  button.print {
+    background: #55917f;
   }
 }
 // @media (prefers-color-scheme: light) {
-.theme-light{
-  .form{
-    section{
-      background-color: rgba(221, 213, 223, .3);
-      .more-info{
-        .add-more{
+.theme-light {
+  .form {
+    section {
+      background-color: rgba(221, 213, 223, 0.3);
+      .more-info {
+        .add-more {
           // background-color: rgba(0, 0, 0, .1);s
-          background-color: rgba(229, 190, 237, .5);
+          background-color: rgba(229, 190, 237, 0.5);
         }
       }
-      &.anatomy{
-        .anatomy-more{
-          background-color: rgba(0, 0, 0, .1);
+      &.anatomy {
+        .anatomy-more {
+          background-color: rgba(0, 0, 0, 0.1);
         }
       }
-      .chart-percentile{
-        .line, .base .middle, .base .point, .base{
+      .chart-percentile {
+        .line,
+        .base .middle,
+        .base .point,
+        .base {
           background-color: #1a1a1a !important;
         }
       }
-      &.re-dating-panel{
-        .re-dating-container{
+      &.re-dating-panel {
+        .re-dating-container {
           border: 1px solid rgba(0, 0, 0, 0.87);
-          background-color: #DDD5DF;
-          .old-date{
+          background-color: #ddd5df;
+          .old-date {
             border-bottom: 1px solid #242424;
           }
-          button{
-            background-color: rgba(0, 0, 0, .1);
+          button {
+            background-color: rgba(0, 0, 0, 0.1);
           }
-          .action{
-            
+          .action {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
           }
         }
       }
-    
     }
-    .act{
+    .act {
       color: rgba(0, 0, 0, 0.87) !important;
     }
 
-
-    input, select{
-      background-color: rgba(0, 0, 0, .04);
-      border: 1px solid #1a1a1a
+    input,
+    select {
+      background-color: rgba(0, 0, 0, 0.04);
+      border: 1px solid #1a1a1a;
+      height: 1.75rem;
+      margin-bottom: 8px;
     }
-    textarea{
-      background-color: rgba(0, 0, 0, .04);
+    textarea {
+      background-color: rgba(0, 0, 0, 0.04);
     }
   }
 }
