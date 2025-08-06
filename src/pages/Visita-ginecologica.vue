@@ -23,10 +23,24 @@
             value: 'Testo motivo 2'
           }
         ],
+        savedPathologicalAnamneses: [
+          {
+            label: 'Anamnesi 1',
+            value: 'Testo anamnesi 1'
+          },
+          {
+            label: 'Anamnesi 2',
+            value: 'Testo anamnesi 2'
+          }
+        ],
         reason: '',
         allergies: ['Allergia 1', 'Allergia 2'],
         addMoreAllergie: false,
-        newAllergy: ''
+        newAllergy: '',
+        familyAnamnesis: '',
+        pathologicalAnamneses: [],
+        addMorePathologicalAnamnesis: false,
+        newPathologicalAnamnesis: ''
       }
     },
     mounted() {},
@@ -38,7 +52,7 @@
         this.addMoreAllergie = true
         this.newAllergy = ''
         setTimeout(() => {
-          this.$refs.addAllergy.focus()
+          this.$refs.addAllergyElement.focus()
         }, 10)
       },
       saveNewAllergy() {
@@ -46,6 +60,26 @@
           this.allergies.push(this.newAllergy.trim())
           this.newAllergy = ''
           this.addMoreAllergie = false
+        }
+      },
+      addPathologicalAnamnesis() {
+        this.addMorePathologicalAnamnesis = true
+        this.newPathologicalAnamnesis = ''
+        setTimeout(() => {
+          this.$refs.addPathologicalAnamnesisSelectElement.focus()
+        }, 10)
+      },
+      setPathologicalAnamnesis(event) {
+        this.newPathologicalAnamnesis = event.target.value
+        setTimeout(() => {
+          this.$refs.addPathologicalAnamnesisElement.focus()
+        }, 10)
+      },
+      saveNewPathologicalAnamnesis() {
+        if (this.newPathologicalAnamnesis.trim()) {
+          this.pathologicalAnamneses.push(this.newPathologicalAnamnesis.trim())
+          this.newPathologicalAnamnesis = ''
+          this.addMorePathologicalAnamnesis = false
         }
       }
     }
@@ -73,8 +107,9 @@
             <textarea
               class="w-full"
               v-model="reason"
-              rows="4"
+              rows="8"
               placeholder="Descrizione del motivo della visita"
+              style="resize: none"
             ></textarea>
           </div>
         </section>
@@ -91,7 +126,7 @@
             <ul class="d-flex flex-col flex-wrap pl-0">
               <li
                 class="d-flex gap-2 justify-content-between items-center w-40"
-                v-for="(allergy, index) in allergies"
+                v-for="allergy in allergies"
                 :key="allergy"
               >
                 <span>- {{ allergy }}</span>
@@ -100,7 +135,7 @@
           </div>
           <div v-if="addMoreAllergie === true" class="d-flex align-items-center gap-2">
             <input
-              ref="addAllergy"
+              ref="addAllergyElement"
               v-model="newAllergy"
               @keyup.enter="saveNewAllergy"
               type="text"
@@ -115,9 +150,59 @@
       </div>
       <section>
         <div class="title">Anamnesi familiare</div>
+        <textarea
+          class="w-full"
+          v-model="familyAnamnesis"
+          rows="4"
+          placeholder="Descrizione dell'anamnesi familiare"
+        ></textarea>
       </section>
       <section>
-        <div class="title">Anamnesi patologica remota</div>
+        <div class="title d-flex gap-2 items-center">
+          <span>Anamnesi patologica remota</span>
+          <span>
+            <div @click="addPathologicalAnamnesis()" class="add-more">
+              <font-awesome-icon icon="fa-solid fa-plus" />
+            </div>
+          </span>
+        </div>
+        <div class="d-flex h-2/3">
+          <ul class="pl-0">
+            <li
+              class="d-flex gap-2 justify-content-between items-center"
+              v-for="pathologicalAnamnesis in pathologicalAnamneses"
+              :key="pathologicalAnamnesis"
+            >
+              <span>- {{ pathologicalAnamnesis }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="addMorePathologicalAnamnesis === true" class="d-flex flex-col gap-2 w-1/2">
+          <select @change="setPathologicalAnamnesis" ref="addPathologicalAnamnesisSelectElement">
+            <option disabled selected value>-- select an option --</option>
+            <option
+              v-for="pathologicalAnamnesis in savedPathologicalAnamneses"
+              :key="pathologicalAnamnesis.value"
+              :value="pathologicalAnamnesis.value"
+            >
+              {{ pathologicalAnamnesis.label }}
+            </option>
+          </select>
+          <div class="d-flex align-items-center gap-2 w-full">
+            <input
+              ref="addPathologicalAnamnesisElement"
+              v-model="newPathologicalAnamnesis"
+              @keyup.enter="saveNewPathologicalAnamnesis"
+              type="text"
+              class="flex-grow"
+              placeholder="Inserisci anamnesi patologica remota"
+            />
+            <div @click="saveNewPathologicalAnamnesis" class="icon-check">
+              <font-awesome-icon icon="fa-solid fa-check" />
+            </div>
+          </div>
+        </div>
       </section>
       <section>
         <div class="title">Anamnesi ginecologica</div>
