@@ -8,7 +8,6 @@
       // USO
       this.fetchAndParseCSV('/patients.csv')
         .then((patients) => {
-          console.log(patients)
           this.$store.commit('SET_PATIENTS', patients)
         })
         .catch((error) => console.error('Errore nel parsing CSV:', error))
