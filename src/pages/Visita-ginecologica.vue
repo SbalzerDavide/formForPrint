@@ -4,6 +4,8 @@
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
 
+  import { Reasons, SavedPathologicalAnamneses } from '../const/visitaGinecologica'
+
   export default {
     name: 'VisitaGinecologica',
     components: {
@@ -13,28 +15,10 @@
     },
     data() {
       return {
-        reasons: [
-          {
-            label: 'Motivo 1',
-            value: 'Testo motivo 1'
-          },
-          {
-            label: 'Motivo 2',
-            value: 'Testo motivo 2'
-          }
-        ],
-        savedPathologicalAnamneses: [
-          {
-            label: 'Anamnesi 1',
-            value: 'Testo anamnesi 1'
-          },
-          {
-            label: 'Anamnesi 2',
-            value: 'Testo anamnesi 2'
-          }
-        ],
+        reasons: Reasons,
+        savedPathologicalAnamneses: SavedPathologicalAnamneses,
         reason: '',
-        allergies: ['Allergia 1', 'Allergia 2'],
+        allergies: [],
         addMoreAllergie: false,
         newAllergy: '',
         familyAnamnesis: '',
