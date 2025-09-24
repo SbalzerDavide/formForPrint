@@ -29,7 +29,6 @@
         paraX: 0,
         paraY: 0,
         paraZ: 0,
-        paraW: 0,
         lastPregnancyDate: null,
         papTest: false,
         conclusion: ''
@@ -210,7 +209,6 @@
               <input type="number" class="custom-input w-8 h-8" v-model="paraX" />
               <input type="number" class="custom-input w-8 h-8" v-model="paraY" />
               <input type="number" class="custom-input w-8 h-8" v-model="paraZ" />
-              <input type="number" class="custom-input w-8 h-8" v-model="paraW" />
             </div>
           </div>
           <div class="d-flex items-center gap-4">
@@ -228,6 +226,15 @@
       </section>
       <section>
         <div class="title">Esame obiettivo</div>
+        <div class="es">
+          <label for="type">ES</label>
+          <select v-model="es">
+            <option value="transaddominale">Transaddominale</option>
+            <option value="transvaginale">Transvaginale</option>
+            <option value="transaddominale e trasvaginale">Transaddominale e Trasvaginale</option>
+          </select>
+        </div>
+        <div></div>
       </section>
       <section>
         <div class="title">Conclusioni</div>
