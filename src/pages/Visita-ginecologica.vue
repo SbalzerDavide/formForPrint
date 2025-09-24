@@ -31,6 +31,7 @@
         paraZ: 0,
         paraW: 0,
         lastPregnancyDate: null,
+        papTest: false,
         conclusion: ''
       }
     },
@@ -72,6 +73,9 @@
           this.newPathologicalAnamnesis = ''
           this.addMorePathologicalAnamnesis = false
         }
+      },
+      removePathologicalAnamnesis(index) {
+        this.pathologicalAnamneses.splice(index, 1)
       }
     }
   }
@@ -151,20 +155,21 @@
       <section>
         <div class="title d-flex gap-2 items-center">
           <span>Anamnesi patologica remota</span>
-          <span>
-            <div @click="addPathologicalAnamnesis()" class="add-more">
-              <font-awesome-icon icon="fa-solid fa-plus" />
-            </div>
-          </span>
+          <div @click="addPathologicalAnamnesis()" class="add-more">
+            <font-awesome-icon icon="fa-solid fa-plus" />
+          </div>
         </div>
         <div class="d-flex h-2/3">
           <ul class="pl-0">
             <li
               class="d-flex gap-2 justify-content-between items-center"
-              v-for="pathologicalAnamnesis in pathologicalAnamneses"
+              v-for="(pathologicalAnamnesis, index) in pathologicalAnamneses"
               :key="pathologicalAnamnesis"
             >
               <span>- {{ pathologicalAnamnesis }}</span>
+              <span @click="removePathologicalAnamnesis(index)" class="icon-delete">
+                <font-awesome-icon icon="fa-solid fa-trash" />
+              </span>
             </li>
           </ul>
         </div>
@@ -212,7 +217,17 @@
             <div class="w-48">Ultima Gravidanza</div>
             <input type="date" v-model="lastPregnancyDate" />
           </div>
+          <div class="d-flex align-items-start gap-4">
+            <div class="w-48">Pap test</div>
+            <div class="d-flex gap-2 items-center">
+              <input type="checkbox" class="w-auto mb-0" v-model="papTest" />
+              <label for="papTest">fatto</label>
+            </div>
+          </div>
         </div>
+      </section>
+      <section>
+        <div class="title">Esame obiettivo</div>
       </section>
       <section>
         <div class="title">Conclusioni</div>
@@ -246,6 +261,25 @@
     transition: all 0.25s;
     &:hover {
       border-color: #646cff;
+      background-color: #2a2a2a;
+    }
+  }
+
+  .icon-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: #f44336;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: all 0.25s;
+    &:hover {
+      border-color: #f44336;
       background-color: #2a2a2a;
     }
   }
