@@ -31,7 +31,11 @@
         paraZ: 0,
         lastPregnancyDate: null,
         papTest: false,
-        conclusion: ''
+        conclusion: '',
+        selectdCities: null,
+        es: '',
+        eog: '',
+        eco_tv: ''
       }
     },
     mounted() {},
@@ -217,6 +221,7 @@
           </div>
           <div class="d-flex align-items-start gap-4">
             <div class="w-48">Pap test</div>
+            <!-- data e risultato -->
             <div class="d-flex gap-2 items-center">
               <input type="checkbox" class="w-auto mb-0" v-model="papTest" />
               <label for="papTest">fatto</label>
@@ -226,15 +231,18 @@
       </section>
       <section>
         <div class="title">Esame obiettivo</div>
-        <div class="es">
+        <div>
           <label for="type">ES</label>
-          <select v-model="es">
-            <option value="transaddominale">Transaddominale</option>
-            <option value="transvaginale">Transvaginale</option>
-            <option value="transaddominale e trasvaginale">Transaddominale e Trasvaginale</option>
-          </select>
+          <input class="input-large" type="text" name="es" id="es" v-model="es" />
         </div>
-        <div></div>
+        <div>
+          <label for="type">EOG</label>
+          <input class="input-large" type="text" name="eog" id="eog" v-model="eog" />
+        </div>
+        <div>
+          <label for="type">ECO TV</label>
+          <input class="input-large" type="text" name="eco_tv" id="eco_tv" v-model="eco_tv" />
+        </div>
       </section>
       <section>
         <div class="title">Conclusioni</div>
@@ -311,5 +319,8 @@
   }
   .allergies-section {
     height: 250px;
+  }
+  .input-large {
+    width: 400px !important;
   }
 </style>
