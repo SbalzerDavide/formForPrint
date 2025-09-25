@@ -43,7 +43,7 @@
 
 <template>
   <div class="visit">
-    <h1>Visit template</h1>
+    <!-- <h1>Visit template</h1> -->
   </div>
   <router-view></router-view>
 </template>
