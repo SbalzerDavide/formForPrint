@@ -14,10 +14,23 @@ window.NormalDistribution = NormalDistribution;
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+
 library.add(fas)
 
 createApp(App)
   .use(router)
   .use(commonStore)
+  .use(PrimeVue, {
+    theme: {
+      preset: Aura,
+      options: {
+        prefix: 'p',
+        darkModeSelector: 'system',
+        cssLayer: false
+      }
+    }
+  })
   .component('font-awesome-icon', FontAwesomeIcon)
   .mount('#app');
