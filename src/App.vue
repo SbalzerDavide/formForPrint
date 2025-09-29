@@ -26,6 +26,6 @@
 </template>
 
 <style lang="scss">
-  @import './assets/utility.scss';
-  @import './assets/form.scss';
+  @use './assets/utility.scss';
+  @use './assets/form.scss';
 </style>

@@ -565,5 +565,5 @@
 </template>
 
 <style lang="scss" scoped>
-  @import '../assets/print';
+  @use '../assets/print';
 </style>
