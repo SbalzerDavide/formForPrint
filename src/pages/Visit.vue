@@ -1,6 +1,10 @@
 <script>
+  import Header from '@/components/sections/Header.vue'
   export default {
     name: 'Visit',
+    components: {
+      Header
+    },
     data() {
       return {}
     },
@@ -42,9 +46,7 @@
 </script>
 
 <template>
-  <div class="visit">
-    <h1>Visit template</h1>
-  </div>
+  <Header></Header>
   <router-view></router-view>
 </template>
 

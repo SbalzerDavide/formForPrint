@@ -95,7 +95,6 @@
     computed: {
       ecoTool: storeModel('ecoTool', 'SET_ECO_TOOL')
     },
-
     watch: {
       deliveryDate(val) {
         this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY')
@@ -131,6 +130,9 @@
           this.conclusion = 'Biometria fetale regolare'
         }
       }
+    },
+    created() {
+      this.$store.commit('SET_ACTIVE_PAGE', 'Ecografia ostetrica')
     },
     methods: {
       manageBiometriaFetale(index) {

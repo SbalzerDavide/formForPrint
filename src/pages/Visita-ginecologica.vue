@@ -38,6 +38,9 @@
         eco_tv: ''
       }
     },
+    created() {
+      this.$store.commit('SET_ACTIVE_PAGE', 'Visita ginecologica')
+    },
     mounted() {},
     methods: {
       setReason(event) {

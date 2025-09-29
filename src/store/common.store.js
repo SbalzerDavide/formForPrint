@@ -4,6 +4,7 @@ import { Offices } from '@/const/offices.js'
 
 export const commonStore = new Vuex.Store({
   state: {
+    activePage: 'Home',
     // office 
     user: Users[0], // Default user
     office: null,
@@ -23,6 +24,9 @@ export const commonStore = new Vuex.Store({
 
   },
   mutations: {
+    SET_ACTIVE_PAGE(state, page) {
+      state.activePage = page
+    },
     SET_USER(state, user) {
       state.user = user
     },

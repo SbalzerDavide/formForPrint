@@ -264,7 +264,7 @@
     page-break-after: always;
   }
   .hide-print {
-    display: none;
+    display: none !important;
   }
   footer {
     display: block;
