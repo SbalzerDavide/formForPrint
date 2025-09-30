@@ -63,3 +63,18 @@ export const SavedPathologicalAnamneses = [
     value: 'Storia di displasia cervicale di basso grado (LSIL) con follow-up negativo'
   }
 ]
+
+export const papTestResults = [
+  {
+    label: 'Negativo',
+    value: 'Pap test negativo per lesioni intraepiteliali o malignità'
+  },
+  {
+    label: 'ASC-US',
+    value: 'Cellule squamose atipiche di significato indeterminato (ASC-US)'
+  },
+  {
+    label: 'LSIL',
+    value: 'Lesione intraepiteliale squamosa di basso grado (LSIL)'
+  }
+]
