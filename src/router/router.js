@@ -5,6 +5,7 @@ import EcografiaOstetrica from '@/pages/Ecografia-ostetrica.vue'
 import VisitaGinecologica from '@/pages/Visita-ginecologica.vue'
 import VisitaOstetrica from '@/pages/Visita-ostetrica.vue'
 import Visit from '@/pages/Visit.vue'
+import Print from '@/pages/Print.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -13,6 +14,7 @@ const routes = [
       { path: 'ecografia-ostetrica', name: 'EcografiaOstetrica', component: EcografiaOstetrica },
       { path: 'visita-ginecologica', name: 'VisitaGinecologica', component: VisitaGinecologica },
       { path: 'visita-ostetrica', name: 'VisitaOstetrica', component: VisitaOstetrica },
+      { path: 'print', name: 'Print', component: Print }
     ]
   },
 ]
