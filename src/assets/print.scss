@@ -74,6 +74,9 @@
       margin: 18px 0;
       page-break-inside: avoid;
     }
+    .label {
+      font-weight: 500;
+    }
     .charts {
       display: flex;
       & > div {
