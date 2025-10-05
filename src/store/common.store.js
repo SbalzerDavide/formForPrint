@@ -68,6 +68,29 @@ export const commonStore = new Vuex.Store({
         eco_tv: ''
       },
       conclusion: ''
+    },
+    visitaOstetricaPrintData: {
+      reason: '',
+      allergies: [],
+      familyAnamnesis: '',
+      pathologicalAnamneses: [],
+      obstetricAnamnesis: {
+        paraP: 0,
+        paraX: 0,
+        paraY: 0,
+        paraZ: 0,
+        paraDesc: '',
+        lastMenstruationDate: null,
+        papTestDate: null,
+        papTestResult: ''
+      },
+      objectiveExam: {
+        es: '',
+        eog: '',
+        eco_tv: ''
+      },
+      conclusion: ''
+
     }
 
   },
@@ -202,6 +225,9 @@ export const commonStore = new Vuex.Store({
     },
     SET_VISITA_GINECOLOGICA_PRINT_DATA(state, data) {
       state.visitaGinecologicaPrintData = { ...state.visitaGinecologicaPrintData, ...data }
+    },
+    SET_VISITA_OSTETRICA_PRINT_DATA(state, data) {
+      state.visitaOstetricaPrintData = { ...state.visitaOstetricaPrintData, ...data }
     }
   },
   // getters: {

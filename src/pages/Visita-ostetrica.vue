@@ -4,6 +4,8 @@
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
 
+  import { Reasons, SavedPathologicalAnamneses, papTestResults, reports } from '../const/visits'
+
   export default {
     name: 'VisitaOstetrica',
     components: {
@@ -12,26 +14,438 @@
       Office
     },
     data() {
-      return {}
+      return {
+        reasons: Reasons,
+        savedPathologicalAnamneses: SavedPathologicalAnamneses,
+        reason: '',
+        allergies: [],
+        addMoreAllergie: false,
+        newAllergy: '',
+        familyAnamnesis: '',
+        pathologicalAnamneses: [],
+        addMorePathologicalAnamnesis: false,
+        newPathologicalAnamnesis: '',
+        paraP: 0,
+        paraX: 0,
+        paraY: 0,
+        paraZ: 0,
+        paraDesc: '',
+        lastMenstruationDate: null,
+        papTestDate: null,
+        papTestResults: papTestResults,
+        reports: reports,
+        selectedReport: '',
+        papTestResult: '',
+        conclusion: '',
+        selectdCities: null,
+        es: '',
+        eog: '',
+        eco_tv: ''
+      }
     },
-    mounted() {},
-    methods: {}
+    created() {
+      this.$store.commit('SET_ACTIVE_PAGE', 'Visita ostetrica')
+      this.loadDataFromStore()
+    },
+    methods: {
+      loadDataFromStore() {
+        const storeData = this.$store.state.visitaOstetricaPrintData
+
+        // Pre-popola i dati se presenti nello store
+        if (storeData.reason) {
+          this.reason = storeData.reason
+        }
+        if (storeData.allergies && storeData.allergies.length > 0) {
+          this.allergies = [...storeData.allergies]
+        }
+        if (storeData.familyAnamnesis) {
+          this.familyAnamnesis = storeData.familyAnamnesis
+        }
+        if (storeData.pathologicalAnamneses && storeData.pathologicalAnamneses.length > 0) {
+          this.pathologicalAnamneses = [...storeData.pathologicalAnamneses]
+        }
+        if (storeData.gynecologicalAnamnesis) {
+          const gynAnamnesis = storeData.gynecologicalAnamnesis
+          if (gynAnamnesis.paraP !== null) {
+            this.paraP = gynAnamnesis.paraP
+          }
+          if (gynAnamnesis.paraX !== null) {
+            this.paraX = gynAnamnesis.paraX
+          }
+          if (gynAnamnesis.paraY !== null) {
+            this.paraY = gynAnamnesis.paraY
+          }
+          if (gynAnamnesis.paraZ !== null) {
+            this.paraZ = gynAnamnesis.paraZ
+          }
+          if (gynAnamnesis.paraDesc) {
+            this.paraDesc = gynAnamnesis.paraDesc
+          }
+          if (gynAnamnesis.lastMenstruationDate) {
+            this.lastMenstruationDate = gynAnamnesis.lastMenstruationDate
+          }
+          if (gynAnamnesis.papTestDate) {
+            this.papTestDate = gynAnamnesis.papTestDate
+          }
+          if (gynAnamnesis.papTestResult) {
+            this.papTestResult = gynAnamnesis.papTestResult
+          }
+        }
+        if (storeData.objectiveExam) {
+          const objExam = storeData.objectiveExam
+          if (objExam.es) {
+            this.es = objExam.es
+          }
+          if (objExam.eog) {
+            this.eog = objExam.eog
+          }
+          if (objExam.eco_tv) {
+            this.eco_tv = objExam.eco_tv
+          }
+        }
+        if (storeData.conclusion) {
+          this.conclusion = storeData.conclusion
+        }
+      },
+      setReason(event) {
+        this.reason = event.target.value
+      },
+      addNewAllergy() {
+        this.addMoreAllergie = true
+        this.newAllergy = ''
+        setTimeout(() => {
+          this.$refs.addAllergyElement.focus()
+        }, 10)
+      },
+      saveNewAllergy() {
+        if (this.newAllergy.trim()) {
+          this.allergies.push(this.newAllergy.trim())
+          this.newAllergy = ''
+          this.addMoreAllergie = false
+        }
+      },
+      addPathologicalAnamnesis() {
+        this.addMorePathologicalAnamnesis = true
+        this.newPathologicalAnamnesis = ''
+        setTimeout(() => {
+          this.$refs.addPathologicalAnamnesisSelectElement.focus()
+        }, 10)
+      },
+      setPathologicalAnamnesis(event) {
+        this.newPathologicalAnamnesis = event.target.value
+        setTimeout(() => {
+          this.$refs.addPathologicalAnamnesisElement.focus()
+        }, 10)
+      },
+      saveNewPathologicalAnamnesis() {
+        if (this.newPathologicalAnamnesis.trim()) {
+          this.pathologicalAnamneses.push(this.newPathologicalAnamnesis.trim())
+          this.newPathologicalAnamnesis = ''
+          this.addMorePathologicalAnamnesis = false
+        }
+      },
+      removePathologicalAnamnesis(index) {
+        this.pathologicalAnamneses.splice(index, 1)
+      },
+      print() {
+        // Imposta i dati nello store per il componente Print
+        console.log(this.conclusion)
+
+        this.$store.commit('SET_VISITA_OSTETRICA_PRINT_DATA', {
+          reason: this.reason,
+          allergies: this.allergies,
+          familyAnamnesis: this.familyAnamnesis,
+          pathologicalAnamneses: this.pathologicalAnamneses,
+          gynecologicalAnamnesis: {
+            paraP: this.paraP,
+            paraX: this.paraX,
+            paraY: this.paraY,
+            paraZ: this.paraZ,
+            paraDesc: this.paraDesc,
+            lastMenstruationDate: this.lastMenstruationDate,
+            papTestDate: this.papTestDate,
+            papTestResult: this.papTestResult
+          },
+          objectiveExam: {
+            es: this.es,
+            eog: this.eog,
+            eco_tv: this.eco_tv
+          },
+          conclusion: this.conclusion
+        })
+        this.$store.commit('SET_PRINT_TYPE', 'visita-ostetrica')
+        this.$router.push({ name: 'Print' })
+      }
+    }
   }
 </script>
 
 <template>
-  <div class="visita-ginecologica">
-    <h1>Visita ostetrica</h1>
+  <div class="visita-ostetrica form">
     <div class="form">
-      <!-- <PopupMessage
-        :content="popupMessage"
-        position="bottom"
-        :type="popupType"
-        :show="triggerPopup"
-        @showBack="triggerPopup = false"
-      /> -->
-      <Office @print="showPrint = true" />
+      <Office @print="print()" />
       <Patient />
+      <div class="d-flex justify-content-between align-items-center gap-3">
+        <section class="reason">
+          <div class="title">Motivo della visita</div>
+          <div class="mb-4 w-full">
+            <select @change="setReason">
+              <option disabled selected value>-- select an option --</option>
+              <option v-for="reason in reasons" :key="reason.value" :value="reason.value">
+                {{ reason.label }}
+              </option>
+            </select>
+          </div>
+          <div class="description">
+            <textarea
+              class="w-full"
+              v-model="reason"
+              rows="8"
+              placeholder="Descrizione del motivo della visita"
+              style="resize: none"
+            ></textarea>
+          </div>
+        </section>
+        <section class="allergies-section">
+          <div class="title d-flex gap-2 items-center">
+            <span>Allergie</span>
+            <span>
+              <div @click="addNewAllergy()" class="add-more">
+                <font-awesome-icon icon="fa-solid fa-plus" />
+              </div>
+            </span>
+          </div>
+          <div class="d-flex h-2/3">
+            <ul class="d-flex flex-col flex-wrap pl-0">
+              <li
+                class="d-flex gap-2 justify-content-between items-center w-40"
+                v-for="allergy in allergies"
+                :key="allergy"
+              >
+                <span>- {{ allergy }}</span>
+              </li>
+            </ul>
+          </div>
+          <div v-if="addMoreAllergie === true" class="d-flex align-items-center gap-2">
+            <input
+              ref="addAllergyElement"
+              v-model="newAllergy"
+              @keyup.enter="saveNewAllergy"
+              type="text"
+              class=""
+              placeholder="Inserisci allergia"
+            />
+            <div @click="saveNewAllergy" class="icon-check">
+              <font-awesome-icon icon="fa-solid fa-check" />
+            </div>
+          </div>
+        </section>
+      </div>
+      <section>
+        <div class="title">Anamnesi familiare</div>
+        <textarea
+          class="w-full"
+          v-model="familyAnamnesis"
+          rows="4"
+          placeholder="Descrizione dell'anamnesi familiare"
+        ></textarea>
+      </section>
+      <section>
+        <div class="title d-flex gap-2 items-center">
+          <span>Anamnesi patologica remota</span>
+          <div @click="addPathologicalAnamnesis()" class="add-more">
+            <font-awesome-icon icon="fa-solid fa-plus" />
+          </div>
+        </div>
+        <div class="d-flex h-2/3">
+          <ul class="pl-0">
+            <li
+              class="d-flex gap-2 justify-content-between items-center"
+              v-for="(pathologicalAnamnesis, index) in pathologicalAnamneses"
+              :key="pathologicalAnamnesis"
+            >
+              <span>- {{ pathologicalAnamnesis }}</span>
+              <span @click="removePathologicalAnamnesis(index)" class="icon-delete">
+                <font-awesome-icon icon="fa-solid fa-trash" />
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="addMorePathologicalAnamnesis === true" class="d-flex flex-col gap-2 w-1/2">
+          <select @change="setPathologicalAnamnesis" ref="addPathologicalAnamnesisSelectElement">
+            <option disabled selected value>-- select an option --</option>
+            <option
+              v-for="pathologicalAnamnesis in savedPathologicalAnamneses"
+              :key="pathologicalAnamnesis.value"
+              :value="pathologicalAnamnesis.value"
+            >
+              {{ pathologicalAnamnesis.label }}
+            </option>
+          </select>
+          <div class="d-flex align-items-center gap-2 w-full">
+            <input
+              ref="addPathologicalAnamnesisElement"
+              v-model="newPathologicalAnamnesis"
+              @keyup.enter="saveNewPathologicalAnamnesis"
+              type="text"
+              class="flex-grow"
+              placeholder="Inserisci anamnesi patologica remota"
+            />
+            <div @click="saveNewPathologicalAnamnesis" class="icon-check">
+              <font-awesome-icon icon="fa-solid fa-check" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="title">Anamnesi ostetrica</div>
+        <div class="d-flex flex-col gap-4">
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Gravidanze</div>
+            <div class="d-flex gap-2">
+              <input type="number" class="custom-input w-8 h-8" v-model="paraP" />
+              <input type="number" class="custom-input w-8 h-8" v-model="paraX" />
+              <input type="number" class="custom-input w-8 h-8" v-model="paraY" />
+              <input type="number" class="custom-input w-8 h-8" v-model="paraZ" />
+            </div>
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48"></div>
+            <textarea
+              class="flex-grow"
+              placeholder="Descrizione para"
+              name="paraDesc"
+              id="paraDesc"
+              v-model="paraDesc"
+            ></textarea>
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Ultima Mestruazione</div>
+            <input type="date" id="lastMenstruationDate" v-model="lastMenstruationDate" />
+          </div>
+          <div class="d-flex align-items-start gap-4">
+            <!-- data e risultato -->
+            <div class="w-48">Pap test</div>
+            <input type="date" id="papTestDate" v-model="papTestDate" />
+          </div>
+          <div class="d-flex align-items-start gap-4">
+            <div class="w-48">Risultato</div>
+            <select v-model="papTestResult">
+              <option disabled selected value>-- select an option --</option>
+              <option v-for="result in papTestResults" :key="result.value" :value="result.value">
+                {{ result.label }}
+              </option>
+            </select>
+            <span>{{ papTestResult }}</span>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="title">Esame obiettivo</div>
+        <div>
+          <label for="type">ES</label>
+          <input class="input-large" type="text" name="es" id="es" v-model="es" />
+        </div>
+        <div>
+          <label for="type">EOG</label>
+          <input class="input-large" type="text" name="eog" id="eog" v-model="eog" />
+        </div>
+        <div>
+          <label for="type">ECO TV</label>
+          <input class="input-large" type="text" name="eco_tv" id="eco_tv" v-model="eco_tv" />
+        </div>
+      </section>
+      <section>
+        <div class="title">Conclusioni</div>
+        <div class="description">
+          <textarea
+            class="w-full"
+            v-model="conclusion"
+            rows="8"
+            placeholder="Inserisci le conclusioni della visita"
+            style="resize: none"
+          ></textarea>
+        </div>
+      </section>
+      <section class="report">
+        <div class="title">Referti</div>
+        <div class="mb-4 w-full">
+          <select v-model="selectedReport">
+            <option disabled selected value>-- select an option --</option>
+            <option v-for="report in reports" :key="report.value" :value="report.value">
+              {{ report.label }}
+            </option>
+          </select>
+        </div>
+        <div v-html="selectedReport"></div>
+      </section>
+      <button class="print" @click="print()">Print</button>
     </div>
   </div>
 </template>
+
+<style scoped>
+  .add-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: #646cff;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: all 0.25s;
+    &:hover {
+      border-color: #646cff;
+      background-color: #2a2a2a;
+    }
+  }
+
+  .icon-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: #f44336;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: all 0.25s;
+    &:hover {
+      border-color: #f44336;
+      background-color: #2a2a2a;
+    }
+  }
+
+  .icon-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: #4caf50;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: all 0.25s;
+    &:hover {
+      border-color: #4caf50;
+      background-color: #2a2a2a;
+    }
+  }
+  .allergies-section {
+    height: 250px;
+  }
+  .input-large {
+    width: 400px !important;
+  }
+</style>
