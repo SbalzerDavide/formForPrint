@@ -4,7 +4,7 @@
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
 
-  import { Reasons, SavedPathologicalAnamneses, papTestResults } from '../const/visitaGinecologica'
+  import { Reasons, SavedPathologicalAnamneses, papTestResults } from '../const/visits'
 
   export default {
     name: 'VisitaGinecologica',
@@ -44,7 +44,6 @@
       this.$store.commit('SET_ACTIVE_PAGE', 'Visita ginecologica')
       this.loadDataFromStore()
     },
-    mounted() {},
     methods: {
       loadDataFromStore() {
         const storeData = this.$store.state.visitaGinecologicaPrintData
@@ -176,7 +175,6 @@
 
 <template>
   <div class="visita-ginecologica form">
-    <h1>Visita ginecologica</h1>
     <div class="form">
       <Office @print="print()" />
       <Patient />
