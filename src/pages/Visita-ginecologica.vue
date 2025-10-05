@@ -4,7 +4,7 @@
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
 
-  import { Reasons, SavedPathologicalAnamneses } from '../const/visitaGinecologica'
+  import { Reasons, SavedPathologicalAnamneses, papTestResults } from '../const/visits'
 
   export default {
     name: 'VisitaGinecologica',
@@ -29,8 +29,10 @@
         paraX: 0,
         paraY: 0,
         paraZ: 0,
-        lastPregnancyDate: null,
-        papTest: false,
+        lastMenstruationDate: null,
+        papTestDate: null,
+        papTestResults: papTestResults,
+        papTestResult: '',
         conclusion: '',
         selectdCities: null,
         es: '',
@@ -38,8 +40,67 @@
         eco_tv: ''
       }
     },
-    mounted() {},
+    created() {
+      this.$store.commit('SET_ACTIVE_PAGE', 'Visita ginecologica')
+      this.loadDataFromStore()
+    },
     methods: {
+      loadDataFromStore() {
+        const storeData = this.$store.state.visitaGinecologicaPrintData
+
+        // Pre-popola i dati se presenti nello store
+        if (storeData.reason) {
+          this.reason = storeData.reason
+        }
+        if (storeData.allergies && storeData.allergies.length > 0) {
+          this.allergies = [...storeData.allergies]
+        }
+        if (storeData.familyAnamnesis) {
+          this.familyAnamnesis = storeData.familyAnamnesis
+        }
+        if (storeData.pathologicalAnamneses && storeData.pathologicalAnamneses.length > 0) {
+          this.pathologicalAnamneses = [...storeData.pathologicalAnamneses]
+        }
+        if (storeData.gynecologicalAnamnesis) {
+          const gynAnamnesis = storeData.gynecologicalAnamnesis
+          if (gynAnamnesis.paraP !== null) {
+            this.paraP = gynAnamnesis.paraP
+          }
+          if (gynAnamnesis.paraX !== null) {
+            this.paraX = gynAnamnesis.paraX
+          }
+          if (gynAnamnesis.paraY !== null) {
+            this.paraY = gynAnamnesis.paraY
+          }
+          if (gynAnamnesis.paraZ !== null) {
+            this.paraZ = gynAnamnesis.paraZ
+          }
+          if (gynAnamnesis.lastMenstruationDate) {
+            this.lastMenstruationDate = gynAnamnesis.lastMenstruationDate
+          }
+          if (gynAnamnesis.papTestDate) {
+            this.papTestDate = gynAnamnesis.papTestDate
+          }
+          if (gynAnamnesis.papTestResult) {
+            this.papTestResult = gynAnamnesis.papTestResult
+          }
+        }
+        if (storeData.objectiveExam) {
+          const objExam = storeData.objectiveExam
+          if (objExam.es) {
+            this.es = objExam.es
+          }
+          if (objExam.eog) {
+            this.eog = objExam.eog
+          }
+          if (objExam.eco_tv) {
+            this.eco_tv = objExam.eco_tv
+          }
+        }
+        if (storeData.conclusion) {
+          this.conclusion = storeData.conclusion
+        }
+      },
       setReason(event) {
         this.reason = event.target.value
       },
@@ -79,6 +140,34 @@
       },
       removePathologicalAnamnesis(index) {
         this.pathologicalAnamneses.splice(index, 1)
+      },
+      print() {
+        // Imposta i dati nello store per il componente Print
+        console.log(this.conclusion)
+
+        this.$store.commit('SET_VISITA_GINECOLOGICA_PRINT_DATA', {
+          reason: this.reason,
+          allergies: this.allergies,
+          familyAnamnesis: this.familyAnamnesis,
+          pathologicalAnamneses: this.pathologicalAnamneses,
+          gynecologicalAnamnesis: {
+            paraP: this.paraP,
+            paraX: this.paraX,
+            paraY: this.paraY,
+            paraZ: this.paraZ,
+            lastMenstruationDate: this.lastMenstruationDate,
+            papTestDate: this.papTestDate,
+            papTestResult: this.papTestResult
+          },
+          objectiveExam: {
+            es: this.es,
+            eog: this.eog,
+            eco_tv: this.eco_tv
+          },
+          conclusion: this.conclusion
+        })
+        this.$store.commit('SET_PRINT_TYPE', 'visita-ginecologica')
+        this.$router.push({ name: 'Print' })
       }
     }
   }
@@ -86,9 +175,8 @@
 
 <template>
   <div class="visita-ginecologica form">
-    <h1>Visita ginecologica</h1>
     <div class="form">
-      <Office @print="showPrint = true" />
+      <Office @print="print()" />
       <Patient />
       <div class="d-flex justify-content-between align-items-center gap-3">
         <section class="reason">
@@ -216,16 +304,23 @@
             </div>
           </div>
           <div class="d-flex items-center gap-4">
-            <div class="w-48">Ultima Gravidanza</div>
-            <input type="date" v-model="lastPregnancyDate" />
+            <div class="w-48">Ultima Mestruazione</div>
+            <input type="date" id="lastMenstruationDate" v-model="lastMenstruationDate" />
           </div>
           <div class="d-flex align-items-start gap-4">
-            <div class="w-48">Pap test</div>
             <!-- data e risultato -->
-            <div class="d-flex gap-2 items-center">
-              <input type="checkbox" class="w-auto mb-0" v-model="papTest" />
-              <label for="papTest">fatto</label>
-            </div>
+            <div class="w-48">Pap test</div>
+            <input type="date" id="papTestDate" v-model="papTestDate" />
+          </div>
+          <div class="d-flex align-items-start gap-4">
+            <div class="w-48">Risultato</div>
+            <select v-model="papTestResult">
+              <option disabled selected value>-- select an option --</option>
+              <option v-for="result in papTestResults" :key="result.value" :value="result.value">
+                {{ result.label }}
+              </option>
+            </select>
+            <span>{{ papTestResult }}</span>
           </div>
         </div>
       </section>
@@ -256,6 +351,7 @@
           ></textarea>
         </div>
       </section>
+      <button class="print" @click="print()">Print</button>
     </div>
   </div>
 </template>

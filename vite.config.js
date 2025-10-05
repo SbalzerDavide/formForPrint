@@ -12,9 +12,16 @@ export default defineConfig({
       '@public': path.resolve(__dirname, './public'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
   // publicPath: "",
   pages: {
-    index:{
+    index: {
       entry: 'src/main.js',
       template: 'index.html'
     },

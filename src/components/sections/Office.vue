@@ -1,14 +1,11 @@
 <script>
   import { Users } from '@/const/users.js'
   import { Offices } from '@/const/offices.js'
-  import ThemeSwitch from '@/components/ThemeSwitch.vue'
   import { storeModel } from '@/utils/storeModel.js'
 
   export default {
     name: 'Office',
-    components: {
-      ThemeSwitch
-    },
+    components: {},
     data() {
       return {
         users: Users,
@@ -50,7 +47,6 @@
       </div>
     </div>
     <div class="right-top">
-      <ThemeSwitch />
       <button class="print" @click="print">Print</button>
     </div>
   </section>

@@ -4,6 +4,8 @@ import { Offices } from '@/const/offices.js'
 
 export const commonStore = new Vuex.Store({
   state: {
+    activePage: 'Home',
+    printType: '',
     // office 
     user: Users[0], // Default user
     office: null,
@@ -21,8 +23,84 @@ export const commonStore = new Vuex.Store({
 
     patientMoreText: '',
 
+    // Ecografia Ostetrica Print Data
+    ecografiaOstetricaPrintData: {
+      pregnancy: null,
+      ecoType: null,
+      ecoMethod: '',
+      fetusNumber: 1,
+      decimalWeeks: null,
+      enableCRLReDate: false,
+      externalCRLReDate: false,
+      decimalWeeksFromCRL: null,
+      biometriaFetale: [],
+      anatomy: [],
+      doppler: [],
+      heart: true,
+      liquid: 'normale',
+      direction: '',
+      placenta: '',
+      patientMore: '',
+      pregnancyMore: '',
+      ecoMore: '',
+      biometriaMore: '',
+      lastMore: '',
+      conclusion: '',
+      policyType: null
+    },
+    visitaGinecologicaPrintData: {
+      reason: '',
+      allergies: [],
+      familyAnamnesis: '',
+      pathologicalAnamneses: [],
+      gynecologicalAnamnesis: {
+        paraP: 0,
+        paraX: 0,
+        paraY: 0,
+        paraZ: 0,
+        lastMenstruationDate: null,
+        papTestDate: null,
+        papTestResult: ''
+      },
+      objectiveExam: {
+        es: '',
+        eog: '',
+        eco_tv: ''
+      },
+      conclusion: ''
+    },
+    visitaOstetricaPrintData: {
+      reason: '',
+      allergies: [],
+      familyAnamnesis: '',
+      pathologicalAnamneses: [],
+      obstetricAnamnesis: {
+        paraP: 0,
+        paraX: 0,
+        paraY: 0,
+        paraZ: 0,
+        paraDesc: '',
+        lastMenstruationDate: null,
+        papTestDate: null,
+        papTestResult: ''
+      },
+      objectiveExam: {
+        es: '',
+        eog: '',
+        eco_tv: ''
+      },
+      conclusion: ''
+
+    }
+
   },
   mutations: {
+    SET_ACTIVE_PAGE(state, page) {
+      state.activePage = page
+    },
+    SET_PRINT_TYPE(state, printType) {
+      state.printType = printType
+    },
     SET_USER(state, user) {
       state.user = user
     },
@@ -73,6 +151,83 @@ export const commonStore = new Vuex.Store({
     },
     SET_PATIENT_MORE_TEXT(state, patientMoreText) {
       state.patientMoreText = patientMoreText
+    },
+
+    SET_PREGNANCY(state, pregnancy) {
+      state.ecografiaOstetricaPrintData.pregnancy = pregnancy
+    },
+    SET_ECO_TYPE(state, ecoType) {
+      state.ecografiaOstetricaPrintData.ecoType = ecoType
+    },
+    SET_ECO_METHOD(state, ecoMethod) {
+      state.ecografiaOstetricaPrintData.ecoMethod = ecoMethod
+    },
+    SET_FETUS_NUMBER(state, fetusNumber) {
+      state.ecografiaOstetricaPrintData.fetusNumber = fetusNumber
+    },
+    SET_DECIMAL_WEEKS(state, decimalWeeks) {
+      state.ecografiaOstetricaPrintData.decimalWeeks = decimalWeeks
+    },
+    SET_ENABLE_CRL_RE_DATE(state, enableCRLReDate) {
+      state.ecografiaOstetricaPrintData.enableCRLReDate = enableCRLReDate
+    },
+    SET_EXTERNAL_CRL_RE_DATE(state, externalCRLReDate) {
+      state.ecografiaOstetricaPrintData.externalCRLReDate = externalCRLReDate
+    },
+    SET_DECIMAL_WEEKS_FROM_CRL(state, decimalWeeksFromCRL) {
+      state.ecografiaOstetricaPrintData.decimalWeeksFromCRL = decimalWeeksFromCRL
+    },
+    SET_BIOMETRIA_FETALE(state, biometriaFetale) {
+      state.ecografiaOstetricaPrintData.biometriaFetale = biometriaFetale
+    },
+    SET_ANATOMY(state, anatomy) {
+      state.ecografiaOstetricaPrintData.anatomy = anatomy
+    },
+    SET_DOPPLER(state, doppler) {
+      state.ecografiaOstetricaPrintData.doppler = doppler
+    },
+    SET_HEART(state, heart) {
+      state.ecografiaOstetricaPrintData.heart = heart
+    },
+    SET_LIQUID(state, liquid) {
+      state.ecografiaOstetricaPrintData.liquid = liquid
+    },
+    SET_DIRECTION(state, direction) {
+      state.ecografiaOstetricaPrintData.direction = direction
+    },
+    SET_PLACENTA(state, placenta) {
+      state.ecografiaOstetricaPrintData.placenta = placenta
+    },
+    SET_PATIENT_MORE(state, patientMore) {
+      state.ecografiaOstetricaPrintData.patientMore = patientMore
+    },
+    SET_PREGNANCY_MORE(state, pregnancyMore) {
+      state.ecografiaOstetricaPrintData.pregnancyMore = pregnancyMore
+    },
+    SET_ECO_MORE(state, ecoMore) {
+      state.ecografiaOstetricaPrintData.ecoMore = ecoMore
+    },
+    SET_BIOMETRIA_MORE(state, biometriaMore) {
+      state.ecografiaOstetricaPrintData.biometriaMore = biometriaMore
+    },
+    SET_LAST_MORE(state, lastMore) {
+      state.ecografiaOstetricaPrintData.lastMore = lastMore
+    },
+    SET_CONCLUSION(state, conclusion) {
+      state.ecografiaOstetricaPrintData.conclusion = conclusion
+    },
+    SET_POLICY_TYPE(state, policyType) {
+      state.ecografiaOstetricaPrintData.policyType = policyType
+    },
+    // Mutations for Ecografia Ostetrica Print Data
+    SET_ECOGRAFIA_OSTETRICA_PRINT_DATA(state, data) {
+      state.ecografiaOstetricaPrintData = { ...state.ecografiaOstetricaPrintData, ...data }
+    },
+    SET_VISITA_GINECOLOGICA_PRINT_DATA(state, data) {
+      state.visitaGinecologicaPrintData = { ...state.visitaGinecologicaPrintData, ...data }
+    },
+    SET_VISITA_OSTETRICA_PRINT_DATA(state, data) {
+      state.visitaOstetricaPrintData = { ...state.visitaOstetricaPrintData, ...data }
     }
   },
   // getters: {

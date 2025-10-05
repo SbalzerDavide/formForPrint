@@ -1,5 +1,5 @@
 <script>
-  import Print from '@/pages/Print.vue'
+  // import Print from '@/pages/Print.vue'
   import PopupMessage from '@/components/PopupMessage.vue'
 
   import Patient from '@/components/sections/Patient.vue'
@@ -19,7 +19,7 @@
   export default {
     name: 'EcografiaOstetrica',
     components: {
-      Print,
+      // Print,
       PopupMessage,
       Patient,
       Office
@@ -95,7 +95,6 @@
     computed: {
       ecoTool: storeModel('ecoTool', 'SET_ECO_TOOL')
     },
-
     watch: {
       deliveryDate(val) {
         this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY')
@@ -132,7 +131,89 @@
         }
       }
     },
+    created() {
+      this.$store.commit('SET_ACTIVE_PAGE', 'Ecografia ostetrica')
+      this.loadDataFromStore()
+    },
     methods: {
+      loadDataFromStore() {
+        const storeData = this.$store.state.ecografiaOstetricaPrintData
+
+        // Pre-popola i dati se presenti nello store
+        if (storeData.pregnancy) {
+          this.pregnancy = { ...storeData.pregnancy }
+        }
+        if (storeData.ecoType) {
+          this.ecoType = { ...storeData.ecoType }
+        }
+        if (storeData.ecoMethod) {
+          this.ecoMethod = storeData.ecoMethod
+        }
+        if (storeData.fetusNumber) {
+          this.fetusNumber = storeData.fetusNumber
+        }
+        if (storeData.decimalWeeks) {
+          this.decimalWeeks = storeData.decimalWeeks
+        }
+        if (storeData.enableCRLReDate !== null) {
+          this.enableCRLReDate = storeData.enableCRLReDate
+        }
+        if (storeData.externalCRLReDate !== null) {
+          this.externalCRLReDate = storeData.externalCRLReDate
+        }
+        if (storeData.decimalWeeksFromCRL) {
+          this.decimalWeeksFromCRL = storeData.decimalWeeksFromCRL
+        }
+        if (storeData.biometriaFetale && storeData.biometriaFetale.length > 0) {
+          this.biometriaFetale = [...storeData.biometriaFetale]
+        }
+        if (storeData.anatomy && storeData.anatomy.length > 0) {
+          this.anatomy = [...storeData.anatomy]
+        }
+        if (storeData.doppler && storeData.doppler.length > 0) {
+          this.doppler = [...storeData.doppler]
+        }
+        if (storeData.heart !== null) {
+          this.heart = storeData.heart
+        }
+        if (storeData.liquid) {
+          this.liquid = storeData.liquid
+        }
+        if (storeData.direction) {
+          this.direction = storeData.direction
+        }
+        if (storeData.placenta) {
+          this.placenta = storeData.placenta
+        }
+        if (storeData.pregnancyMore) {
+          this.pregnancyMoreText = storeData.pregnancyMore
+          this.pregnancyMore = true
+        }
+        if (storeData.ecoMore) {
+          this.ecoMoreText = storeData.ecoMore
+          this.ecoMore = true
+        }
+        if (storeData.biometriaMore) {
+          this.biometriaMoreText = storeData.biometriaMore
+          this.biometriaMore = true
+        }
+        if (storeData.lastMore) {
+          this.lastMoreText = storeData.lastMore
+          this.lastMore = true
+        }
+        if (storeData.conclusion) {
+          this.conclusion = storeData.conclusion
+        }
+        if (storeData.policyType !== null) {
+          this.policyType = storeData.policyType
+        }
+
+        // Ricalcola le date se ci sono dati di gravidanza
+        if (this.pregnancy.start) {
+          this.startDate = this.pregnancy.start
+          this.calcPregnancyDate()
+        }
+      },
       manageBiometriaFetale(index) {
         let femore = false
         let circonferenzaC = false
@@ -580,7 +661,33 @@
         return show
       },
       print() {
-        this.showPrint = true
+        // Imposta i dati nello store per il componente Print
+        this.$store.commit('SET_ECOGRAFIA_OSTETRICA_PRINT_DATA', {
+          pregnancy: this.pregnancy,
+          ecoType: this.ecoType,
+          ecoMethod: this.ecoMethod,
+          fetusNumber: this.fetusNumber,
+          decimalWeeks: this.decimalWeeks,
+          enableCRLReDate: this.enableCRLReDate,
+          externalCRLReDate: this.externalCRLReDate,
+          decimalWeeksFromCRL: this.decimalWeeksFromCRL,
+          biometriaFetale: this.biometriaFetale,
+          anatomy: this.anatomy,
+          doppler: this.doppler,
+          heart: this.heart,
+          liquid: this.liquid,
+          direction: this.ecoType.value !== '1T' ? this.direction : '',
+          placenta: this.placenta,
+          patientMore: '',
+          pregnancyMore: this.pregnancyMoreText,
+          ecoMore: this.ecoMoreText,
+          biometriaMore: this.biometriaMoreText,
+          lastMore: this.lastMoreText,
+          conclusion: this.conclusion,
+          policyType: this.policyType
+        })
+        this.$store.commit('SET_PRINT_TYPE', 'ecografia-ostetrica')
+        this.$router.push({ name: 'Print' })
       },
       comeBack() {
         this.showPrint = false
@@ -598,7 +705,7 @@
       :show="triggerPopup"
       @showBack="triggerPopup = false"
     />
-    <Office @print="showPrint = true" />
+    <Office @print="print()" />
     <Patient />
     <div class="double">
       <section class="pregnancy">
@@ -955,33 +1062,7 @@
       </select>
     </section>
 
-    <button class="print" @click="print">Print</button>
+    <button class="print" @click="print()">Print</button>
   </div>
-  <Print
-    v-else
-    @comeBack="comeBack"
-    :pregnancy="pregnancy"
-    :decimalWeeks="decimalWeeks"
-    :enableCRLReDate="enableCRLReDate"
-    :externalCRLReDate="externalCRLReDate"
-    :decimalWeeksFromCRL="decimalWeeksFromCRL"
-    :ecoType="ecoType"
-    :ecoMethod="ecoMethod"
-    :ecoTool="ecoTool != 'altro' ? ecoTool : otherTool"
-    :ecoNumber="ecoNumber"
-    :fetusNumber="fetusNumber"
-    :biometriaFetale="biometriaFetale"
-    :anatomy="anatomy"
-    :doppler="doppler"
-    :heart="heart"
-    :direction="ecoType.value !== '1T' ? direction : ''"
-    :liquid="liquid"
-    :placenta="placenta"
-    :pregnancyMore="pregnancyMoreText"
-    :ecoMore="ecoMoreText"
-    :biometriaMore="biometriaMoreText"
-    :lastMore="lastMoreText"
-    :conclusion="conclusion"
-    :policyType="policyType"
-  />
+  <!-- <Print v-else @comeBack="comeBack" /> -->
 </template>
