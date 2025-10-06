@@ -11,21 +11,21 @@
 
 <template>
   <div class="consent">
-    <h2>INFORMAZIONI SULL’ECOGRAFIA DEL I TRIMESTRE DI GRAVIDANZA (TRA 11+0 -13+6 SETTIMANE)</h2>
-    <h3>Che cos’è l’ecografia?</h3>
+    <h3>INFORMAZIONI SULL’ECOGRAFIA DEL I TRIMESTRE DI GRAVIDANZA (TRA 11+0 -13+6 SETTIMANE)</h3>
+    <h4>Che cos’è l’ecografia?</h4>
     <p>
       L’ecografia è una tecnica che consente di vedere gli organi del nostro corpo con l’utilizzo di
       onde sonore ad alta frequenza (ultrasuoni, non udibili dall’orecchio umano) che attraversano i
       tessuti: quando esse arrivano al feto producono echi che sono trasformati in immagini sul
       monitor dell’ecografia.
     </p>
-    <h3>Come si effettua l’esame?</h3>
+    <h4>Come si effettua l’esame?</h4>
     <p>
       Tra 11+0 -13+6 settimane l'ecografia del I trimestre si esegue per via trans-addominale nella
       maggior parte dei casi. Anche se non si può escludere che sia necessario eseguire l'esame
       anche per via trans- vaginale.
     </p>
-    <h3>Quali sono le finalità dell'ecografia tra 11+0 e 13+6 settimane?</h3>
+    <h4>Quali sono le finalità dell'ecografia tra 11+0 e 13+6 settimane?</h4>
     <p>
       Le principali finalità di questa ecografia sono la valutazione della vitalità fetale, la
       misurazione della translucenza nucale, la valutazione di base dell’anatomia fetale e, qualora
@@ -35,7 +35,7 @@
       gravidanza), il numero dei feti e, se la gravidanza è multipla, il numero dei sacchi amniotici
       (amnionicità) e delle placente (corionicità).
     </p>
-    <h3>In che cosa consiste la misura della translucenza nucale (NT)?</h3>
+    <h4>In che cosa consiste la misura della translucenza nucale (NT)?</h4>
     <p>
       La misurazione della translucenza nucale dovrebbe essere eseguita in tutte le donne in
       gravidanza. Si tratta della misurazione dello spessore del tessuto sottocutaneo della regione
@@ -46,7 +46,7 @@
       rischio per patologie genetiche incluse le più comuni trisomie (es. trisomia 21, 18 e 13) e
       patologie malformative (anomalie strutturali cardiache o extracardiache).
     </p>
-    <h3>In che cosa consiste la valutazione di base dell’anatomia fetale nel I trimestre?</h3>
+    <h4>In che cosa consiste la valutazione di base dell’anatomia fetale nel I trimestre?</h4>
     <p>
       Qualora eseguita, questa procedura permette di sospettare alcune malformazioni fetali maggiori
       e di riferire la gestante per un'Ecografia di Riferimento per una valutazione approfondita
@@ -57,9 +57,9 @@
       di screening del II trimestre è caratterizzata da una maggiore accuratezza e rimane l’esame
       ecografico raccomandato per lo screening delle anomalie strutturali del feto.
     </p>
-    <h3>
+    <h4>
       In quali casi è necessaria una valutazione approfondita dell'anatomia fetale nel I trimestre?
-    </h3>
+    </h4>
     <p>
       In tutte le pazienti in cui l’esame di screening delle 11+0 e 13+6 settimane rilevi una
       translucenza nucale maggiore o uguale di 3,5 mm o una sospetta anomalia strutturale fetale, è

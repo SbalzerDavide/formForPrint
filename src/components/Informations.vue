@@ -20,7 +20,7 @@
 
 <template>
   <section class="informativa">
-    <h2>Informativa</h2>
+    <h3>Informativa</h3>
     <div v-if="policyType == '1'">
       <Concents11_13Weeks />
     </div>
@@ -32,3 +32,17 @@
     </div>
   </section>
 </template>
+
+<style>
+  .informativa p,
+  .informativa li {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .informativa h3 {
+    margin: 14px 0;
+  }
+  .informativa h4 {
+    margin: 10px 0;
+  }
+</style>

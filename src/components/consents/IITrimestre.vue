@@ -12,15 +12,15 @@
 
 <template>
   <section class="consent">
-    <h2>INFORMAZIONI SULL’ECOGRAFIA DI SCREENING DEL II TRIMESTRE</h2>
-    <h3>Che cos’è l’ecografia?</h3>
+    <h3>INFORMAZIONI SULL’ECOGRAFIA DI SCREENING DEL II TRIMESTRE</h3>
+    <h4>Che cos’è l’ecografia?</h4>
     <p>
       L’ecografia è una tecnica che consente di vedere gli organi del nostro corpo con l’utilizzo di
       onde sonore ad alta frequenza (ultrasuoni, non udibili dall’orecchio umano) che attraversano i
       tessuti: quando esse arrivano al feto producono echi che sono trasformati in immagini sul
       monitor dell’ecografia.
     </p>
-    <h3>Quando e perché fare l’ecografia di screening del II trimestre?</h3>
+    <h4>Quando e perché fare l’ecografia di screening del II trimestre?</h4>
     <p>
       Le malformazioni fetali sono condizioni che complicano la gravidanza di 2-3 donne su 100.
       Tutte le donne in gravidanza condividono quindi questo rischio generico di avere un bambino
@@ -36,7 +36,7 @@
       gravidanza nel caso in cui non sia stata effettuata una ecografia di datazione nel I
       trimestre.
     </p>
-    <h3>Che cosa si vede con l’ecografia nel II trimestre di gravidanza?</h3>
+    <h4>Che cosa si vede con l’ecografia nel II trimestre di gravidanza?</h4>
     <p>
       Questo esame consente di ottenere la misura di alcune parti del corpo del feto ed i valori di
       tali misure vengono confrontati con quelli delle curve di riferimento per valutare se le
@@ -44,7 +44,7 @@
       visualizzano la sede di inserzione placentare, la quantità di liquido amniotico e la struttura
       dei principali organi e distretti anatomici del feto.
     </p>
-    <h3>Come si svolge l’esame ecografico del II trimestre di gravidanza?</h3>
+    <h4>Come si svolge l’esame ecografico del II trimestre di gravidanza?</h4>
     <p>
       Il Medico effettua l’esame appoggiando una sonda sull’addome. Talora è necessario applicare
       una certa pressione per ottenere immagini nitide. A volte l’esame non può essere effettuato in
@@ -56,7 +56,7 @@
       (Ecografia di Riferimento). Peraltro in un buon numero di casi un reperto sospetto
       all’ecografia di screening può rivelarsi non patologico all’esame di approfondimento.
     </p>
-    <h3>È possibile rilevare con l’ecografia malformazioni fetali?</h3>
+    <h4>È possibile rilevare con l’ecografia malformazioni fetali?</h4>
     <p>
       A parte rare eccezioni, non esistono anomalie fetali che sono individuabili sempre e con
       certezza. Dall'analisi dei dati italiani disponibili emerge che solo il 32% delle anomalie
@@ -77,13 +77,13 @@
       casi) non è possibile essere del tutto certi che in quel neonato non saranno presenti
       malformazioni congenite.
     </p>
-    <h3>È possibile con l’ecografia sospettare anomalie genetiche?</h3>
+    <h4>È possibile con l’ecografia sospettare anomalie genetiche?</h4>
     <p>
       Non è compito dell’ecografia di screening del II trimestre l’individuazione delle anomalie
       genetiche (cromosomiche e non). Infatti non tutte le malattie genetiche presentano
       malformazioni rilevanti ed evidenziabili all’esame ecografico.
     </p>
-    <h3>L’ecografia è innocua per il feto?</h3>
+    <h4>L’ecografia è innocua per il feto?</h4>
     <p>
       Gli ultrasuoni sono utilizzati nella pratica ostetrica da oltre trent’anni e non sono stati
       riportati effetti dannosi anche a lungo termine, sul feto. Per tale ragione, con le procedure

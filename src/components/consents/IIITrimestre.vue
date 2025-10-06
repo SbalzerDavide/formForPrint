@@ -11,15 +11,15 @@
 
 <template>
   <section class="consent">
-    <h2>INFORMAZIONI SULL’ECOGRAFIA DI SCREENING DEL III TRIMESTRE</h2>
-    <h3>Che cos’è l’ecografia?</h3>
+    <h3>INFORMAZIONI SULL’ECOGRAFIA DI SCREENING DEL III TRIMESTRE</h3>
+    <h4>Che cos’è l’ecografia?</h4>
     <p>
       L’ecografia è una tecnica che consente di vedere gli organi del nostro corpo con l’utilizzo di
       onde sonore ad alta frequenza (ultrasuoni, non udibili dall'orecchio umano) che attraversano i
       tessuti: quando esse arrivano al feto producono echi che sono trasformati in immagini sul
       monitor dell’ecografia.
     </p>
-    <h3>Perché fare l’ecografia del III trimestre?</h3>
+    <h4>Perché fare l’ecografia del III trimestre?</h4>
     <p>
       Gli scopi per il quale tale accertamento viene proposto ed effettuato sono la valutazione
       della crescita fetale, della quantità di liquido amniotico e della localizzazione placentare.
@@ -39,7 +39,7 @@
       è indicato un inquadramento più approfondito presso i centri con adeguata esperienza in tale
       valutazione.
     </p>
-    <h3>Che cosa si vede con l’ecografia nel III trimestre di gravidanza?</h3>
+    <h4>Che cosa si vede con l’ecografia nel III trimestre di gravidanza?</h4>
     <p>
       Nel III trimestre si effettuano misurazioni di alcune strutture del feto, ed i valori di tali
       misure vengono confrontati con quelli delle curve di riferimento per valutare se corrispondono
@@ -55,7 +55,7 @@
       venga evidenziato un reperto sospetto il Medico ne discuterà con la persona assistita. È
       possibile che si renda opportuna una valutazione ulteriore presso un centro di riferimento.
     </p>
-    <h3>È possibile rilevare con l’ecografia malformazioni fetali nel III trimestre?</h3>
+    <h4>È possibile rilevare con l’ecografia malformazioni fetali nel III trimestre?</h4>
     <p>
       Il riconoscimento delle malformazioni non è un obiettivo specifico dell’ecografia del III
       trimestre. Nella popolazione a basso rischio, l’ecografia può identificare anomalie
@@ -68,9 +68,9 @@
       tendenza alla evolutività, possono non essere rilevabile anche nel corso di tale esame
       ecografico ed evidenziarsi solo dopo la nascita.
     </p>
-    <h3>
+    <h4>
       È sempre possibile rilevare un difetto o eccesso di crescita del feto o del liquido amniotico?
-    </h3>
+    </h4>
     <p>
       La crescita è un fenomeno dinamico per cui una certa percentuale di ritardi o di eccessi di
       crescita fetali o variazioni della quantità del liquido amniotico non sono rilevabili con
@@ -80,7 +80,7 @@
       un individuo non affetto da alterazioni della crescita o del liquido amniotico o di una
       regolare evoluzione della gravidanza.
     </p>
-    <h3>L’ecografia è innocua per il feto?</h3>
+    <h4>L’ecografia è innocua per il feto?</h4>
     <p>
       Gli ultrasuoni sono utilizzati nella pratica ostetrica da oltre trent’anni e non sono stati
       riportati effetti dannosi anche a lungo termine, sul feto. Per tale ragione, con le procedure

@@ -572,7 +572,6 @@
           suoi limiti nell'individuazione delle anomalie fetali.
         </p>
       </section>
-      <Informations v-if="policyType !== null" :policyType="policyType" />
       <section class="container-signature">
         <div class="signature">
           <div class="empty-space"></div>
@@ -583,6 +582,7 @@
           </div>
         </div>
       </section>
+      <Informations v-if="policyType !== null" :policyType="policyType" />
     </main>
     <footer>
       <img v-if="office === 'Pralboino'" class="footer-pralboino" src="@/img/footerPralboino.jpg" />
