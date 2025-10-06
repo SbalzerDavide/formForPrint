@@ -29,10 +29,13 @@
         paraX: 0,
         paraY: 0,
         paraZ: 0,
+        paraDesc: '',
         lastMenstruationDate: null,
+        lastMenstruationDesc: '',
         papTestDate: null,
         papTestResults: papTestResults,
         papTestResult: '',
+        mammografiaDesc: '',
         conclusion: '',
         selectdCities: null,
         es: '',
@@ -75,14 +78,24 @@
           if (gynAnamnesis.paraZ !== null) {
             this.paraZ = gynAnamnesis.paraZ
           }
+          if (gynAnamnesis.paraDesc) {
+            this.paraDesc = gynAnamnesis.paraDesc
+          }
           if (gynAnamnesis.lastMenstruationDate) {
             this.lastMenstruationDate = gynAnamnesis.lastMenstruationDate
           }
+          if (gynAnamnesis.lastMenstruationDesc) {
+            this.lastMenstruationDesc = gynAnamnesis.lastMenstruationDesc
+          }
+
           if (gynAnamnesis.papTestDate) {
             this.papTestDate = gynAnamnesis.papTestDate
           }
           if (gynAnamnesis.papTestResult) {
             this.papTestResult = gynAnamnesis.papTestResult
+          }
+          if (gynAnamnesis.mammografiaDesc) {
+            this.mammografiaDesc = gynAnamnesis.mammografiaDesc
           }
         }
         if (storeData.objectiveExam) {
@@ -155,9 +168,12 @@
             paraX: this.paraX,
             paraY: this.paraY,
             paraZ: this.paraZ,
+            paraDesc: this.paraDesc,
             lastMenstruationDate: this.lastMenstruationDate,
+            lastMenstruationDesc: this.lastMenstruationDesc,
             papTestDate: this.papTestDate,
-            papTestResult: this.papTestResult
+            papTestResult: this.papTestResult,
+            mammografiaDesc: this.mammografiaDesc
           },
           objectiveExam: {
             es: this.es,
@@ -304,23 +320,63 @@
             </div>
           </div>
           <div class="d-flex items-center gap-4">
+            <div class="w-48"></div>
+            <textarea
+              class="flex-grow"
+              placeholder="Dettaggli gravidanze"
+              name="paraDesc"
+              id="paraDesc"
+              v-model="paraDesc"
+            ></textarea>
+          </div>
+
+          <div class="d-flex items-center gap-4">
             <div class="w-48">Ultima Mestruazione</div>
             <input type="date" id="lastMenstruationDate" v-model="lastMenstruationDate" />
           </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48"></div>
+            <textarea
+              class="flex-grow"
+              placeholder="Dettaggli UM"
+              name="lastMenstruationDesc"
+              id="lastMenstruationDesc"
+              v-model="lastMenstruationDesc"
+            ></textarea>
+          </div>
+
           <div class="d-flex align-items-start gap-4">
             <!-- data e risultato -->
             <div class="w-48">Pap test</div>
             <input type="date" id="papTestDate" v-model="papTestDate" />
           </div>
           <div class="d-flex align-items-start gap-4">
-            <div class="w-48">Risultato</div>
-            <select v-model="papTestResult">
+            <div class="w-48"></div>
+            <textarea
+              class="flex-grow"
+              placeholder="Risultato Pap test"
+              name="papTestResult"
+              id="papTestResult"
+              v-model="papTestResult"
+            ></textarea>
+
+            <!-- <select v-model="papTestResult">
               <option disabled selected value>-- select an option --</option>
               <option v-for="result in papTestResults" :key="result.value" :value="result.value">
                 {{ result.label }}
               </option>
             </select>
-            <span>{{ papTestResult }}</span>
+            <span>{{ papTestResult }}</span> -->
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Mammografia</div>
+            <textarea
+              class="flex-grow"
+              placeholder="Dettaggli Mammografia"
+              name="mammografiaDesc"
+              id="mammografiaDesc"
+              v-model="mammografiaDesc"
+            ></textarea>
           </div>
         </div>
       </section>
