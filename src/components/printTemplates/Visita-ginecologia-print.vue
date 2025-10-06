@@ -196,21 +196,33 @@
       <section class="gynecological-anamnesis">
         <div class="title-par">Anamnesi ginecologica:</div>
         <div>
-          <span class="label">PARA:</span>
+          <span class="label mr-1">PARA:</span>
           <span>{{ gynecologicalAnamnesis.paraP }}</span>
           <span>{{ gynecologicalAnamnesis.paraX }}</span>
           <span>{{ gynecologicalAnamnesis.paraY }}</span>
           <span>{{ gynecologicalAnamnesis.paraZ }}</span>
+          <span v-if="gynecologicalAnamnesis.paraDesc">
+            , {{ gynecologicalAnamnesis.paraDesc }}
+          </span>
         </div>
         <div>
-          <span class="label">UM:</span>
+          <span class="label mr-1">UM:</span>
           <span>{{ formatDate(gynecologicalAnamnesis.lastMenstruationDate) }}</span>
+          <span v-if="gynecologicalAnamnesis.lastMenstruationDesc">
+            , {{ gynecologicalAnamnesis.lastMenstruationDesc }}
+          </span>
         </div>
         <div>
-          <span class="label">Pap test:</span>
+          <span class="label mr-1">Pap test:</span>
           <span>
             {{ formatDate(gynecologicalAnamnesis.papTestDate) }},
             {{ gynecologicalAnamnesis.papTestResult }}
+          </span>
+        </div>
+        <div>
+          <span class="label mr-1">Mammografia:</span>
+          <span>
+            {{ gynecologicalAnamnesis.mammografiaDesc }}
           </span>
         </div>
       </section>
@@ -224,15 +236,15 @@
         </div>
 
         <div v-if="objectiveExam.es">
-          <span class="label">ES:</span>
+          <span class="label mr-1">ES:</span>
           {{ objectiveExam.es }}
         </div>
         <div v-if="objectiveExam.eog">
-          <span class="label">EOG:</span>
+          <span class="label mr-1">EOG:</span>
           {{ objectiveExam.eog }}
         </div>
         <div v-if="objectiveExam.eco_tv">
-          <span class="label">Eco TV:</span>
+          <span class="label mr-1">Eco TV:</span>
           {{ objectiveExam.eco_tv }}
         </div>
       </section>

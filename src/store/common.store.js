@@ -58,9 +58,12 @@ export const commonStore = new Vuex.Store({
         paraX: 0,
         paraY: 0,
         paraZ: 0,
+        paraDesc: '',
         lastMenstruationDate: null,
+        lastMenstruationDesc: '',
         papTestDate: null,
-        papTestResult: ''
+        papTestResult: '',
+        mammografiaDesc: ''
       },
       objectiveExam: {
         es: '',
