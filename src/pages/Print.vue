@@ -1,12 +1,14 @@
 <script>
   import EcografiaOstetricaPrint from '@/components/printTemplates/Ecografia-ostetrica-print.vue'
   import VisitaGinecologiaPrint from '@/components/printTemplates/Visita-ginecologia-print.vue'
+  import VisitaOstetricaPrint from '@/components/printTemplates/Visita-ostetrica-print.vue'
 
   export default {
     name: 'Print',
     components: {
       EcografiaOstetricaPrint,
-      VisitaGinecologiaPrint
+      VisitaGinecologiaPrint,
+      VisitaOstetricaPrint
     },
     data() {
       return {}
@@ -40,6 +42,7 @@
     <button class="come-back-to-form hide-print" @click="comeBack">Modifica dati</button>
     <EcografiaOstetricaPrint v-if="printType === 'ecografia-ostetrica'" />
     <VisitaGinecologiaPrint v-if="printType === 'visita-ginecologica'" />
+    <VisitaOstetricaPrint v-if="printType === 'visita-ostetrica'" />
   </div>
 </template>
 
