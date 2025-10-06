@@ -94,6 +94,7 @@
     },
 
     created() {
+      this.$store.commit('SET_ACTIVE_PAGE', 'Stampa visita ginecologica')
       this.date = dayjs().format('DD/MM/YYYY')
 
       this.formattingDateOfBirth = this.formatDate(this.dateOfBirth)

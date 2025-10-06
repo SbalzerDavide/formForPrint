@@ -189,6 +189,7 @@
     },
 
     created() {
+      this.$store.commit('SET_ACTIVE_PAGE', 'Stampa visita ostetrica')
       let app = document.getElementById('app')
       app.classList.add('appOnPrint')
       this.date = dayjs().format('DD/MM/YYYY')
