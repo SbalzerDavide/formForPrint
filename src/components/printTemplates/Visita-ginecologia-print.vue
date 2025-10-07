@@ -99,8 +99,6 @@
 
       this.formattingDateOfBirth = this.formatDate(this.dateOfBirth)
 
-      console.log(this.conclusion)
-
       // scrolla a top
       window.scrollTo(0, 0)
     },

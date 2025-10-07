@@ -158,8 +158,6 @@
       },
       print() {
         // Imposta i dati nello store per il componente Print
-        console.log(this.conclusion)
-
         this.$store.commit('SET_VISITA_OSTETRICA_PRINT_DATA', {
           reason: this.reason,
           allergies: this.allergies,
