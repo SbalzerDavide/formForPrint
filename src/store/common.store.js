@@ -73,6 +73,8 @@ export const commonStore = new Vuex.Store({
       conclusion: ''
     },
     visitaOstetricaPrintData: {
+      pregnancy: null,
+
       reason: '',
       allergies: [],
       familyAnamnesis: '',

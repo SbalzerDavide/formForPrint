@@ -17,6 +17,25 @@
       return {
         reasons: Reasons,
         savedPathologicalAnamneses: SavedPathologicalAnamneses,
+
+        // UM and redate
+        activeDateSelection: 'start',
+        startDate: '',
+        deliveryDate: '',
+        deliveryDateFormatting: '',
+        epocaGestazionale: '',
+        enableCRLReDate: false,
+        externalCRLReDate: false,
+        reDateFromCrl: false,
+        deliveryDateFromCRLFormatting: '',
+        deliveryDateFromCRL: '',
+        decimalWeeks: 0,
+        decimalWeeksFromCRL: 0,
+        redatingPanel: false,
+        crlWeeks: 0,
+        crlDays: 0,
+        pregnancy: {},
+
         reason: '',
         allergies: [],
         addMoreAllergie: false,
@@ -33,6 +52,7 @@
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
         papTestDate: null,
+        pregnancyMore: false,
         papTestResults: papTestResults,
         mammografiaDesc: '',
         reports: reports,
@@ -45,6 +65,17 @@
         eco_tv: ''
       }
     },
+    watch: {
+      deliveryDateFromCRL(val) {
+        this.deliveryDateFromCRLFormatting = dayjs(val).format('DD/MM/YYYY')
+        this.pregnancy.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(
+          this.decimalWeeksFromCRL
+        )
+      },
+      deliveryDate(val) {
+        this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY')
+      }
+    },
     created() {
       this.$store.commit('SET_ACTIVE_PAGE', 'Visita ostetrica')
       this.loadDataFromStore()
@@ -54,6 +85,9 @@
         const storeData = this.$store.state.visitaOstetricaPrintData
 
         // Pre-popola i dati se presenti nello store
+        if (storeData.pregnancy) {
+          this.pregnancy = { ...storeData.pregnancy }
+        }
         if (storeData.reason) {
           this.reason = storeData.reason
         }
@@ -114,6 +148,11 @@
         }
         if (storeData.conclusion) {
           this.conclusion = storeData.conclusion
+        }
+        // Ricalcola le date se ci sono dati di gravidanza
+        if (this.pregnancy.start) {
+          this.startDate = this.pregnancy.start
+          this.calcPregnancyDate()
         }
       },
       setReason(event) {
@@ -184,6 +223,64 @@
         })
         this.$store.commit('SET_PRINT_TYPE', 'visita-ostetrica')
         this.$router.push({ name: 'Print' })
+      },
+      calcPregnancyDate() {
+        if (this.activeDateSelection === 'start') {
+          // ho settato l'ultima mestruazione
+          this.deliveryDate = dayjs(this.startDate).add(280, 'day')
+          this.pregnancy.start = this.startDate
+          this.pregnancy.delivery = this.deliveryDate
+        } else if (this.activeDateSelection === 'end') {
+          // ho settato data presunta parto
+          this.startDate = dayjs(this.deliveryDate).subtract(280, 'day')
+          const deliveryDate = dayjs(this.deliveryDate)
+          this.pregnancy.delivery = deliveryDate
+        }
+        let today = dayjs()
+        let dayDiff = today.diff(this.startDate, 'day') % 7
+        let weekDiff = today.diff(this.startDate, 'week')
+        this.decimalWeeks = weekDiff + dayDiff / 7
+        this.epocaGestazionale = `${weekDiff} settiname + ${dayDiff} gg`
+        this.pregnancy.epocaGestazionale = this.epocaGestazionale
+      },
+
+      reDateCRL() {
+        this.enableCRLReDate = true
+        this.redatingPanel = false
+        this.pregnancy.deliveryDateFromCRL = this.deliveryDateFromCRL
+        // ricalcolo tutti i percentili
+        // non lo ricalcolo perchè mi sballa tutti i dati sulla nuova data
+        this.triggerPopup = true
+        this.popupMessage = 'Verifica i dati inseriti'
+        this.popupType = 'warning'
+      },
+
+      setManuallyCrlReDate(type) {
+        if (type == 'weeks') {
+          if (this.crlDays >= 7) {
+            this.crlDays = 6
+          }
+          // sto modificando le settimane
+          // calcolo primo decimalWeeks
+          this.decimalWeeksFromCRL = this.crlWeeks + this.crlDays / 7
+          // dopo calcolo le variabili derivate, cioè quelle a loro volta modificabili
+          this.deliveryDateFromCRL = this.getDeliveryDateFromDecimalWeeks(this.decimalWeeksFromCRL)
+        } else if (type == 'date') {
+          // sto modificando la data
+          // calcolo primo decimalWeeks
+          let pregancyStart = dayjs(this.deliveryDateFromCRL).subtract(280, 'day')
+          let diff = dayjs().diff(pregancyStart, 'week', true)
+          this.decimalWeeksFromCRL = diff
+          // dopo calcolo le variabili derivate, cioè quelle a loro volta modificabili
+          this.crlWeeks = this.getWeeksFromDecimal(this.decimalWeeksFromCRL)
+          this.crlDays = this.getDaysFromDecimal(this.decimalWeeksFromCRL)
+        }
+        this.pregnancy.reDateFromCrl = `${this.crlWeeks} settimane + ${this.crlDays} giorni`
+      },
+
+      getDeliveryDateFromDecimalWeeks(decimal) {
+        let daysToDeliveryFromCRL = 280 - decimal * 7
+        return dayjs().add(daysToDeliveryFromCRL, 'day').format('YYYY-MM-DD')
       }
     }
   }
@@ -194,6 +291,94 @@
     <div class="form">
       <Office @print="print()" />
       <Patient />
+
+      <section class="pregnancy">
+        <div class="title">Gravidanza</div>
+        <div class="switch">
+          <div
+            @click="activeDateSelection = 'start'"
+            class="selStart"
+            :class="activeDateSelection === 'start' ? 'act' : ''"
+          >
+            Ultima mestruazione
+          </div>
+          <div
+            @click="activeDateSelection = 'end'"
+            :class="activeDateSelection === 'end' ? 'act' : ''"
+            class="selEnd"
+          >
+            Data prevista parto
+          </div>
+          <div class="active" :class="activeDateSelection"></div>
+        </div>
+        <input
+          v-if="activeDateSelection == 'start'"
+          @change="calcPregnancyDate"
+          v-model="startDate"
+          type="date"
+        />
+        <input
+          v-else-if="activeDateSelection == 'end'"
+          @change="calcPregnancyDate"
+          v-model="deliveryDate"
+          type="date"
+        />
+        <div class="calc-date">
+          Data prevista per il parto da U.M.:
+          {{ deliveryDateFormatting }}
+        </div>
+        <div class="epoca-gestazionale">
+          Epoca gestazionale da U.M.:
+          {{ epocaGestazionale }}
+        </div>
+        <div class="epoca-gestazionale-CRL">
+          <div class="show">
+            <div class="checkbox">
+              <input
+                type="checkbox"
+                name="enableReDating"
+                id="enableReDating"
+                v-model="enableCRLReDate"
+              />
+              <label for="enableReDating">Applica ridatazione CRL</label>
+            </div>
+            <div v-show="enableCRLReDate" class="checkbox">
+              <input
+                type="checkbox"
+                name="externalReDating"
+                id="externalReDating"
+                v-model="externalCRLReDate"
+              />
+              <label for="externalReDating">Effettuata in precedenza in altra sede</label>
+            </div>
+
+            <div v-show="enableCRLReDate" class="re-date-show">
+              <div class="ga-crl">
+                Epoca gestazionale da eco:
+                {{ reDateFromCrl }}
+              </div>
+              <div class="delivery-crl">
+                Data prevista per il parto da eco:
+                {{ deliveryDateFromCRLFormatting }}
+              </div>
+              <!-- {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni -->
+            </div>
+          </div>
+          <div class="action">
+            <button @click="redatingPanel = true">Modifica Ridatazione</button>
+          </div>
+        </div>
+        <div class="more-info">
+          <div v-if="!pregnancyMore" class="add-more" @click="pregnancyMore = true">+</div>
+          <textarea
+            v-else
+            v-model="pregnancyMoreText"
+            placeholder="Aggiungi ulteriori informazioni"
+            rows="4"
+          ></textarea>
+        </div>
+      </section>
+
       <div class="d-flex justify-content-between align-items-center gap-3">
         <section class="reason">
           <div class="title">Motivo della visita</div>
@@ -418,6 +603,44 @@
         <div v-html="selectedReport"></div>
       </section>
       <button class="print" @click="print()">Print</button>
+
+      <section v-show="redatingPanel" class="re-dating-panel">
+        <div class="re-dating-background" @click="redatingPanel = false"></div>
+        <div class="re-dating-container">
+          <div class="panel-title">Ridatazione da CRL</div>
+          <div class="old-date">
+            <span>Data originale:</span>
+            {{ parseInt(decimalWeeks) }} settimane +
+            {{ ((decimalWeeks - parseInt(decimalWeeks)) * 7).toFixed(0) }} giorni
+          </div>
+          <div class="new-date">
+            <span>Ridatazione:</span>
+            <div class="re-dating-input">
+              <div class="number">
+                <div>
+                  <input type="number" v-model="crlWeeks" @change="setManuallyCrlReDate('weeks')" />
+                  Settimane +
+                </div>
+                <div>
+                  <input type="number" v-model="crlDays" @change="setManuallyCrlReDate('weeks')" />
+                  Giorni
+                </div>
+              </div>
+              <div class="delivery">
+                <label>Termine eco:</label>
+                <input
+                  type="date"
+                  v-model="deliveryDateFromCRL"
+                  @change="setManuallyCrlReDate('date')"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="action">
+            <button @click="reDateCRL">Ridata</button>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
