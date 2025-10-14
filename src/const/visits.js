@@ -1,23 +1,23 @@
 export const Reasons = [
   {
-    label: 'Visita di controllo',
-    value: 'Visita ginecologica di controllo periodico'
+    labeL: 'Controllo ginecologico',
+    value: 'Controllo ginecologico'
   },
   {
-    label: 'Esame Pap test',
-    value: 'Esecuzione del Pap test per screening del cancro del collo dell\'utero'
+    label: 'Controllo post-partum',
+    value: 'Controllo post-partum'
   },
   {
-    label: 'Disturbi mestruali',
-    value: 'Valutazione di irregolarità, dolore o sanguinamento anomalo del ciclo mestruale'
+    label: 'Irregolarità mestruali',
+    value: 'Irregolarità mestruali'
   },
   {
-    label: 'Consulenza contraccettiva',
-    value: 'Consulenza e prescrizione di metodi contraccettivi'
+    label: 'Acne',
+    value: 'Acne'
   },
   {
-    label: 'Infezioni/Sintomi',
-    value: 'Valutazione di possibili infezioni, prurito, bruciore o secrezioni anomale'
+    label: 'Contraccezione',
+    value: 'Contraccezione',
   }
 ]
 
