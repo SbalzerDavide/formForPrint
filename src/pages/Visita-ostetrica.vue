@@ -195,6 +195,9 @@
       removePathologicalAnamnesis(index) {
         this.pathologicalAnamneses.splice(index, 1)
       },
+      setPapTestResult(value) {
+        this.papTestResult = value
+      },
       print() {
         // Imposta i dati nello store per il componente Print
         this.$store.commit('SET_VISITA_OSTETRICA_PRINT_DATA', {
@@ -533,6 +536,12 @@
             <!-- data e risultato -->
             <div class="w-48">Pap test</div>
             <input type="date" id="papTestDate" v-model="papTestDate" />
+            <select @change="setPapTestResult($event.target.value)">
+              <option disabled selected value>-- select an option --</option>
+              <option v-for="result in papTestResults" :key="result.value" :value="result.value">
+                {{ result.label }}
+              </option>
+            </select>
           </div>
           <div class="d-flex align-items-start gap-4">
             <div class="w-48"></div>
@@ -543,13 +552,6 @@
               id="papTestResult"
               v-model="papTestResult"
             ></textarea>
-            <!-- <select v-model="papTestResult">
-              <option disabled selected value>-- select an option --</option>
-              <option v-for="result in papTestResults" :key="result.value" :value="result.value">
-                {{ result.label }}
-              </option>
-            </select>
-            <span>{{ papTestResult }}</span> -->
           </div>
           <div class="d-flex items-center gap-4">
             <div class="w-48">Mammografia</div>

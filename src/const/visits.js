@@ -67,15 +67,27 @@ export const SavedPathologicalAnamneses = [
 export const papTestResults = [
   {
     label: 'Negativo',
-    value: 'Pap test negativo per lesioni intraepiteliali o malignità'
+    value: ''
   },
   {
-    label: 'ASC-US',
-    value: 'Cellule squamose atipiche di significato indeterminato (ASC-US)'
+    label: 'Alterazioni di tipo infiammatorio',
+    value: ''
   },
   {
-    label: 'LSIL',
-    value: 'Lesione intraepiteliale squamosa di basso grado (LSIL)'
+    label: 'H-SIL',
+    value: ''
+  },
+  {
+    label: 'L-SIL',
+    value: ''
+  },
+  {
+    label: 'ASCUS',
+    value: ''
+  },
+  {
+    label: 'AGC',
+    value: ''
   }
 ]
 
