@@ -1,6 +1,6 @@
 export const Reasons = [
   {
-    labeL: 'Controllo ginecologico',
+    label: 'Controllo ginecologico',
     value: 'Controllo ginecologico'
   },
   {
@@ -90,6 +90,8 @@ export const papTestResults = [
     value: ''
   }
 ]
+
+export const infections = ['TOXO', 'RUBEO', 'HBsAg', 'HCV', 'HIV', 'TPHA', 'CMV']
 
 export const reports = [
   {
