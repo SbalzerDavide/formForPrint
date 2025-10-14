@@ -41,6 +41,7 @@
         addMoreAllergie: false,
         newAllergy: '',
         familyAnamnesis: '',
+        trombo: 'false',
         pathologicalAnamneses: [],
         addMorePathologicalAnamnesis: false,
         newPathologicalAnamnesis: '',
@@ -60,9 +61,29 @@
         papTestResult: '',
         conclusion: '',
         selectdCities: null,
+
+        // anamnesi patologica remota
         es: '',
         eog: '',
-        eco_tv: ''
+        eco_tv: '',
+        pa: '',
+
+        // esami
+        emogruppo: '',
+        coombs: '',
+        ogtt: '',
+
+        // screening
+        testCombinato: '',
+        nipt: '',
+
+        // disgnosi invasiva
+        amniocentesi: false,
+        villocentesi: false,
+        esitoCariotipo: '',
+
+        // infections
+        itchingReason: ''
       }
     },
     watch: {
@@ -74,6 +95,9 @@
       },
       deliveryDate(val) {
         this.deliveryDateFormatting = dayjs(val).format('DD/MM/YYYY')
+      },
+      decimalWeeks(val) {
+        this.reason = `Gravida para a ${parseInt(val)} settimane di gestazione`
       }
     },
     created() {
@@ -96,6 +120,9 @@
         }
         if (storeData.familyAnamnesis) {
           this.familyAnamnesis = storeData.familyAnamnesis
+        }
+        if (storeData.trombo) {
+          this.trombo = storeData.trombo
         }
         if (storeData.pathologicalAnamneses && storeData.pathologicalAnamneses.length > 0) {
           this.pathologicalAnamneses = [...storeData.pathologicalAnamneses]
@@ -133,6 +160,30 @@
           if (gynAnamnesis.mammografiaDesc) {
             this.mammografiaDesc = gynAnamnesis.mammografiaDesc
           }
+          if (gynAnamnesis.emogruppo) {
+            this.emogruppo = gynAnamnesis.emogruppo
+          }
+          if (gynAnamnesis.coombs) {
+            this.coombs = gynAnamnesis.coombs
+          }
+          if (gynAnamnesis.ogtt) {
+            this.ogtt = gynAnamnesis.ogtt
+          }
+          if (gynAnamnesis.testCombinato) {
+            this.testCombinato = gynAnamnesis.testCombinato
+          }
+          if (gynAnamnesis.nipt) {
+            this.nipt = gynAnamnesis.nipt
+          }
+          if (gynAnamnesis.amniocentesi) {
+            this.amniocentesi = gynAnamnesis.amniocentesi
+          }
+          if (gynAnamnesis.villocentesi) {
+            this.villocentesi = gynAnamnesis.villocentesi
+          }
+          if (gynAnamnesis.esitoCariotipo) {
+            this.esitoCariotipo = gynAnamnesis.esitoCariotipo
+          }
         }
         if (storeData.objectiveExam) {
           const objExam = storeData.objectiveExam
@@ -145,6 +196,12 @@
           if (objExam.eco_tv) {
             this.eco_tv = objExam.eco_tv
           }
+          if (objExam.pa) {
+            this.pa = objExam.pa
+          }
+        }
+        if (storeData.infections) {
+          this.itchingReason = storeData.infections.itchingReason
         }
         if (storeData.conclusion) {
           this.conclusion = storeData.conclusion
@@ -204,6 +261,7 @@
           reason: this.reason,
           allergies: this.allergies,
           familyAnamnesis: this.familyAnamnesis,
+          trombo: this.trombo,
           pathologicalAnamneses: this.pathologicalAnamneses,
           obstetricAnamnesis: {
             paraP: this.paraP,
@@ -215,12 +273,24 @@
             lastMenstruationDesc: this.lastMenstruationDesc,
             papTestDate: this.papTestDate,
             papTestResult: this.papTestResult,
-            mammografiaDesc: this.mammografiaDesc
+            mammografiaDesc: this.mammografiaDesc,
+            emogruppo: this.emogruppo,
+            coombs: this.coombs,
+            ogtt: this.ogtt,
+            testCombinato: this.testCombinato,
+            nipt: this.nipt,
+            amniocentesi: this.amniocentesi,
+            villocentesi: this.villocentesi,
+            esitoCariotipo: this.esitoCariotipo
           },
           objectiveExam: {
             es: this.es,
             eog: this.eog,
-            eco_tv: this.eco_tv
+            eco_tv: this.eco_tv,
+            pa: this.pa
+          },
+          infections: {
+            itchingReason: this.itchingReason
           },
           conclusion: this.conclusion
         })
@@ -385,14 +455,6 @@
       <div class="d-flex justify-content-between align-items-center gap-3">
         <section class="reason">
           <div class="title">Motivo della visita</div>
-          <div class="mb-4 w-full">
-            <select @change="setReason">
-              <option disabled selected value>-- select an option --</option>
-              <option v-for="reason in reasons" :key="reason.value" :value="reason.value">
-                {{ reason.label }}
-              </option>
-            </select>
-          </div>
           <div class="description">
             <textarea
               class="w-full"
@@ -440,6 +502,34 @@
       </div>
       <section>
         <div class="title">Anamnesi familiare</div>
+        <div class="d-flex items-center gap-4 mb-4">
+          <div class="">Eventi trombotici e cardiovascolari</div>
+          <div class="d-flex gap-1">
+            <div class="d-flex gap-2 align-items-center">
+              <input
+                class="custom-input w-4"
+                type="radio"
+                id="TromboPos"
+                name="trombo"
+                value="true"
+                v-model="trombo"
+              />
+              <label for="TromboPos">Positivo</label>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+              <input
+                class="custom-input w-4"
+                type="radio"
+                id="TromboNeg"
+                name="trombo"
+                value="false"
+                v-model="trombo"
+              />
+              <label for="TromboNeg">Negativo</label>
+            </div>
+          </div>
+        </div>
+
         <textarea
           class="w-full"
           v-model="familyAnamnesis"
@@ -563,6 +653,68 @@
               v-model="mammografiaDesc"
             ></textarea>
           </div>
+          <hr class="w-full" />
+          <div class="title">Esami</div>
+
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Tipo emogruppo</div>
+            <input type="text" name="emogruppo" id="emogruppo" v-model="emogruppo" />
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Coombs infettivologici</div>
+            <input type="text" name="coombs" id="coombs" v-model="coombs" />
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">OGTT</div>
+            <input type="text" name="ogtt" id="ogtt" v-model="ogtt" />
+          </div>
+
+          <hr class="w-full" />
+          <div class="title">Screening</div>
+
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Test combinato</div>
+            <input type="text" name="testCombinato" id="testCombinato" v-model="testCombinato" />
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">NIPT</div>
+            <input type="text" name="nipt" id="nipt" v-model="nipt" />
+          </div>
+
+          <hr class="w-full" />
+          <div class="title">Diagnosi prenatale invasiva</div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">amniocentesi</div>
+            <input
+              class="custom-input"
+              type="checkbox"
+              name="amniocentesi"
+              id="amniocentesi"
+              v-model="amniocentesi"
+            />
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">villocentesi</div>
+            <input
+              class="custom-input"
+              type="checkbox"
+              name="villocentesi"
+              id="villocentesi"
+              v-model="villocentesi"
+            />
+          </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Esito cariotipo</div>
+            <input type="text" name="esitoCariotipo" id="esitoCariotipo" v-model="esitoCariotipo" />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="title">Infezioni</div>
+        <div class="d-flex align-items-start gap-4">
+          <div class="w-48">Lamenta bruciore e prurito da</div>
+          <input type="text" id="itchingReason" v-model="itchingReason" />
         </div>
       </section>
       <section>
@@ -578,6 +730,11 @@
         <div>
           <label for="type">ECO TV</label>
           <input class="input-large" type="text" name="eco_tv" id="eco_tv" v-model="eco_tv" />
+        </div>
+        <div>
+          <label for="type">PA</label>
+          <input class="input-large" type="number" name="pa" id="pa" v-model="pa" />
+          mmHg
         </div>
       </section>
       <section>
