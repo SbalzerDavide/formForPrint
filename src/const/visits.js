@@ -67,27 +67,27 @@ export const SavedPathologicalAnamneses = [
 export const papTestResults = [
   {
     label: 'Negativo',
-    value: ''
+    value: 'Negativo'
   },
   {
     label: 'Alterazioni di tipo infiammatorio',
-    value: ''
+    value: 'Alterazioni di tipo infiammatorio'
   },
   {
     label: 'H-SIL',
-    value: ''
+    value: 'H-SIL'
   },
   {
     label: 'L-SIL',
-    value: ''
+    value: 'L-SIL'
   },
   {
     label: 'ASCUS',
-    value: ''
+    value: 'ASCUS'
   },
   {
     label: 'AGC',
-    value: ''
+    value: 'AGC'
   }
 ]
 
