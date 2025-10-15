@@ -52,7 +52,13 @@ export const commonStore = new Vuex.Store({
       reason: '',
       allergies: [],
       familyAnamnesis: '',
+      trombo: 'false',
       pathologicalAnamneses: [],
+
+      // paptest
+      papTestYear: null,
+      papTestResult: '',
+
       gynecologicalAnamnesis: {
         paraP: 0,
         paraX: 0,
@@ -61,8 +67,6 @@ export const commonStore = new Vuex.Store({
         paraDesc: '',
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
-        papTestDate: null,
-        papTestResult: '',
         mammografiaDesc: '',
       },
       objectiveExam: {
@@ -74,11 +78,16 @@ export const commonStore = new Vuex.Store({
     },
     visitaOstetricaPrintData: {
       pregnancy: null,
-
       reason: '',
       allergies: [],
       familyAnamnesis: '',
+      trombo: 'false',
       pathologicalAnamneses: [],
+
+      // paptest
+      papTestYear: null,
+      papTestResult: '',
+
       obstetricAnamnesis: {
         paraP: 0,
         paraX: 0,
@@ -86,8 +95,6 @@ export const commonStore = new Vuex.Store({
         paraZ: 0,
         paraDesc: '',
         lastMenstruationDate: null,
-        papTestDate: null,
-        papTestResult: '',
         emogruppo: '',
         coombs: '',
         ogtt: '',
@@ -231,6 +238,14 @@ export const commonStore = new Vuex.Store({
     SET_POLICY_TYPE(state, policyType) {
       state.ecografiaOstetricaPrintData.policyType = policyType
     },
+
+    SET_PAPTEST_YEAR(state, { papTestYear, visit }) {
+      state[visit].papTestYear = papTestYear
+    },
+    SET_PAPTEST_RESULT(state, { papTestResult, visit }) {
+      state[visit].papTestResult = papTestResult
+    },
+
     // Mutations for Ecografia Ostetrica Print Data
     SET_ECOGRAFIA_OSTETRICA_PRINT_DATA(state, data) {
       state.ecografiaOstetricaPrintData = { ...state.ecografiaOstetricaPrintData, ...data }
