@@ -71,6 +71,11 @@
           return this.$store.state.visitaGinecologicaPrintData.familyAnamnesis
         }
       },
+      trombo: {
+        get() {
+          return this.$store.state.visitaGinecologicaPrintData.trombo
+        }
+      },
       pathologicalAnamneses: {
         get() {
           return this.$store.state.visitaGinecologicaPrintData.pathologicalAnamneses
@@ -81,6 +86,15 @@
           return {
             year: this.$store.state.visitaGinecologicaPrintData.papTestYear,
             result: this.$store.state.visitaGinecologicaPrintData.papTestResult
+          }
+        }
+      },
+      hpv: {
+        get() {
+          console.log(this.$store.state.visitaGinecologicaPrintData.hpv)
+          return {
+            date: this.$store.state.visitaGinecologicaPrintData.hpvDate,
+            result: this.$store.state.visitaGinecologicaPrintData.hpv
           }
         }
       },
@@ -179,9 +193,11 @@
       </section>
 
       <!-- anamnesi familiare -->
-      <section v-if="familyAnamnesis" class="anamnesis">
+      <section class="anamnesis">
         <div class="title-par">Anamnesi familiare:</div>
-        <p>{{ familyAnamnesis }}</p>
+        <p v-if="trombo">Positiva per TEV</p>
+        <p v-else>Negativa per TEV</p>
+        <p v-if="familyAnamnesis">{{ familyAnamnesis }}</p>
       </section>
 
       <!-- anamnesi patologica -->
@@ -226,6 +242,14 @@
             {{ papTest.result }}
           </span>
         </div>
+        <div v-if="hpv.result === 'true' || hpv.result === 'false'">
+          <span class="label mr-1">HPV:</span>
+          <span>
+            {{ hpv.result === 'true' ? 'Positivo' : 'Negativo' }}
+          </span>
+          <span v-if="hpv.date" class="ml-1">in data {{ formatDate(hpv.date) }}</span>
+        </div>
+
         <div>
           <span class="label mr-1">Mammografia:</span>
           <span>

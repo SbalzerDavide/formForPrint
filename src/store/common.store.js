@@ -58,6 +58,8 @@ export const commonStore = new Vuex.Store({
       // paptest
       papTestYear: null,
       papTestResult: '',
+      hpv: '',
+      hpvDate: null,
 
       gynecologicalAnamnesis: {
         paraP: 0,
@@ -87,6 +89,8 @@ export const commonStore = new Vuex.Store({
       // paptest
       papTestYear: null,
       papTestResult: '',
+      hpv: '',
+      hpvDate: null,
 
       obstetricAnamnesis: {
         paraP: 0,
@@ -244,6 +248,12 @@ export const commonStore = new Vuex.Store({
     },
     SET_PAPTEST_RESULT(state, { papTestResult, visit }) {
       state[visit].papTestResult = papTestResult
+    },
+    SET_HPV(state, { hpv, visit }) {
+      state[visit].hpv = hpv
+    },
+    SET_HPV_DATE(state, { hpvDate, visit }) {
+      state[visit].hpvDate = hpvDate
     },
 
     // Mutations for Ecografia Ostetrica Print Data
