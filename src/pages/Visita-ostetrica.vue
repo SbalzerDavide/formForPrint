@@ -605,7 +605,7 @@
             <div class="w-48"></div>
             <textarea
               class="flex-grow"
-              placeholder="Dettaggli UM"
+              placeholder="Dettagli UM"
               name="lastMenstruationDesc"
               id="lastMenstruationDesc"
               v-model="lastMenstruationDesc"
@@ -618,7 +618,7 @@
             <div class="w-48">Mammografia</div>
             <textarea
               class="flex-grow"
-              placeholder="Dettaggli Mammografia"
+              placeholder="Dettagli Mammografia"
               name="mammografiaDesc"
               id="mammografiaDesc"
               v-model="mammografiaDesc"
