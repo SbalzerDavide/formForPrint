@@ -76,6 +76,14 @@
           return this.$store.state.visitaGinecologicaPrintData.pathologicalAnamneses
         }
       },
+      papTest: {
+        get() {
+          return {
+            year: this.$store.state.visitaGinecologicaPrintData.papTestYear,
+            result: this.$store.state.visitaGinecologicaPrintData.papTestResult
+          }
+        }
+      },
       gynecologicalAnamnesis: {
         get() {
           return this.$store.state.visitaGinecologicaPrintData.gynecologicalAnamnesis
@@ -214,8 +222,8 @@
         <div>
           <span class="label mr-1">Pap test:</span>
           <span>
-            {{ formatDate(gynecologicalAnamnesis.papTestDate) }},
-            {{ gynecologicalAnamnesis.papTestResult }}
+            {{ papTest.year }} -
+            {{ papTest.result }}
           </span>
         </div>
         <div>
