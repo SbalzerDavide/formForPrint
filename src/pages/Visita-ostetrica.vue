@@ -4,14 +4,17 @@
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
 
-  import { Reasons, SavedPathologicalAnamneses, papTestResults, reports } from '../const/visits'
+  import PapTest from '@/components/visitModules/PapTest.vue'
+
+  import { Reasons, SavedPathologicalAnamneses, reports } from '../const/visits'
 
   export default {
     name: 'VisitaOstetrica',
     components: {
       PopupMessage,
       Patient,
-      Office
+      Office,
+      PapTest
     },
     data() {
       return {
@@ -40,8 +43,11 @@
         allergies: [],
         addMoreAllergie: false,
         newAllergy: '',
+
+        // anamnesi familiare
         familyAnamnesis: '',
         trombo: 'false',
+
         pathologicalAnamneses: [],
         addMorePathologicalAnamnesis: false,
         newPathologicalAnamnesis: '',
@@ -52,13 +58,10 @@
         paraDesc: '',
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
-        papTestDate: null,
         pregnancyMore: false,
-        papTestResults: papTestResults,
         mammografiaDesc: '',
         reports: reports,
         selectedReport: '',
-        papTestResult: '',
         conclusion: '',
         selectdCities: null,
 
@@ -149,13 +152,6 @@
           }
           if (gynAnamnesis.lastMenstruationDesc) {
             this.lastMenstruationDesc = gynAnamnesis.lastMenstruationDesc
-          }
-
-          if (gynAnamnesis.papTestDate) {
-            this.papTestDate = gynAnamnesis.papTestDate
-          }
-          if (gynAnamnesis.papTestResult) {
-            this.papTestResult = gynAnamnesis.papTestResult
           }
           if (gynAnamnesis.mammografiaDesc) {
             this.mammografiaDesc = gynAnamnesis.mammografiaDesc
@@ -252,9 +248,6 @@
       removePathologicalAnamnesis(index) {
         this.pathologicalAnamneses.splice(index, 1)
       },
-      setPapTestResult(value) {
-        this.papTestResult = value
-      },
       print() {
         // Imposta i dati nello store per il componente Print
         this.$store.commit('SET_VISITA_OSTETRICA_PRINT_DATA', {
@@ -271,8 +264,6 @@
             paraDesc: this.paraDesc,
             lastMenstruationDate: this.lastMenstruationDate,
             lastMenstruationDesc: this.lastMenstruationDesc,
-            papTestDate: this.papTestDate,
-            papTestResult: this.papTestResult,
             mammografiaDesc: this.mammografiaDesc,
             emogruppo: this.emogruppo,
             coombs: this.coombs,
@@ -364,104 +355,90 @@
     <div class="form">
       <Office @print="print()" />
       <Patient />
-
-      <section class="pregnancy">
-        <div class="title">Gravidanza</div>
-        <div class="switch">
-          <div
-            @click="activeDateSelection = 'start'"
-            class="selStart"
-            :class="activeDateSelection === 'start' ? 'act' : ''"
-          >
-            Ultima mestruazione
-          </div>
-          <div
-            @click="activeDateSelection = 'end'"
-            :class="activeDateSelection === 'end' ? 'act' : ''"
-            class="selEnd"
-          >
-            Data prevista parto
-          </div>
-          <div class="active" :class="activeDateSelection"></div>
-        </div>
-        <input
-          v-if="activeDateSelection == 'start'"
-          @change="calcPregnancyDate"
-          v-model="startDate"
-          type="date"
-        />
-        <input
-          v-else-if="activeDateSelection == 'end'"
-          @change="calcPregnancyDate"
-          v-model="deliveryDate"
-          type="date"
-        />
-        <div class="calc-date">
-          Data prevista per il parto da U.M.:
-          {{ deliveryDateFormatting }}
-        </div>
-        <div class="epoca-gestazionale">
-          Epoca gestazionale da U.M.:
-          {{ epocaGestazionale }}
-        </div>
-        <div class="epoca-gestazionale-CRL">
-          <div class="show">
-            <div class="checkbox">
-              <input
-                type="checkbox"
-                name="enableReDating"
-                id="enableReDating"
-                v-model="enableCRLReDate"
-              />
-              <label for="enableReDating">Applica ridatazione CRL</label>
+      <div class="double">
+        <section class="pregnancy">
+          <div class="title">Gravidanza</div>
+          <div class="switch">
+            <div
+              @click="activeDateSelection = 'start'"
+              class="selStart"
+              :class="activeDateSelection === 'start' ? 'act' : ''"
+            >
+              Ultima mestruazione
             </div>
-            <div v-show="enableCRLReDate" class="checkbox">
-              <input
-                type="checkbox"
-                name="externalReDating"
-                id="externalReDating"
-                v-model="externalCRLReDate"
-              />
-              <label for="externalReDating">Effettuata in precedenza in altra sede</label>
+            <div
+              @click="activeDateSelection = 'end'"
+              :class="activeDateSelection === 'end' ? 'act' : ''"
+              class="selEnd"
+            >
+              Data prevista parto
             </div>
-
-            <div v-show="enableCRLReDate" class="re-date-show">
-              <div class="ga-crl">
-                Epoca gestazionale da eco:
-                {{ reDateFromCrl }}
+            <div class="active" :class="activeDateSelection"></div>
+          </div>
+          <input
+            v-if="activeDateSelection == 'start'"
+            @change="calcPregnancyDate"
+            v-model="startDate"
+            type="date"
+          />
+          <input
+            v-else-if="activeDateSelection == 'end'"
+            @change="calcPregnancyDate"
+            v-model="deliveryDate"
+            type="date"
+          />
+          <div class="calc-date">
+            Data prevista per il parto da U.M.:
+            {{ deliveryDateFormatting }}
+          </div>
+          <div class="epoca-gestazionale">
+            Epoca gestazionale da U.M.:
+            {{ epocaGestazionale }}
+          </div>
+          <div class="epoca-gestazionale-CRL">
+            <div class="show">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  name="enableReDating"
+                  id="enableReDating"
+                  v-model="enableCRLReDate"
+                />
+                <label for="enableReDating">Applica ridatazione CRL</label>
               </div>
-              <div class="delivery-crl">
-                Data prevista per il parto da eco:
-                {{ deliveryDateFromCRLFormatting }}
+              <div v-show="enableCRLReDate" class="checkbox">
+                <input
+                  type="checkbox"
+                  name="externalReDating"
+                  id="externalReDating"
+                  v-model="externalCRLReDate"
+                />
+                <label for="externalReDating">Effettuata in precedenza in altra sede</label>
               </div>
-              <!-- {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni -->
+
+              <div v-show="enableCRLReDate" class="re-date-show">
+                <div class="ga-crl">
+                  Epoca gestazionale da eco:
+                  {{ reDateFromCrl }}
+                </div>
+                <div class="delivery-crl">
+                  Data prevista per il parto da eco:
+                  {{ deliveryDateFromCRLFormatting }}
+                </div>
+                <!-- {{ parseInt(decimalWeeksFromCRL) }} settimane + {{ ((decimalWeeksFromCRL -  parseInt(decimalWeeksFromCRL)) * 7).toFixed(0) }} giorni -->
+              </div>
+            </div>
+            <div class="action">
+              <button @click="redatingPanel = true">Modifica Ridatazione</button>
             </div>
           </div>
-          <div class="action">
-            <button @click="redatingPanel = true">Modifica Ridatazione</button>
-          </div>
-        </div>
-        <div class="more-info">
-          <div v-if="!pregnancyMore" class="add-more" @click="pregnancyMore = true">+</div>
-          <textarea
-            v-else
-            v-model="pregnancyMoreText"
-            placeholder="Aggiungi ulteriori informazioni"
-            rows="4"
-          ></textarea>
-        </div>
-      </section>
-
-      <div class="d-flex justify-content-between align-items-center gap-3">
-        <section class="reason">
-          <div class="title">Motivo della visita</div>
-          <div class="description">
+          <div class="more-info">
+            <div v-if="!pregnancyMore" class="add-more" @click="pregnancyMore = true">+</div>
             <textarea
-              class="w-full"
-              v-model="reason"
-              rows="8"
-              placeholder="Descrizione del motivo della visita"
-              style="resize: none"
+              v-else
+              v-model="pregnancyMoreText"
+              placeholder="Aggiungi ulteriori informazioni"
+              rows="4"
             ></textarea>
           </div>
         </section>
@@ -500,6 +477,19 @@
           </div>
         </section>
       </div>
+
+      <!-- <section class="reason">
+          <div class="title">Motivo della visita</div>
+          <div class="description">
+            <textarea
+              class="w-full"
+              v-model="reason"
+              rows="8"
+              placeholder="Descrizione del motivo della visita"
+              style="resize: none"
+            ></textarea>
+          </div>
+        </section> -->
       <section>
         <div class="title">Anamnesi familiare</div>
         <div class="d-flex items-center gap-4 mb-4">
@@ -622,27 +612,8 @@
             ></textarea>
           </div>
 
-          <div class="d-flex align-items-start gap-4">
-            <!-- data e risultato -->
-            <div class="w-48">Pap test</div>
-            <input type="date" id="papTestDate" v-model="papTestDate" />
-            <select @change="setPapTestResult($event.target.value)">
-              <option disabled selected value>-- select an option --</option>
-              <option v-for="result in papTestResults" :key="result.value" :value="result.value">
-                {{ result.label }}
-              </option>
-            </select>
-          </div>
-          <div class="d-flex align-items-start gap-4">
-            <div class="w-48"></div>
-            <textarea
-              class="flex-grow"
-              placeholder="Risultato Pap test"
-              name="papTestResult"
-              id="papTestResult"
-              v-model="papTestResult"
-            ></textarea>
-          </div>
+          <PapTest visit-store="visitaOstetricaPrintData" />
+
           <div class="d-flex items-center gap-4">
             <div class="w-48">Mammografia</div>
             <textarea
@@ -861,9 +832,9 @@
       background-color: #2a2a2a;
     }
   }
-  .allergies-section {
+  /* .allergies-section {
     height: 250px;
-  }
+  } */
   .input-large {
     width: 400px !important;
   }
