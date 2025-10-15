@@ -1,12 +1,14 @@
 <script>
   import Informations from '@/components/Informations.vue'
+  import ContentsContraceptive from '@/components/consents/ContentsContraceptive.vue'
   import { ombelicaleStd95RangeValues, uterineStd95RangeValues } from '@/utils/uterineVal.js'
   import { storeModel } from '@/utils/storeModel.js'
 
   export default {
     name: 'VisitaGinecologiaPrint',
     components: {
-      Informations
+      Informations,
+      ContentsContraceptive
     },
     data() {
       return {
@@ -294,6 +296,7 @@
         </p>
         <p v-if="conclusion.text">{{ conclusion.text }}</p>
       </section>
+      <ContentsContraceptive />
     </main>
     <footer>
       <img v-if="office === 'Pralboino'" class="footer-pralboino" src="@/img/footerPralboino.jpg" />
