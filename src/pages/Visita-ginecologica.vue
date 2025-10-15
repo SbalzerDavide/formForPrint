@@ -4,14 +4,17 @@
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
 
-  import { Reasons, SavedPathologicalAnamneses, papTestResults } from '../const/visits'
+  import PapTest from '@/components/visitModules/PapTest.vue'
+
+  import { Reasons, SavedPathologicalAnamneses } from '../const/visits'
 
   export default {
     name: 'VisitaGinecologica',
     components: {
       PopupMessage,
       Patient,
-      Office
+      Office,
+      PapTest
     },
     data() {
       return {
@@ -21,7 +24,11 @@
         allergies: [],
         addMoreAllergie: false,
         newAllergy: '',
+
+        // anamnesi familiare
         familyAnamnesis: '',
+        trombo: 'false',
+
         pathologicalAnamneses: [],
         addMorePathologicalAnamnesis: false,
         newPathologicalAnamnesis: '',
@@ -32,9 +39,6 @@
         paraDesc: '',
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
-        papTestDate: null,
-        papTestResults: papTestResults,
-        papTestResult: '',
         mammografiaDesc: '',
         conclusion: '',
         selectdCities: null,
@@ -61,6 +65,10 @@
         if (storeData.familyAnamnesis) {
           this.familyAnamnesis = storeData.familyAnamnesis
         }
+        if (storeData.trombo) {
+          this.trombo = storeData.trombo
+        }
+
         if (storeData.pathologicalAnamneses && storeData.pathologicalAnamneses.length > 0) {
           this.pathologicalAnamneses = [...storeData.pathologicalAnamneses]
         }
@@ -88,12 +96,6 @@
             this.lastMenstruationDesc = gynAnamnesis.lastMenstruationDesc
           }
 
-          if (gynAnamnesis.papTestDate) {
-            this.papTestDate = gynAnamnesis.papTestDate
-          }
-          if (gynAnamnesis.papTestResult) {
-            this.papTestResult = gynAnamnesis.papTestResult
-          }
           if (gynAnamnesis.mammografiaDesc) {
             this.mammografiaDesc = gynAnamnesis.mammografiaDesc
           }
@@ -160,6 +162,7 @@
           reason: this.reason,
           allergies: this.allergies,
           familyAnamnesis: this.familyAnamnesis,
+          trombo: this.trombo,
           pathologicalAnamneses: this.pathologicalAnamneses,
           gynecologicalAnamnesis: {
             paraP: this.paraP,
@@ -169,8 +172,6 @@
             paraDesc: this.paraDesc,
             lastMenstruationDate: this.lastMenstruationDate,
             lastMenstruationDesc: this.lastMenstruationDesc,
-            papTestDate: this.papTestDate,
-            papTestResult: this.papTestResult,
             mammografiaDesc: this.mammografiaDesc
           },
           objectiveExam: {
@@ -250,6 +251,34 @@
       </div>
       <section>
         <div class="title">Anamnesi familiare</div>
+        <div class="d-flex items-center gap-4 mb-4">
+          <div class="">Eventi trombotici e cardiovascolari</div>
+          <div class="d-flex gap-1">
+            <div class="d-flex gap-2 align-items-center">
+              <input
+                class="custom-input w-4"
+                type="radio"
+                id="TromboPos"
+                name="trombo"
+                value="true"
+                v-model="trombo"
+              />
+              <label for="TromboPos">Positivo</label>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+              <input
+                class="custom-input w-4"
+                type="radio"
+                id="TromboNeg"
+                name="trombo"
+                value="false"
+                v-model="trombo"
+              />
+              <label for="TromboNeg">Negativo</label>
+            </div>
+          </div>
+        </div>
+
         <textarea
           class="w-full"
           v-model="familyAnamnesis"
@@ -343,29 +372,8 @@
             ></textarea>
           </div>
 
-          <div class="d-flex align-items-start gap-4">
-            <!-- data e risultato -->
-            <div class="w-48">Pap test</div>
-            <input type="date" id="papTestDate" v-model="papTestDate" />
-          </div>
-          <div class="d-flex align-items-start gap-4">
-            <div class="w-48"></div>
-            <textarea
-              class="flex-grow"
-              placeholder="Risultato Pap test"
-              name="papTestResult"
-              id="papTestResult"
-              v-model="papTestResult"
-            ></textarea>
+          <PapTest visit-store="visitaGinecologicaPrintData" />
 
-            <!-- <select v-model="papTestResult">
-              <option disabled selected value>-- select an option --</option>
-              <option v-for="result in papTestResults" :key="result.value" :value="result.value">
-                {{ result.label }}
-              </option>
-            </select>
-            <span>{{ papTestResult }}</span> -->
-          </div>
           <div class="d-flex items-center gap-4">
             <div class="w-48">Mammografia</div>
             <textarea
