@@ -283,7 +283,7 @@
           class="w-full"
           v-model="familyAnamnesis"
           rows="4"
-          placeholder="Descrizione dell'anamnesi familiare"
+          placeholder="Testo aggiuntivo anamnesi familiare"
         ></textarea>
       </section>
       <section>
