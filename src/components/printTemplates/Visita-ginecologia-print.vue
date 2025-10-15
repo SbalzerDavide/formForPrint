@@ -110,7 +110,12 @@
       },
       conclusion: {
         get() {
-          return this.$store.state.visitaGinecologicaPrintData.conclusion
+          return {
+            normale: this.$store.state.visitaGinecologicaPrintData.conclusionNormale,
+            contraccettivo:
+              this.$store.state.visitaGinecologicaPrintData.conclusionContraccettivoDesc,
+            text: this.$store.state.visitaGinecologicaPrintData.conclusion
+          }
         }
       }
     },
@@ -283,7 +288,11 @@
       <!-- conclusioni -->
       <section class="conclusion">
         <div class="title-par">Conclusioni:</div>
-        <p>{{ conclusion }}</p>
+        <p v-if="conclusion.normale">Reperto pelvico regolare</p>
+        <p v-if="conclusion.contraccettivo">
+          Contraccettivo: {{ conclusion.contraccettivo }}, si esegue counseling
+        </p>
+        <p v-if="conclusion.text">{{ conclusion.text }}</p>
       </section>
     </main>
     <footer>

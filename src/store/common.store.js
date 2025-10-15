@@ -76,6 +76,8 @@ export const commonStore = new Vuex.Store({
         eog: '',
         eco_tv: ''
       },
+      conclusionNormale: false,
+      conclusionContraccettivoDesc: '',
       conclusion: ''
     },
     visitaOstetricaPrintData: {

@@ -40,7 +40,13 @@
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
         mammografiaDesc: '',
+
+        // conclusioni
+        conclusionNormale: false,
+        conclusionContraccettivo: false,
+        conclusionContraccettivoDesc: '',
         conclusion: '',
+
         selectdCities: null,
         es: '',
         eog: '',
@@ -112,6 +118,13 @@
             this.eco_tv = objExam.eco_tv
           }
         }
+        if (storeData.conclusionNormale) {
+          this.conclusionNormale = storeData.conclusionNormale
+        }
+        if (storeData.conclusionContraccettivoDesc) {
+          this.conclusionContraccettivo = true
+          this.conclusionContraccettivoDesc = storeData.conclusionContraccettivoDesc
+        }
         if (storeData.conclusion) {
           this.conclusion = storeData.conclusion
         }
@@ -179,6 +192,10 @@
             eog: this.eog,
             eco_tv: this.eco_tv
           },
+          conclusionNormale: this.conclusionNormale,
+          conclusionContraccettivoDesc: this.conclusionContraccettivo
+            ? this.conclusionContraccettivoDesc
+            : '',
           conclusion: this.conclusion
         })
         this.$store.commit('SET_PRINT_TYPE', 'visita-ginecologica')
@@ -403,11 +420,43 @@
       </section>
       <section>
         <div class="title">Conclusioni</div>
+        <div class="d-flex align-items-center gap-1">
+          <label for="conclusione-normale">Normale</label>
+          <input
+            class="custom-input"
+            type="checkbox"
+            name="conclusione"
+            id="conclusione-normale"
+            v-model="conclusionNormale"
+            value="Normale"
+          />
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <label for="conclusione-contraccettivo">Contraccettivo</label>
+          <input
+            class="custom-input"
+            type="checkbox"
+            name="conclusione"
+            id="conclusione-contraccettivo"
+            v-model="conclusionContraccettivo"
+            value="Contraccettivo"
+          />
+          <input
+            v-if="conclusionContraccettivo"
+            class="ml-4"
+            placeholder="Specifica contraccettivo"
+            type="text"
+            name="conclusione-contraccettivo-desc"
+            id="conclusione-contraccettivo-desc"
+            v-model="conclusionContraccettivoDesc"
+          />
+        </div>
+
         <div class="description">
           <textarea
             class="w-full"
             v-model="conclusion"
-            rows="8"
+            rows="4"
             placeholder="Inserisci le conclusioni della visita"
             style="resize: none"
           ></textarea>
