@@ -202,7 +202,7 @@
       <!-- anamnesi familiare -->
       <section class="anamnesis">
         <div class="title-par">Anamnesi familiare:</div>
-        <p v-if="trombo">Positiva per TEV</p>
+        <p v-if="trombo == 'true'">Positiva per TEV</p>
         <p v-else>Negativa per TEV</p>
         <p v-if="familyAnamnesis">{{ familyAnamnesis }}</p>
       </section>
