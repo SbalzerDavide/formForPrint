@@ -51,6 +51,7 @@
         conclusionNormale: false,
         conclusionContraccettivo: false,
         conclusionContraccettivoDesc: '',
+        showContraceptiveInfo: false,
         conclusion: '',
 
         selectdCities: null,
@@ -140,6 +141,9 @@
           this.conclusionContraccettivo = true
           this.conclusionContraccettivoDesc = storeData.conclusionContraccettivoDesc
         }
+        if (storeData.showContraceptiveInfo) {
+          this.showContraceptiveInfo = storeData.showContraceptiveInfo
+        }
         if (storeData.conclusion) {
           this.conclusion = storeData.conclusion
         }
@@ -214,6 +218,7 @@
           conclusionContraccettivoDesc: this.conclusionContraccettivo
             ? this.conclusionContraccettivoDesc
             : '',
+          showContraceptiveInfo: this.showContraceptiveInfo,
           conclusion: this.conclusion
         })
         this.$store.commit('SET_PRINT_TYPE', 'visita-ginecologica')
@@ -458,23 +463,23 @@
       </section>
       <section>
         <div class="title">Esame obiettivo</div>
-        <div>
-          <label for="type">ES</label>
+        <div class="d-flex align-items-center gap-4 mb-4">
+          <label class="custom-label w-48" for="es">ES</label>
           <input class="input-large" type="text" name="es" id="es" v-model="es" />
         </div>
-        <div>
-          <label for="type">EOG</label>
+        <div class="d-flex align-items-center gap-4 mb-4">
+          <label class="custom-label w-48" for="eog">EOG</label>
           <input class="input-large" type="text" name="eog" id="eog" v-model="eog" />
         </div>
-        <div>
-          <label for="type">ECO TV</label>
+        <div class="d-flex align-items-center gap-4 mb-4">
+          <label class="custom-label w-48" for="eco_tv">ECO TV</label>
           <input class="input-large" type="text" name="eco_tv" id="eco_tv" v-model="eco_tv" />
         </div>
       </section>
       <section>
         <div class="title">Conclusioni</div>
         <div class="d-flex align-items-center gap-1">
-          <label for="conclusione-normale">Normale</label>
+          <label class="custom-label w-48" for="conclusione-normale">Normale</label>
           <input
             class="custom-input"
             type="checkbox"
@@ -484,8 +489,8 @@
             value="Normale"
           />
         </div>
-        <div class="d-flex align-items-center gap-1">
-          <label for="conclusione-contraccettivo">Contraccettivo</label>
+        <div class="d-flex items-center gap-1 h-12">
+          <label class="custom-label w-48" for="conclusione-contraccettivo">Contraccettivo</label>
           <input
             class="custom-input"
             type="checkbox"
@@ -496,12 +501,26 @@
           />
           <input
             v-if="conclusionContraccettivo"
+            style="margin-bottom: 0"
             class="ml-4"
             placeholder="Specifica contraccettivo"
             type="text"
             name="conclusione-contraccettivo-desc"
             id="conclusione-contraccettivo-desc"
             v-model="conclusionContraccettivoDesc"
+          />
+        </div>
+        <div class="d-flex align-items-center gap-1 mb-4">
+          <label class="custom-label w-48" for="conclusione-normale">
+            Informativa contraccettivi
+          </label>
+          <input
+            class="custom-input"
+            type="checkbox"
+            name="conclusione"
+            id="conclusione-normale"
+            v-model="showContraceptiveInfo"
+            value="Normale"
           />
         </div>
 

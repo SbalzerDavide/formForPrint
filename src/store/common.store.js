@@ -81,6 +81,7 @@ export const commonStore = new Vuex.Store({
       },
       conclusionNormale: false,
       conclusionContraccettivoDesc: '',
+      showContraceptiveInfo: false,
       conclusion: ''
     },
     visitaOstetricaPrintData: {

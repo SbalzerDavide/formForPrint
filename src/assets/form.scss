@@ -79,7 +79,7 @@
         font-weight: normal;
       }
     }
-    label {
+    label:not(.custom-label) {
       display: inline-block;
       width: 150px;
     }

@@ -126,6 +126,8 @@
             normale: this.$store.state.visitaGinecologicaPrintData.conclusionNormale,
             contraccettivo:
               this.$store.state.visitaGinecologicaPrintData.conclusionContraccettivoDesc,
+            showContraceptiveInfo:
+              this.$store.state.visitaGinecologicaPrintData.showContraceptiveInfo,
             text: this.$store.state.visitaGinecologicaPrintData.conclusion
           }
         }
@@ -318,7 +320,7 @@
         </p>
         <p v-if="conclusion.text">{{ conclusion.text }}</p>
       </section>
-      <ContentsContraceptive />
+      <ContentsContraceptive v-if="conclusion.showContraceptiveInfo" />
     </main>
     <footer>
       <img v-if="office === 'Pralboino'" class="footer-pralboino" src="@/img/footerPralboino.jpg" />
