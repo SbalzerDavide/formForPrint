@@ -54,6 +54,8 @@ export const commonStore = new Vuex.Store({
       familyAnamnesis: '',
       trombo: 'false',
       pathologicalAnamneses: [],
+      smoker: false,
+      cigarettesPerDay: null,
 
       // paptest
       papTestYear: null,
@@ -88,6 +90,8 @@ export const commonStore = new Vuex.Store({
       familyAnamnesis: '',
       trombo: 'false',
       pathologicalAnamneses: [],
+      smoker: 'false',
+      cigarettesPerDay: 0,
 
       // paptest
       papTestYear: null,

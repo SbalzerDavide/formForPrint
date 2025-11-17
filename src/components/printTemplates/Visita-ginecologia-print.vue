@@ -83,6 +83,16 @@
           return this.$store.state.visitaGinecologicaPrintData.pathologicalAnamneses
         }
       },
+      smoker: {
+        get() {
+          return this.$store.state.visitaGinecologicaPrintData.smoker
+        }
+      },
+      cigarettesPerDay: {
+        get() {
+          return this.$store.state.visitaGinecologicaPrintData.cigarettesPerDay
+        }
+      },
       papTest: {
         get() {
           return {
@@ -208,11 +218,17 @@
       </section>
 
       <!-- anamnesi patologica -->
-      <section v-if="pathologicalAnamneses.length > 0" class="pathological-anamnesis">
+      <section class="pathological-anamnesis">
         <div class="title-par">Anamnesi patologica remota:</div>
         <ul>
           <li v-for="(item, index) in pathologicalAnamneses" :key="index">{{ item }}</li>
         </ul>
+
+        <div>
+          <span class="label mr-1">Fumatrice:</span>
+          <span v-if="smoker">Sì, {{ cigarettesPerDay }} sigarette al giorno</span>
+          <span v-else>No</span>
+        </div>
       </section>
 
       <section v-if="allergies.length > 0" class="allergies">
@@ -257,13 +273,13 @@
           <span v-if="hpv.date" class="ml-1">in data {{ formatDate(hpv.date) }}</span>
         </div>
 
-        <div>
+        <div v-if="gynecologicalAnamnesis.mammografiaDesc">
           <span class="label mr-1">Mammografia:</span>
           <span>
             {{ gynecologicalAnamnesis.mammografiaDesc }}
           </span>
         </div>
-        <div>
+        <div v-if="gynecologicalAnamnesis.allergiesDesc">
           <span class="label mr-1">Allergie:</span>
           <span>
             {{ gynecologicalAnamnesis.allergiesDesc }}
