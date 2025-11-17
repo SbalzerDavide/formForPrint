@@ -263,6 +263,12 @@
             {{ gynecologicalAnamnesis.mammografiaDesc }}
           </span>
         </div>
+        <div>
+          <span class="label mr-1">Allergie:</span>
+          <span>
+            {{ gynecologicalAnamnesis.allergiesDesc }}
+          </span>
+        </div>
       </section>
 
       <!-- esame obiettivo -->

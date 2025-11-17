@@ -40,6 +40,7 @@
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
         mammografiaDesc: '',
+        allergiesDesc: '',
 
         // conclusioni
         conclusionNormale: false,
@@ -104,6 +105,9 @@
 
           if (gynAnamnesis.mammografiaDesc) {
             this.mammografiaDesc = gynAnamnesis.mammografiaDesc
+          }
+          if (gynAnamnesis.allergiesDesc) {
+            this.allergiesDesc = gynAnamnesis.allergiesDesc
           }
         }
         if (storeData.objectiveExam) {
@@ -185,7 +189,8 @@
             paraDesc: this.paraDesc,
             lastMenstruationDate: this.lastMenstruationDate,
             lastMenstruationDesc: this.lastMenstruationDesc,
-            mammografiaDesc: this.mammografiaDesc
+            mammografiaDesc: this.mammografiaDesc,
+            allergiesDesc: this.allergiesDesc
           },
           objectiveExam: {
             es: this.es,
@@ -391,6 +396,7 @@
 
           <PapTest visit-store="visitaGinecologicaPrintData" />
 
+          <!-- Mammografia -->
           <div class="d-flex items-center gap-4">
             <div class="w-48">Mammografia</div>
             <textarea
@@ -399,6 +405,18 @@
               name="mammografiaDesc"
               id="mammografiaDesc"
               v-model="mammografiaDesc"
+            ></textarea>
+          </div>
+
+          <!-- allergie -->
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Allergie</div>
+            <textarea
+              class="flex-grow"
+              placeholder="Dettagli Allergie"
+              name="allergiesDesc"
+              id="allergiesDesc"
+              v-model="allergiesDesc"
             ></textarea>
           </div>
         </div>
