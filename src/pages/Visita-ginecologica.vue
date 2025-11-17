@@ -340,6 +340,7 @@
             >
               {{ pathologicalAnamnesis.label }}
             </option>
+            <option value="">Altro</option>
           </select>
           <div class="d-flex align-items-center gap-2 w-full">
             <input

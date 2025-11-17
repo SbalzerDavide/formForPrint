@@ -23,44 +23,32 @@ export const Reasons = [
 
 export const SavedPathologicalAnamneses = [
   {
+    label: 'Ipotiroidismo',
+    value: 'Ipotiroidismo - '
+  },
+  {
     label: 'Ipertensione',
-    value: 'Paziente con ipertensione arteriosa in trattamento farmacologico'
+    value: 'Ipertensione - '
   },
   {
     label: 'Diabete',
-    value: 'Diabete mellito di tipo 2 in trattamento con ipoglicemizzanti orali'
+    value: 'Diabete - '
+  },
+  {
+    label: 'Chirurgia pelvica',
+    value: 'Chirurgia pelvica - '
+  },
+  {
+    label: 'Tonsillectomia',
+    value: 'Tonsillectomia - '
+  },
+  {
+    label: 'Appendicectomia',
+    value: 'Appendicectomia - '
   },
   {
     label: 'Endometriosi',
     value: 'Diagnosi di endometriosi con interessamento ovarico'
-  },
-  {
-    label: 'Fibroma uterino',
-    value: 'Presenza di fibromioma uterino sottosieroso di 2,5 cm'
-  },
-  {
-    label: 'Cisti ovarica',
-    value: 'Cisti ovarica funzionale recidivante a destra'
-  },
-  {
-    label: 'PCOS',
-    value: 'Sindrome dell\'ovaio policistico con irregolarità mestruali e irsutismo'
-  },
-  {
-    label: 'Chirurgia pelvica',
-    value: 'Pregressa chirurgia pelvica per laparoscopia diagnostica'
-  },
-  {
-    label: 'Infezioni ricorrenti',
-    value: 'Storia di infezioni vaginali ricorrenti da Candida albicans'
-  },
-  {
-    label: 'Ipotiroidismo',
-    value: 'Ipotiroidismo in trattamento sostitutivo con Levotiroxina'
-  },
-  {
-    label: 'Patologia cervicale',
-    value: 'Storia di displasia cervicale di basso grado (LSIL) con follow-up negativo'
   }
 ]
 
