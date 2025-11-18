@@ -54,6 +54,7 @@
         ecoNumber: 'singola',
         fetusNumber: 1,
         biometriaFetale: biometriaFetale,
+        cervicometria: '',
         anatomy: anatomy,
         doppler: doppler,
         heart: true,
@@ -166,6 +167,9 @@
         }
         if (storeData.biometriaFetale && storeData.biometriaFetale.length > 0) {
           this.biometriaFetale = [...storeData.biometriaFetale]
+        }
+        if (storeData.cervicometria) {
+          this.cervicometria = storeData.cervicometria
         }
         if (storeData.anatomy && storeData.anatomy.length > 0) {
           this.anatomy = [...storeData.anatomy]
@@ -672,6 +676,7 @@
           externalCRLReDate: this.externalCRLReDate,
           decimalWeeksFromCRL: this.decimalWeeksFromCRL,
           biometriaFetale: this.biometriaFetale,
+          cervicometria: this.cervicometria,
           anatomy: this.anatomy,
           doppler: this.doppler,
           heart: this.heart,
@@ -879,6 +884,12 @@
           delta: {{ item.delta }}mm
         </div>
       </div>
+      <div class="biometria-item">
+        <label for="efw">Cervicometria</label>
+        <input type="text" name="cervicometria" id="cervicometria" v-model="cervicometria" />
+        <div class="unit">mm</div>
+      </div>
+
       <div class="more-info">
         <div v-if="!biometriaMore" class="add-more" @click="biometriaMore = true">+</div>
         <textarea

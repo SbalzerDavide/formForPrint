@@ -34,6 +34,7 @@ export const commonStore = new Vuex.Store({
       externalCRLReDate: false,
       decimalWeeksFromCRL: null,
       biometriaFetale: [],
+      cervicometria: '',
       anatomy: [],
       doppler: [],
       heart: true,

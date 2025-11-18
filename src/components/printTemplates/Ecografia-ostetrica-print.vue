@@ -121,6 +121,11 @@
           return this.$store.state.ecografiaOstetricaPrintData.biometriaFetale
         }
       },
+      cervicometria: {
+        get() {
+          return this.$store.state.ecografiaOstetricaPrintData.cervicometria
+        }
+      },
       anatomy: {
         get() {
           return this.$store.state.ecografiaOstetricaPrintData.anatomy
@@ -210,11 +215,17 @@
       }
       this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY')
 
-      // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
-      for (let i = 0; i < this.biometriaFetale.length; ++i) {
-        if (this.biometriaFetale[i].value) {
-          this.showBiometria = true
-          break
+      console.log('cervicometria', this.cervicometria)
+
+      if (this.cervicometria !== '') {
+        this.showBiometria = true
+      } else {
+        // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
+        for (let i = 0; i < this.biometriaFetale.length; ++i) {
+          if (this.biometriaFetale[i].value) {
+            this.showBiometria = true
+            break
+          }
         }
       }
       for (let i = 0; i < this.anatomy.length; ++i) {
@@ -436,7 +447,13 @@
             <div v-else-if="item.over95">> 95° p</div>
           </div>
         </div>
-        <!-- </div> -->
+        <div v-if="cervicometria !== ''" class="biometria-item">
+          <div class="biometria-box">
+            <div class="name">Cervicometria</div>
+            <div class="value">{{ cervicometria }}</div>
+            <div class="unit">mm</div>
+          </div>
+        </div>
         <p v-if="biometriaMore !== ''">{{ biometriaMore }}</p>
       </section>
       <section v-if="showAnatomia" class="anatomy">
