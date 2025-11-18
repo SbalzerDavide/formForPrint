@@ -45,7 +45,7 @@
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
         mammografiaDesc: '',
-        allergiesDesc: '',
+        infectionsDesc: '',
 
         // conclusioni
         conclusionNormale: false,
@@ -118,8 +118,8 @@
           if (gynAnamnesis.mammografiaDesc) {
             this.mammografiaDesc = gynAnamnesis.mammografiaDesc
           }
-          if (gynAnamnesis.allergiesDesc) {
-            this.allergiesDesc = gynAnamnesis.allergiesDesc
+          if (gynAnamnesis.infectionsDesc) {
+            this.infectionsDesc = gynAnamnesis.infectionsDesc
           }
         }
         if (storeData.objectiveExam) {
@@ -207,7 +207,7 @@
             lastMenstruationDate: this.lastMenstruationDate,
             lastMenstruationDesc: this.lastMenstruationDesc,
             mammografiaDesc: this.mammografiaDesc,
-            allergiesDesc: this.allergiesDesc
+            infectionsDesc: this.infectionsDesc
           },
           objectiveExam: {
             es: this.es,
@@ -450,13 +450,13 @@
 
           <!-- allergie -->
           <div class="d-flex items-center gap-4">
-            <div class="w-48">Allergie</div>
+            <div class="w-48">Infezioni</div>
             <textarea
               class="flex-grow"
-              placeholder="Dettagli Allergie"
-              name="allergiesDesc"
-              id="allergiesDesc"
-              v-model="allergiesDesc"
+              placeholder="Dettagli Infezioni"
+              name="infectionsDesc"
+              id="infectionsDesc"
+              v-model="infectionsDesc"
             ></textarea>
           </div>
         </div>
