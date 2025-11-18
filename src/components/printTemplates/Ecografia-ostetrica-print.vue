@@ -215,19 +215,14 @@
       }
       this.formattingPregnancyStart = dayjs(this.pregnancy?.start).format('DD/MM/YYYY')
 
-      console.log('cervicometria', this.cervicometria)
-
-      if (this.cervicometria !== '') {
-        this.showBiometria = true
-      } else {
-        // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
-        for (let i = 0; i < this.biometriaFetale.length; ++i) {
-          if (this.biometriaFetale[i].value) {
-            this.showBiometria = true
-            break
-          }
+      // se almeno un elemento per lista contiene un valore allora inserisco l'intestazione
+      for (let i = 0; i < this.biometriaFetale.length; ++i) {
+        if (this.biometriaFetale[i].value) {
+          this.showBiometria = true
+          break
         }
       }
+
       for (let i = 0; i < this.anatomy.length; ++i) {
         if (this.anatomy[i].checked || this.anatomy[i].comment) {
           this.showAnatomia = true
@@ -447,14 +442,17 @@
             <div v-else-if="item.over95">> 95° p</div>
           </div>
         </div>
-        <div v-if="cervicometria !== ''" class="biometria-item">
+        <p v-if="biometriaMore !== ''">{{ biometriaMore }}</p>
+      </section>
+      <section v-if="cervicometria !== ''">
+        <div class="title-par">Strutture materne</div>
+        <div class="biometria-item">
           <div class="biometria-box">
             <div class="name">Cervicometria</div>
             <div class="value">{{ cervicometria }}</div>
             <div class="unit">mm</div>
           </div>
         </div>
-        <p v-if="biometriaMore !== ''">{{ biometriaMore }}</p>
       </section>
       <section v-if="showAnatomia" class="anatomy">
         <div class="title-par">Anatomia</div>
