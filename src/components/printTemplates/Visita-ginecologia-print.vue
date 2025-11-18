@@ -18,7 +18,6 @@
         formattingPregnancyEnd: '',
         formattingPregnancyStart: '',
         formattingDeliveryCRL: '',
-        // showBiometria: false,
         showDoppler: false,
         showAnatomia: false,
         enableNT: false
