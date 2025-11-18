@@ -18,6 +18,10 @@ export const Reasons = [
   {
     label: 'Contraccezione',
     value: 'Contraccezione',
+  },
+  {
+    label: 'Infertilità',
+    value: 'Ricerca gravidanza da'
   }
 ]
 

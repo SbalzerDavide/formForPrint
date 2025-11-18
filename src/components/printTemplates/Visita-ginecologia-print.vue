@@ -18,7 +18,7 @@
         formattingPregnancyEnd: '',
         formattingPregnancyStart: '',
         formattingDeliveryCRL: '',
-        showBiometria: false,
+        // showBiometria: false,
         showDoppler: false,
         showAnatomia: false,
         enableNT: false
@@ -281,10 +281,10 @@
             {{ gynecologicalAnamnesis.mammografiaDesc }}
           </span>
         </div>
-        <div v-if="gynecologicalAnamnesis.allergiesDesc">
+        <div v-if="gynecologicalAnamnesis.infectionsDesc">
           <span class="label mr-1">Allergie:</span>
           <span>
-            {{ gynecologicalAnamnesis.allergiesDesc }}
+            {{ gynecologicalAnamnesis.infectionsDesc }}
           </span>
         </div>
       </section>

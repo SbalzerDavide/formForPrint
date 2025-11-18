@@ -72,7 +72,7 @@ export const commonStore = new Vuex.Store({
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
         mammografiaDesc: '',
-        allergiesDesc: ''
+        infectionsDesc: ''
       },
       objectiveExam: {
         es: '',
