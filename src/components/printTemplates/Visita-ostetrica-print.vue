@@ -87,6 +87,7 @@
       },
       obstetricAnamnesis: {
         get() {
+          console.log(this.$store.state.visitaOstetricaPrintData.obstetricAnamnesis)
           return this.$store.state.visitaOstetricaPrintData.obstetricAnamnesis
         }
       },
@@ -235,6 +236,12 @@
           <span class="label mr-1">Mammografia:</span>
           <span>
             {{ obstetricAnamnesis.mammografiaDesc }}
+          </span>
+        </div>
+        <div v-if="obstetricAnamnesis.infectionsDesc">
+          <span class="label mr-1">Infezioni:</span>
+          <span>
+            {{ obstetricAnamnesis.infectionsDesc }}
           </span>
         </div>
       </section>

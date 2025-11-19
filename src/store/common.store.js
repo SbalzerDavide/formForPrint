@@ -113,7 +113,7 @@ export const commonStore = new Vuex.Store({
         ogtt: '',
         testCombinato: '',
         nipt: '',
-
+        infectionsDesc: '',
       },
       objectiveExam: {
         es: '',

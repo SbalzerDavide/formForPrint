@@ -89,7 +89,8 @@
         esitoCariotipo: '',
 
         // infections
-        itchingReason: ''
+        // itchingReason: ''
+        infectionsDesc: ''
       }
     },
     watch: {
@@ -181,6 +182,9 @@
           if (gynAnamnesis.nipt) {
             this.nipt = gynAnamnesis.nipt
           }
+          if (gynAnamnesis.infectionsDesc) {
+            this.infectionsDesc = gynAnamnesis.infectionsDesc
+          }
           if (gynAnamnesis.amniocentesi) {
             this.amniocentesi = gynAnamnesis.amniocentesi
           }
@@ -207,7 +211,7 @@
           }
         }
         if (storeData.infections) {
-          this.itchingReason = storeData.infections.itchingReason
+          // this.itchingReason = storeData.infections.itchingReason
         }
         if (storeData.conclusion) {
           this.conclusion = storeData.conclusion
@@ -282,6 +286,7 @@
             ogtt: this.ogtt,
             testCombinato: this.testCombinato,
             nipt: this.nipt,
+            infectionsDesc: this.infectionsDesc,
             amniocentesi: this.amniocentesi,
             villocentesi: this.villocentesi,
             esitoCariotipo: this.esitoCariotipo
@@ -291,9 +296,6 @@
             eog: this.eog,
             eco_tv: this.eco_tv,
             pa: this.pa
-          },
-          infections: {
-            itchingReason: this.itchingReason
           },
           conclusion: this.conclusion
         })
@@ -656,6 +658,17 @@
               v-model="mammografiaDesc"
             ></textarea>
           </div>
+          <div class="d-flex items-center gap-4">
+            <div class="w-48">Infezioni</div>
+            <textarea
+              class="flex-grow"
+              placeholder="Dettagli Infezioni"
+              name="infectionsDesc"
+              id="infectionsDesc"
+              v-model="infectionsDesc"
+            ></textarea>
+          </div>
+
           <hr class="w-full" />
           <div class="title">Esami</div>
 
@@ -713,13 +726,6 @@
         </div>
       </section>
 
-      <section>
-        <div class="title">Infezioni</div>
-        <div class="d-flex align-items-start gap-4">
-          <div class="w-48">Lamenta bruciore e prurito da</div>
-          <input type="text" id="itchingReason" v-model="itchingReason" />
-        </div>
-      </section>
       <section>
         <div class="title">Esame obiettivo</div>
         <div>
