@@ -281,7 +281,7 @@
           </span>
         </div>
         <div v-if="gynecologicalAnamnesis.infectionsDesc">
-          <span class="label mr-1">Allergie:</span>
+          <span class="label mr-1">Infezioni:</span>
           <span>
             {{ gynecologicalAnamnesis.infectionsDesc }}
           </span>
