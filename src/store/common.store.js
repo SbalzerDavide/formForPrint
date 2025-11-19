@@ -92,7 +92,7 @@ export const commonStore = new Vuex.Store({
       familyAnamnesis: '',
       trombo: 'false',
       pathologicalAnamneses: [],
-      smoker: 'false',
+      smoker: false,
       cigarettesPerDay: 0,
 
       // paptest

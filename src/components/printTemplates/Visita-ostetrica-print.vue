@@ -75,6 +75,16 @@
           return this.$store.state.visitaOstetricaPrintData.pathologicalAnamneses
         }
       },
+      smoker: {
+        get() {
+          return this.$store.state.visitaOstetricaPrintData.smoker
+        }
+      },
+      cigarettesPerDay: {
+        get() {
+          return this.$store.state.visitaOstetricaPrintData.cigarettesPerDay
+        }
+      },
       obstetricAnamnesis: {
         get() {
           return this.$store.state.visitaOstetricaPrintData.obstetricAnamnesis
@@ -176,11 +186,17 @@
       </section>
 
       <!-- anamnesi patologica -->
-      <section v-if="pathologicalAnamneses.length > 0" class="pathological-anamnesis">
+      <section class="pathological-anamnesis">
         <div class="title-par">Anamnesi patologica remota:</div>
         <ul>
           <li v-for="(item, index) in pathologicalAnamneses" :key="index">{{ item }}</li>
         </ul>
+
+        <div>
+          <span class="label mr-1">Fumatrice:</span>
+          <span v-if="smoker">Sì, {{ cigarettesPerDay }} sigarette al giorno</span>
+          <span v-else>No</span>
+        </div>
       </section>
 
       <section v-if="allergies.length > 0" class="allergies">

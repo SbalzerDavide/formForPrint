@@ -51,6 +51,9 @@
         pathologicalAnamneses: [],
         addMorePathologicalAnamnesis: false,
         newPathologicalAnamnesis: '',
+        smoker: false,
+        cigarettesPerDay: null,
+
         paraP: 0,
         paraX: 0,
         paraY: 0,
@@ -130,6 +133,13 @@
         if (storeData.pathologicalAnamneses && storeData.pathologicalAnamneses.length > 0) {
           this.pathologicalAnamneses = [...storeData.pathologicalAnamneses]
         }
+        if (storeData.smoker) {
+          this.smoker = storeData.smoker
+        }
+        if (storeData.cigarettesPerDay) {
+          this.cigarettesPerDay = storeData.cigarettesPerDay
+        }
+
         if (storeData.obstetricAnamnesis) {
           const gynAnamnesis = storeData.obstetricAnamnesis
           if (gynAnamnesis.paraP !== null) {
@@ -256,6 +266,8 @@
           familyAnamnesis: this.familyAnamnesis,
           trombo: this.trombo,
           pathologicalAnamneses: this.pathologicalAnamneses,
+          smoker: this.smoker,
+          cigarettesPerDay: this.cigarettesPerDay,
           obstetricAnamnesis: {
             paraP: this.paraP,
             paraX: this.paraX,
@@ -573,6 +585,26 @@
               <font-awesome-icon icon="fa-solid fa-check" />
             </div>
           </div>
+        </div>
+        <!-- fumo -->
+        <div class="d-flex items-center gap-4 h-12">
+          <div class="d-flex items-center gap-2 w-48">
+            <input
+              type="checkbox"
+              class="custom-input"
+              name="smoker"
+              id="smoker"
+              v-model="smoker"
+            />
+            <label for="smoker">Fumo</label>
+          </div>
+          <input
+            v-if="smoker"
+            type="number"
+            class=""
+            placeholder="Sigarette al giorno"
+            v-model="cigarettesPerDay"
+          />
         </div>
       </section>
       <section>
