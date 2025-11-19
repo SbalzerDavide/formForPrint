@@ -172,7 +172,7 @@
       <!-- anamnesi familiare -->
       <section v-if="familyAnamnesis" class="anamnesis">
         <div class="title-par">Anamnesi familiare:</div>
-        <p>{{ familyAnamnesis }}</p>
+        <p class="preserve-linebreaks">{{ familyAnamnesis }}</p>
       </section>
 
       <!-- anamnesi patologica -->
@@ -248,7 +248,7 @@
       <!-- conclusioni -->
       <section class="conclusion">
         <div class="title-par">Conclusioni:</div>
-        <p>{{ conclusion }}</p>
+        <p class="preserve-linebreaks">{{ conclusion }}</p>
       </section>
     </main>
     <footer>

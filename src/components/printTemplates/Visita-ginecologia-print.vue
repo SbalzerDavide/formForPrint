@@ -207,7 +207,7 @@
       <!-- motivo della visita -->
       <section v-if="reason" class="reason">
         <div class="title-par">Motivo della visita:</div>
-        <p>{{ reason }}</p>
+        <p class="preserve-linebreaks">{{ reason }}</p>
       </section>
 
       <!-- anamnesi familiare -->
@@ -215,7 +215,7 @@
         <div class="title-par">Anamnesi familiare:</div>
         <p v-if="trombo == 'true'">Positiva per TEV</p>
         <p v-else>Negativa per TEV</p>
-        <p v-if="familyAnamnesis">{{ familyAnamnesis }}</p>
+        <p v-if="familyAnamnesis" class="preserve-linebreaks">{{ familyAnamnesis }}</p>
       </section>
 
       <!-- anamnesi patologica -->
@@ -317,7 +317,7 @@
         <p v-if="conclusion.contraccettivo">
           Contraccettivo: {{ conclusion.contraccettivo }}, si esegue counseling
         </p>
-        <p v-if="conclusion.text">{{ conclusion.text }}</p>
+        <p v-if="conclusion.text" class="preserve-linebreaks">{{ conclusion.text }}</p>
       </section>
       <ContentsContraceptive v-if="conclusion.showContraceptiveInfo" />
     </main>

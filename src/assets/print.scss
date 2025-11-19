@@ -1,3 +1,6 @@
+.preserve-linebreaks {
+  white-space: pre-line;
+}
 .print {
   width: 210mm;
   min-height: calc(100vh - 40px);

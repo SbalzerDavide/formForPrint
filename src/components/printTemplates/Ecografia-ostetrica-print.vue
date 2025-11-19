@@ -397,7 +397,7 @@
           Epoca gestazionale da eco: {{ pregnancy?.reDateFromCrl }}
         </div>
         <span v-if="externalCRLReDate">(ridatazione effettuata in precedenza in altra sede)</span>
-        <p v-if="pregnancyMore !== ''">{{ pregnancyMore }}</p>
+        <p class="preserve-linebreaks" v-if="pregnancyMore !== ''">{{ pregnancyMore }}</p>
       </section>
       <section class="eco">
         <div class="title-par">{{ ecoType.name }}</div>
@@ -410,7 +410,7 @@
         <div v-if="fetusNumber === 1">Gravidanza singola</div>
         <div v-else>Gravidanza gemellare ({{ fetusNumber }} feti)</div>
         <!-- Gravidanza {{ ecoNumber }}  -->
-        <p v-if="ecoMore !== ''">{{ ecoMore }}</p>
+        <p class="preserve-linebreaks" v-if="ecoMore !== ''">{{ ecoMore }}</p>
       </section>
       <section v-if="showBiometria" class="biometria-fetale">
         <div class="title-par">
@@ -442,7 +442,7 @@
             <div v-else-if="item.over95">> 95° p</div>
           </div>
         </div>
-        <p v-if="biometriaMore !== ''">{{ biometriaMore }}</p>
+        <p class="preserve-linebreaks" v-if="biometriaMore !== ''">{{ biometriaMore }}</p>
       </section>
       <section v-if="cervicometria !== ''">
         <div class="title-par">Strutture materne</div>
@@ -540,11 +540,11 @@
         <span v-if="direction !== ''">Presentazione: {{ direction }},</span>
         <span>Liquido amniotico: {{ liquid }},</span>
         <span v-if="placenta">Placenta: {{ placenta }},</span>
-        <p v-if="lastMore !== ''">{{ lastMore }}</p>
+        <p class="preserve-linebreaks" v-if="lastMore !== ''">{{ lastMore }}</p>
       </section>
       <section class="conclusion">
         <div class="title-par">Conclusioni</div>
-        <p>{{ conclusion }}</p>
+        <p class="preserve-linebreaks">{{ conclusion }}</p>
       </section>
       <!-- <section class="charts">
         <div class="bpd">
