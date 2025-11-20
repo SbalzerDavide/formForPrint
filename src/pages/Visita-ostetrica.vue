@@ -297,7 +297,8 @@
             eco_tv: this.eco_tv,
             pa: this.pa
           },
-          conclusion: this.conclusion
+          conclusion: this.conclusion,
+          selectedReport: this.selectedReport
         })
         this.$store.commit('SET_PRINT_TYPE', 'visita-ostetrica')
         this.$router.push({ name: 'Print' })

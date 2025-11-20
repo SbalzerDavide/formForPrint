@@ -70,6 +70,11 @@
           return this.$store.state.visitaOstetricaPrintData.familyAnamnesis
         }
       },
+      trombo: {
+        get() {
+          return this.$store.state.visitaOstetricaPrintData.trombo
+        }
+      },
       pathologicalAnamneses: {
         get() {
           return this.$store.state.visitaOstetricaPrintData.pathologicalAnamneses
@@ -99,6 +104,11 @@
       conclusion: {
         get() {
           return this.$store.state.visitaOstetricaPrintData.conclusion
+        }
+      },
+      selectedReport: {
+        get() {
+          return this.$store.state.visitaOstetricaPrintData.selectedReport
         }
       }
     },
@@ -183,6 +193,8 @@
       <!-- anamnesi familiare -->
       <section v-if="familyAnamnesis" class="anamnesis">
         <div class="title-par">Anamnesi familiare:</div>
+        <p v-if="trombo == 'true'">Positiva per TEV</p>
+        <p v-else>Negativa per TEV</p>
         <p class="preserve-linebreaks">{{ familyAnamnesis }}</p>
       </section>
 
@@ -273,6 +285,9 @@
         <div class="title-par">Conclusioni:</div>
         <p class="preserve-linebreaks">{{ conclusion }}</p>
       </section>
+
+      <!-- report -->
+      <div v-html="selectedReport"></div>
     </main>
     <footer>
       <img v-if="office === 'Pralboino'" class="footer-pralboino" src="@/img/footerPralboino.jpg" />
