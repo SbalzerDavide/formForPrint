@@ -48,6 +48,7 @@ export const commonStore = new Vuex.Store({
       biometriaMore: '',
       lastMore: '',
       conclusion: '',
+      downSyndromeConsents: false,
       policyType: null
     },
     visitaGinecologicaPrintData: {

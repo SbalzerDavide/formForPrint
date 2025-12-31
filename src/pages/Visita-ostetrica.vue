@@ -69,6 +69,7 @@
         reports: reports,
         selectedReport: '',
         conclusion: '',
+        downSyndromeConsents: false,
         selectdCities: null,
 
         // anamnesi patologica remota
@@ -234,6 +235,9 @@
         if (storeData.conclusion) {
           this.conclusion = storeData.conclusion
         }
+        if (storeData.downSyndromeConsents) {
+          this.downSyndromeConsents = storeData.downSyndromeConsents
+        }
         // Ricalcola le date se ci sono dati di gravidanza
         if (this.pregnancy.start) {
           this.startDate = this.pregnancy.start
@@ -321,6 +325,7 @@
             objectiveExamDesc: this.objectiveExamDesc
           },
           conclusion: this.conclusion,
+          downSyndromeConsents: this.downSyndromeConsents,
           selectedReport: this.selectedReport
         })
         this.$store.commit('SET_PRINT_TYPE', 'visita-ostetrica')
@@ -809,6 +814,19 @@
       </section>
       <section>
         <div class="title">Conclusioni</div>
+        <div class="d-flex items-center gap-1 h-12">
+          <label class="custom-label" for="down-syndrome-consent">
+            Informativa sindrome di Down
+          </label>
+          <input
+            class="custom-input"
+            type="checkbox"
+            name="downSyndromeConsents"
+            id="down-syndrome-consent"
+            v-model="downSyndromeConsents"
+          />
+        </div>
+
         <div class="description">
           <textarea
             class="w-full"

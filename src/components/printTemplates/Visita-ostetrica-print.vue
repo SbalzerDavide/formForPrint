@@ -1,12 +1,14 @@
 <script>
   import Informations from '@/components/Informations.vue'
+  import DownSyndromeConsents from '@/components/consents/DownSyndromeConsents.vue'
   import { ombelicaleStd95RangeValues, uterineStd95RangeValues } from '@/utils/uterineVal.js'
   import { storeModel } from '@/utils/storeModel.js'
 
   export default {
     name: 'VisitaOstetricaPrint',
     components: {
-      Informations
+      Informations,
+      DownSyndromeConsents
     },
     data() {
       return {
@@ -153,6 +155,11 @@
       conclusion: {
         get() {
           return this.$store.state.visitaOstetricaPrintData.conclusion
+        }
+      },
+      downSyndromeConsents: {
+        get() {
+          return this.$store.state.visitaOstetricaPrintData.downSyndromeConsents
         }
       },
       selectedReport: {
@@ -467,10 +474,13 @@
       </section>
 
       <!-- conclusioni -->
-      <section class="conclusion">
+      <section v-if="conclusion" class="conclusion">
         <div class="title-par">Conclusioni:</div>
         <p class="preserve-linebreaks">{{ conclusion }}</p>
       </section>
+
+      <!-- consenso sindrome di down -->
+      <DownSyndromeConsents v-if="downSyndromeConsents" />
 
       <!-- report -->
       <div v-html="selectedReport"></div>
