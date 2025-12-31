@@ -1,6 +1,7 @@
 import Vuex from "vuex"
 import { Users } from '@/const/users.js'
 import { Offices } from '@/const/offices.js'
+import { Infections } from '@/const/infections.js'
 
 export const commonStore = new Vuex.Store({
   state: {
@@ -110,10 +111,13 @@ export const commonStore = new Vuex.Store({
         lastMenstruationDate: null,
         emogruppo: '',
         coombs: '',
-        ogtt: '',
+        ogtt1: '',
+        ogtt2: '',
+        ogtt3: '',
         testCombinato: '',
         nipt: '',
-        infectionsDesc: '',
+        infections: Infections,
+        // infectionsDesc: '',
       },
       objectiveExam: {
         es: '',

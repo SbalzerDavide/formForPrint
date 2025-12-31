@@ -4,6 +4,8 @@
   import Patient from '@/components/sections/Patient.vue'
   import Office from '@/components/sections/Office.vue'
 
+  import { Infections } from '../const/infections'
+
   import PapTest from '@/components/visitModules/PapTest.vue'
 
   import { Reasons, SavedPathologicalAnamneses, reports } from '../const/visits'
@@ -62,7 +64,8 @@
         lastMenstruationDate: null,
         lastMenstruationDesc: '',
         pregnancyMore: false,
-        mammografiaDesc: '',
+        // mammografiaDesc: '',
+        infections: Infections,
         reports: reports,
         selectedReport: '',
         conclusion: '',
@@ -77,7 +80,9 @@
         // esami
         emogruppo: '',
         coombs: '',
-        ogtt: '',
+        ogtt1: '',
+        ogtt2: '',
+        ogtt3: '',
 
         // screening
         testCombinato: '',
@@ -86,11 +91,11 @@
         // disgnosi invasiva
         amniocentesi: false,
         villocentesi: false,
-        esitoCariotipo: '',
+        esitoCariotipo: ''
 
         // infections
         // itchingReason: ''
-        infectionsDesc: ''
+        // infectionsDesc: ''
       }
     },
     watch: {
@@ -142,57 +147,66 @@
         }
 
         if (storeData.obstetricAnamnesis) {
-          const gynAnamnesis = storeData.obstetricAnamnesis
-          if (gynAnamnesis.paraP !== null) {
-            this.paraP = gynAnamnesis.paraP
+          const obstetricAnamnesis = storeData.obstetricAnamnesis
+          if (obstetricAnamnesis.paraP !== null) {
+            this.paraP = obstetricAnamnesis.paraP
           }
-          if (gynAnamnesis.paraX !== null) {
-            this.paraX = gynAnamnesis.paraX
+          if (obstetricAnamnesis.paraX !== null) {
+            this.paraX = obstetricAnamnesis.paraX
           }
-          if (gynAnamnesis.paraY !== null) {
-            this.paraY = gynAnamnesis.paraY
+          if (obstetricAnamnesis.paraY !== null) {
+            this.paraY = obstetricAnamnesis.paraY
           }
-          if (gynAnamnesis.paraZ !== null) {
-            this.paraZ = gynAnamnesis.paraZ
+          if (obstetricAnamnesis.paraZ !== null) {
+            this.paraZ = obstetricAnamnesis.paraZ
           }
-          if (gynAnamnesis.paraDesc) {
-            this.paraDesc = gynAnamnesis.paraDesc
+          if (obstetricAnamnesis.paraDesc) {
+            this.paraDesc = obstetricAnamnesis.paraDesc
           }
-          if (gynAnamnesis.lastMenstruationDate) {
-            this.lastMenstruationDate = gynAnamnesis.lastMenstruationDate
+          if (obstetricAnamnesis.lastMenstruationDate) {
+            this.lastMenstruationDate = obstetricAnamnesis.lastMenstruationDate
           }
-          if (gynAnamnesis.lastMenstruationDesc) {
-            this.lastMenstruationDesc = gynAnamnesis.lastMenstruationDesc
+          if (obstetricAnamnesis.lastMenstruationDesc) {
+            this.lastMenstruationDesc = obstetricAnamnesis.lastMenstruationDesc
           }
-          if (gynAnamnesis.mammografiaDesc) {
-            this.mammografiaDesc = gynAnamnesis.mammografiaDesc
+          // if (obstetricAnamnesis.mammografiaDesc) {
+          //   this.mammografiaDesc = obstetricAnamnesis.mammografiaDesc
+          // }
+          if (obstetricAnamnesis.infections) {
+            this.infections = obstetricAnamnesis.infections
           }
-          if (gynAnamnesis.emogruppo) {
-            this.emogruppo = gynAnamnesis.emogruppo
+          if (obstetricAnamnesis.emogruppo) {
+            this.emogruppo = obstetricAnamnesis.emogruppo
           }
-          if (gynAnamnesis.coombs) {
-            this.coombs = gynAnamnesis.coombs
+          if (obstetricAnamnesis.coombs) {
+            this.coombs = obstetricAnamnesis.coombs
           }
-          if (gynAnamnesis.ogtt) {
-            this.ogtt = gynAnamnesis.ogtt
+          if (obstetricAnamnesis.ogtt1) {
+            this.ogtt1 = obstetricAnamnesis.ogtt1
           }
-          if (gynAnamnesis.testCombinato) {
-            this.testCombinato = gynAnamnesis.testCombinato
+          if (obstetricAnamnesis.ogtt2) {
+            this.ogtt2 = obstetricAnamnesis.ogtt2
           }
-          if (gynAnamnesis.nipt) {
-            this.nipt = gynAnamnesis.nipt
+          if (obstetricAnamnesis.ogtt3) {
+            this.ogtt3 = obstetricAnamnesis.ogtt3
           }
-          if (gynAnamnesis.infectionsDesc) {
-            this.infectionsDesc = gynAnamnesis.infectionsDesc
+          if (obstetricAnamnesis.testCombinato) {
+            this.testCombinato = obstetricAnamnesis.testCombinato
           }
-          if (gynAnamnesis.amniocentesi) {
-            this.amniocentesi = gynAnamnesis.amniocentesi
+          if (obstetricAnamnesis.nipt) {
+            this.nipt = obstetricAnamnesis.nipt
           }
-          if (gynAnamnesis.villocentesi) {
-            this.villocentesi = gynAnamnesis.villocentesi
+          // if (obstetricAnamnesis.infectionsDesc) {
+          //   this.infectionsDesc = obstetricAnamnesis.infectionsDesc
+          // }
+          if (obstetricAnamnesis.amniocentesi) {
+            this.amniocentesi = obstetricAnamnesis.amniocentesi
           }
-          if (gynAnamnesis.esitoCariotipo) {
-            this.esitoCariotipo = gynAnamnesis.esitoCariotipo
+          if (obstetricAnamnesis.villocentesi) {
+            this.villocentesi = obstetricAnamnesis.villocentesi
+          }
+          if (obstetricAnamnesis.esitoCariotipo) {
+            this.esitoCariotipo = obstetricAnamnesis.esitoCariotipo
           }
         }
         if (storeData.objectiveExam) {
@@ -272,6 +286,7 @@
           pathologicalAnamneses: this.pathologicalAnamneses,
           smoker: this.smoker,
           cigarettesPerDay: this.cigarettesPerDay,
+          pregnancy: this.pregnancy,
           obstetricAnamnesis: {
             paraP: this.paraP,
             paraX: this.paraX,
@@ -280,13 +295,16 @@
             paraDesc: this.paraDesc,
             lastMenstruationDate: this.lastMenstruationDate,
             lastMenstruationDesc: this.lastMenstruationDesc,
-            mammografiaDesc: this.mammografiaDesc,
+            // mammografiaDesc: this.mammografiaDesc,
+            infections: this.infections,
             emogruppo: this.emogruppo,
             coombs: this.coombs,
-            ogtt: this.ogtt,
+            ogtt1: this.ogtt1,
+            ogtt2: this.ogtt2,
+            ogtt3: this.ogtt3,
             testCombinato: this.testCombinato,
             nipt: this.nipt,
-            infectionsDesc: this.infectionsDesc,
+            // infectionsDesc: this.infectionsDesc,
             amniocentesi: this.amniocentesi,
             villocentesi: this.villocentesi,
             esitoCariotipo: this.esitoCariotipo
@@ -360,6 +378,14 @@
       getDeliveryDateFromDecimalWeeks(decimal) {
         let daysToDeliveryFromCRL = 280 - decimal * 7
         return dayjs().add(daysToDeliveryFromCRL, 'day').format('YYYY-MM-DD')
+      },
+
+      changeInfection(event, infection) {
+        infection.value = event.target.value
+        const index = this.infections.findIndex((inf) => inf.label === infection.label)
+        if (index !== -1) {
+          this.infections[index].value = event.target.value
+        }
       }
     }
   }
@@ -632,24 +658,26 @@
               v-model="paraDesc"
             ></textarea>
           </div>
-          <div class="d-flex items-center gap-4">
-            <div class="w-48">Ultima Mestruazione</div>
-            <input type="date" id="lastMenstruationDate" v-model="lastMenstruationDate" />
-          </div>
-          <div class="d-flex items-center gap-4">
-            <div class="w-48"></div>
-            <textarea
-              class="flex-grow"
-              placeholder="Dettagli UM"
-              name="lastMenstruationDesc"
-              id="lastMenstruationDesc"
-              v-model="lastMenstruationDesc"
-            ></textarea>
-          </div>
+          <!-- <template v-if="activeDateSelection !== 'start'">
+            <div class="d-flex items-center gap-4">
+              <div class="w-48">Ultima Mestruazione</div>
+              <input type="date" id="lastMenstruationDate" v-model="lastMenstruationDate" />
+            </div>
+            <div class="d-flex items-center gap-4">
+              <div class="w-48"></div>
+              <textarea
+                class="flex-grow"
+                placeholder="Dettagli UM"
+                name="lastMenstruationDesc"
+                id="lastMenstruationDesc"
+                v-model="lastMenstruationDesc"
+              ></textarea>
+            </div>
+          </template> -->
 
           <PapTest visit-store="visitaOstetricaPrintData" />
 
-          <div class="d-flex items-center gap-4">
+          <!-- <div class="d-flex items-center gap-4">
             <div class="w-48">Mammografia</div>
             <textarea
               class="flex-grow"
@@ -658,16 +686,34 @@
               id="mammografiaDesc"
               v-model="mammografiaDesc"
             ></textarea>
-          </div>
-          <div class="d-flex items-center gap-4">
-            <div class="w-48">Infezioni</div>
-            <textarea
+          </div> -->
+          <hr class="w-full" />
+
+          <div class="">
+            <div class="title">Infezioni</div>
+
+            <div class="d-flex flex-wrap gap-4 justify-between">
+              <div class="d-flex gap-2" v-for="infection in infections">
+                <div class="w-20">{{ infection.label }}</div>
+                <select
+                  :name="infection.label"
+                  :id="infection.label"
+                  @change="changeInfection($event, infection)"
+                >
+                  <option value="neg">Negativo</option>
+                  <option value="pos">Positivo</option>
+                  <option value="imm">Immune</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- <textarea
               class="flex-grow"
               placeholder="Dettagli Infezioni"
               name="infectionsDesc"
               id="infectionsDesc"
               v-model="infectionsDesc"
-            ></textarea>
+            ></textarea> -->
           </div>
 
           <hr class="w-full" />
@@ -683,7 +729,9 @@
           </div>
           <div class="d-flex items-center gap-4">
             <div class="w-48">OGTT</div>
-            <input type="text" name="ogtt" id="ogtt" v-model="ogtt" />
+            <input type="text" name="ogtt1" id="ogtt1" v-model="ogtt1" />
+            <input type="text" name="ogtt2" id="ogtt2" v-model="ogtt2" />
+            <input type="text" name="ogtt3" id="ogtt3" v-model="ogtt3" />
           </div>
 
           <hr class="w-full" />
