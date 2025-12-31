@@ -435,6 +435,9 @@
         </div> -->
       </section>
 
+      <!-- screening -->
+      <section class="screening"></section>
+
       <!-- esame obiettivo -->
       <section class="objective-exam">
         <div class="title-par">Esame obiettivo:</div>
@@ -459,6 +462,9 @@
         <div v-if="objectiveExam.pa">
           <span class="label mr-1">PA:</span>
           {{ objectiveExam.pa }} mmHg
+        </div>
+        <div v-if="objectiveExam.objectiveExamDesc" class="mt-2">
+          <p class="preserve-linebreaks">{{ objectiveExam.objectiveExamDesc }}</p>
         </div>
       </section>
 

@@ -123,7 +123,8 @@ export const commonStore = new Vuex.Store({
         es: '',
         eog: '',
         eco_tv: '',
-        pa: ''
+        pa: '',
+        objectiveExamDesc: ''
       },
       conclusion: '',
       selectedReport: ''

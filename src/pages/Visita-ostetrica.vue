@@ -76,6 +76,7 @@
         eog: '',
         eco_tv: '',
         pa: '',
+        objectiveExamDesc: '',
 
         // esami
         emogruppo: '',
@@ -223,6 +224,9 @@
           if (objExam.pa) {
             this.pa = objExam.pa
           }
+          if (objExam.objectiveExamDesc) {
+            this.objectiveExamDesc = objExam.objectiveExamDesc
+          }
         }
         if (storeData.infections) {
           // this.itchingReason = storeData.infections.itchingReason
@@ -313,7 +317,8 @@
             es: this.es,
             eog: this.eog,
             eco_tv: this.eco_tv,
-            pa: this.pa
+            pa: this.pa,
+            objectiveExamDesc: this.objectiveExamDesc
           },
           conclusion: this.conclusion,
           selectedReport: this.selectedReport
@@ -794,6 +799,13 @@
           <input class="input-large" type="number" name="pa" id="pa" v-model="pa" />
           mmHg
         </div>
+        <textarea
+          class="w-full"
+          placeholder="Informazioni aggiuntive"
+          name="objectiveExamDesc"
+          id="objectiveExamDesc"
+          v-model="objectiveExamDesc"
+        ></textarea>
       </section>
       <section>
         <div class="title">Conclusioni</div>
