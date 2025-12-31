@@ -107,8 +107,6 @@
       },
       pregnancy: {
         get() {
-          console.log(this.$store.state.visitaOstetricaPrintData.pregnancy)
-
           return this.$store.state.visitaOstetricaPrintData.pregnancy
         }
       },
