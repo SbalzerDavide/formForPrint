@@ -35,8 +35,6 @@
           return this.$store.state[this.visitStore].papTestResult
         },
         set(value) {
-          console.log(value)
-
           this.$store.commit('SET_PAPTEST_RESULT', { papTestResult: value, visit: this.visitStore })
         }
       },
