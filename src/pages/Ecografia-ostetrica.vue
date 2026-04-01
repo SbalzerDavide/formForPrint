@@ -814,6 +814,7 @@
           <select v-model="ecoTool">
             <option value="Samsung WS80">Samsung WS80</option>
             <option value="Samsung HS50">Samsung HS50</option>
+            <option value="Voluson Signature 18">Voluson Signature 18</option>
             <option value="altro">altro</option>
           </select>
           <input

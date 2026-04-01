@@ -10,7 +10,7 @@ export const commonStore = new Vuex.Store({
     // office 
     user: Users[0], // Default user
     office: null,
-    ecoTool: 'Samsung WS80',
+    ecoTool: 'Voluson Signature 18', // Default eco tool
     patients: [],
     // patient 
     name: '',
@@ -148,10 +148,12 @@ export const commonStore = new Vuex.Store({
       state.patients = patients
     },
     SET_OFFICE(state, office) {
-      if (office.id === 'pralboino') {
+      if (office && office.id === 'pralboino') {
         state.ecoTool = 'Samsung HS50'
-      } else if (office.id === 'desenzano') {
+      } else if (office && office.id === 'desenzano') {
         state.ecoTool = 'Samsung WS80'
+      } else {
+        state.ecoTool = 'Voluson Signature 18'
       }
       state.office = office
     },
