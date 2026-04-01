@@ -163,6 +163,11 @@
           return this.$store.state.visitaOstetricaPrintData.downSyndromeConsents
         }
       },
+      regularPregnancyEvolution: {
+        get() {
+          return this.$store.state.visitaOstetricaPrintData.regularPregnancyEvolution
+        }
+      },
       selectedReport: {
         get() {
           return this.$store.state.visitaOstetricaPrintData.selectedReport
@@ -493,9 +498,12 @@
       </section>
 
       <!-- conclusioni -->
-      <section v-if="conclusion" class="conclusion">
+      <section v-if="conclusion || regularPregnancyEvolution" class="conclusion">
         <div class="title-par">Conclusioni:</div>
-        <p class="preserve-linebreaks">{{ conclusion }}</p>
+        <div v-if="regularPregnancyEvolution">Gravidanza in regolare evoluzione</div>
+        <p class="preserve-linebreaks">
+          {{ conclusion }}
+        </p>
       </section>
 
       <!-- consenso sindrome di down -->

@@ -76,6 +76,7 @@
         selectedReport: '',
         conclusion: '',
         downSyndromeConsents: false,
+        regularPregnancyEvolution: false,
         selectdCities: null,
 
         // anamnesi patologica remota
@@ -253,6 +254,9 @@
         if (storeData.downSyndromeConsents) {
           this.downSyndromeConsents = storeData.downSyndromeConsents
         }
+        if (storeData.regularPregnancyEvolution) {
+          this.regularPregnancyEvolution = storeData.regularPregnancyEvolution
+        }
         // Ricalcola le date se ci sono dati di gravidanza
         if (this.pregnancy.start) {
           this.startDate = this.pregnancy.start
@@ -343,6 +347,7 @@
           },
           conclusion: this.conclusion,
           downSyndromeConsents: this.downSyndromeConsents,
+          regularPregnancyEvolution: this.regularPregnancyEvolution,
           selectedReport: this.selectedReport
         })
         this.$store.commit('SET_PRINT_TYPE', 'visita-ostetrica')
@@ -862,6 +867,18 @@
             name="downSyndromeConsents"
             id="down-syndrome-consent"
             v-model="downSyndromeConsents"
+          />
+        </div>
+        <div class="d-flex items-center gap-1 h-12">
+          <label class="custom-label" for="regular-pregnancy-evolution">
+            Gravidanza in regolare evoluzione
+          </label>
+          <input
+            class="custom-input"
+            type="checkbox"
+            name="regularPregnancyEvolution"
+            id="regular-pregnancy-evolution"
+            v-model="regularPregnancyEvolution"
           />
         </div>
 
