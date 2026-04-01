@@ -8,7 +8,12 @@
 
   import PapTest from '@/components/visitModules/PapTest.vue'
 
-  import { Reasons, SavedPathologicalAnamneses, reports } from '../const/visits'
+  import {
+    Reasons,
+    SavedPathologicalAnamneses,
+    reports,
+    testCombinatoOptions
+  } from '../const/visits'
 
   export default {
     name: 'VisitaOstetrica',
@@ -22,6 +27,7 @@
       return {
         reasons: Reasons,
         savedPathologicalAnamneses: SavedPathologicalAnamneses,
+        testCombinatoOptions: testCombinatoOptions,
 
         // UM and redate
         activeDateSelection: 'start',
@@ -88,7 +94,9 @@
 
         // screening
         testCombinato: '',
+        testCombinatoDesc: '',
         nipt: '',
+        niptDesc: '',
 
         // disgnosi invasiva
         amniocentesi: false,
@@ -195,9 +203,16 @@
           if (obstetricAnamnesis.testCombinato) {
             this.testCombinato = obstetricAnamnesis.testCombinato
           }
+          if (obstetricAnamnesis.testCombinatoDesc) {
+            this.testCombinatoDesc = obstetricAnamnesis.testCombinatoDesc
+          }
           if (obstetricAnamnesis.nipt) {
             this.nipt = obstetricAnamnesis.nipt
           }
+          if (obstetricAnamnesis.niptDesc) {
+            this.niptDesc = obstetricAnamnesis.niptDesc
+          }
+
           // if (obstetricAnamnesis.infectionsDesc) {
           //   this.infectionsDesc = obstetricAnamnesis.infectionsDesc
           // }
@@ -311,7 +326,9 @@
             ogtt2: this.ogtt2,
             ogtt3: this.ogtt3,
             testCombinato: this.testCombinato,
+            testCombinatoDesc: this.testCombinatoDesc,
             nipt: this.nipt,
+            niptDesc: this.niptDesc,
             // infectionsDesc: this.infectionsDesc,
             amniocentesi: this.amniocentesi,
             villocentesi: this.villocentesi,
@@ -749,11 +766,32 @@
 
           <div class="d-flex items-center gap-4">
             <div class="w-48">Test combinato</div>
-            <input type="text" name="testCombinato" id="testCombinato" v-model="testCombinato" />
+            <select v-model="testCombinato" name="testCombinato" id="testCombinato">
+              <option
+                v-for="option in testCombinatoOptions"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </option>
+            </select>
+            <input
+              v-if="testCombinato"
+              type="text"
+              name="testCombinatoDesc"
+              id="testCombinatoDesc"
+              v-model="testCombinatoDesc"
+            />
           </div>
           <div class="d-flex items-center gap-4">
             <div class="w-48">NIPT</div>
-            <input type="text" name="nipt" id="nipt" v-model="nipt" />
+            <select v-model="nipt" name="nipt" id="nipt">
+              <option value=""></option>
+              <option value="hight">Alto rischio</option>
+              <option value="low">Basso rischio</option>
+            </select>
+
+            <input v-if="nipt" type="text" name="niptDesc" id="niptDesc" v-model="niptDesc" />
           </div>
 
           <hr class="w-full" />

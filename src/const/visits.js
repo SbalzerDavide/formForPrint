@@ -85,6 +85,17 @@ export const papTestResults = [
 
 export const infections = ['TOXO', 'RUBEO', 'HBsAg', 'HCV', 'HIV', 'TPHA', 'CMV']
 
+export const testCombinatoMap = {
+  'hight': 'Alto rischio',
+  'low': 'Basso rischio'
+}
+
+export const testCombinatoOptions = [
+  { value: '', label: '' },
+  { value: 'hight', label: 'Alto rischio' },
+  { value: 'low', label: 'Basso rischio' }
+]
+
 export const reports = [
   {
     label: 'Primo trimestre',

@@ -3,6 +3,7 @@
   import DownSyndromeConsents from '@/components/consents/DownSyndromeConsents.vue'
   import { ombelicaleStd95RangeValues, uterineStd95RangeValues } from '@/utils/uterineVal.js'
   import { storeModel } from '@/utils/storeModel.js'
+  import { testCombinatoMap } from '@/const/visits.js'
 
   export default {
     name: 'VisitaOstetricaPrint',
@@ -173,6 +174,12 @@
         } else {
           return this.obstetricAnamnesis.lastMenstruationDate
         }
+      },
+      testCombinatoLabel() {
+        return (
+          testCombinatoMap[this.obstetricAnamnesis.testCombinato] ||
+          this.obstetricAnamnesis.testCombinato
+        )
       }
     },
 
@@ -441,7 +448,19 @@
       </section>
 
       <!-- screening -->
-      <section class="screening"></section>
+      <section v-if="obstetricAnamnesis.testCombinato || obstetricAnamnesis.nipt" class="screening">
+        <div class="title-par">Esami di screening:</div>
+        <div v-if="obstetricAnamnesis.testCombinato">
+          <span>Test combinato: {{ testCombinatoLabel }}</span>
+          <span v-if="obstetricAnamnesis.testCombinatoDesc">
+            , {{ obstetricAnamnesis.testCombinatoDesc }}
+          </span>
+        </div>
+        <div v-if="obstetricAnamnesis.nipt">
+          <span>NIPT: {{ obstetricAnamnesis.nipt }}</span>
+          <span v-if="obstetricAnamnesis.niptDesc">, {{ obstetricAnamnesis.niptDesc }}</span>
+        </div>
+      </section>
 
       <!-- esame obiettivo -->
       <section class="objective-exam">
