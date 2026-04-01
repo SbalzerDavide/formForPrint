@@ -329,9 +329,25 @@
         <div class="mb-3">
           <!-- headers -->
           <div class="d-flex">
-            <div class="table-col w-1/3 font-bold">UM</div>
-            <div class="table-col w-1/3 font-bold">EPP</div>
-            <div v-if="pregnancy?.deliveryDateFromCRL" class="table-col w-1/3 font-bold">EPPUS</div>
+            <div
+              class="table-col w-1/3 font-bold"
+              style="font-size: 18px; text-decoration: underline"
+            >
+              UM
+            </div>
+            <div
+              class="table-col w-1/3 font-bold"
+              style="font-size: 18px; text-decoration: underline"
+            >
+              EPP
+            </div>
+            <div
+              v-if="pregnancy?.deliveryDateFromCRL"
+              class="table-col w-1/3 font-bold"
+              style="font-size: 18px; text-decoration: underline"
+            >
+              EPPUS
+            </div>
           </div>
           <!-- rows -->
           <div class="d-flex">
@@ -340,13 +356,13 @@
               <span v-if="obstetricAnamnesis.lastMenstruationDesc">
                 , {{ obstetricAnamnesis.lastMenstruationDesc }}
               </span> -->
-              <span>{{ formatDate(pregnancy?.start) || '&nbsp;' }}</span>
+              <span class="font-bold">{{ formatDate(pregnancy?.start) || '&nbsp;' }}</span>
             </div>
             <div class="table-col w-1/3">
-              <span>{{ formatDate(pregnancy?.delivery) || '&nbsp;' }}</span>
+              <span class="font-bold">{{ formatDate(pregnancy?.delivery) || '&nbsp;' }}</span>
             </div>
             <div v-if="pregnancy?.deliveryDateFromCRL" class="table-col w-1/3">
-              <span>{{ formatDate(pregnancy?.deliveryDateFromCRL) }}</span>
+              <span class="font-bold">{{ formatDate(pregnancy?.deliveryDateFromCRL) }}</span>
             </div>
           </div>
         </div>
