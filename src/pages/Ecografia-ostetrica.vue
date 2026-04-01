@@ -1049,6 +1049,8 @@
           <option value="bassa">A inserzione bassa</option>
           <option value="major">Previa major</option>
           <option value="minor">previa minor</option>
+          <option value="laterale_destra">Laterale destra</option>
+          <option value="laterale_sinistra">Laterale sinistra</option>
         </select>
       </div>
       <div class="more-info">
