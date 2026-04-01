@@ -74,6 +74,11 @@
         infections: Infections,
         reports: reports,
         selectedReport: '',
+        editableReportContent: '',
+        isEditingReport: false,
+        customReports: {},
+        selectedReportLabel: '',
+        showReportHelp: false,
         conclusion: '',
         downSyndromeConsents: false,
         regularPregnancyEvolution: false,
@@ -121,11 +126,19 @@
       },
       decimalWeeks(val) {
         this.reason = `Gravida para a ${parseInt(val)} settimane di gestazione`
+      },
+      selectedReport(newVal) {
+        if (newVal) {
+          const report = this.reports.find((r) => r.value === newVal)
+          this.selectedReportLabel = report ? report.label : ''
+          this.loadReportContent()
+        }
       }
     },
     created() {
       this.$store.commit('SET_ACTIVE_PAGE', 'Visita ostetrica')
       this.loadDataFromStore()
+      this.loadCustomReports()
     },
     methods: {
       loadDataFromStore() {
@@ -256,6 +269,9 @@
         }
         if (storeData.regularPregnancyEvolution) {
           this.regularPregnancyEvolution = storeData.regularPregnancyEvolution
+        }
+        if (storeData.selectedReport) {
+          this.selectedReport = storeData.selectedReport
         }
         // Ricalcola le date se ci sono dati di gravidanza
         if (this.pregnancy.start) {
@@ -418,6 +434,74 @@
         if (index !== -1) {
           this.infections[index].value = event.target.value
         }
+      },
+
+      // Metodi per la gestione dei reports editabili
+      loadCustomReports() {
+        const saved = localStorage.getItem('customReports')
+        if (saved) {
+          try {
+            this.customReports = JSON.parse(saved)
+          } catch (e) {
+            console.error('Errore nel caricamento dei reports personalizzati:', e)
+            this.customReports = {}
+          }
+        }
+      },
+
+      loadReportContent() {
+        if (this.selectedReportLabel && this.customReports[this.selectedReportLabel]) {
+          this.editableReportContent = this.customReports[this.selectedReportLabel]
+        } else {
+          this.editableReportContent = this.selectedReport
+        }
+      },
+
+      toggleEditMode() {
+        if (!this.isEditingReport && this.selectedReport) {
+          this.loadReportContent()
+        }
+        this.isEditingReport = !this.isEditingReport
+      },
+
+      saveReportChanges() {
+        if (this.selectedReportLabel) {
+          this.customReports[this.selectedReportLabel] = this.editableReportContent
+          localStorage.setItem('customReports', JSON.stringify(this.customReports))
+          // Aggiorna il valore mostrato
+          this.selectedReport = this.editableReportContent
+          this.isEditingReport = false
+          alert('Modifiche salvate con successo!')
+        }
+      },
+
+      cancelEditReport() {
+        this.loadReportContent()
+        this.isEditingReport = false
+      },
+
+      restoreDefaultReport() {
+        if (
+          this.selectedReportLabel &&
+          confirm('Sei sicuro di voler ripristinare il testo originale?')
+        ) {
+          const originalReport = reports.find((r) => r.label === this.selectedReportLabel)
+          if (originalReport) {
+            delete this.customReports[this.selectedReportLabel]
+            localStorage.setItem('customReports', JSON.stringify(this.customReports))
+            this.editableReportContent = originalReport.value
+            this.selectedReport = originalReport.value
+            this.isEditingReport = false
+            alert('Report ripristinato al valore originale!')
+          }
+        }
+      },
+
+      getCurrentReportContent() {
+        if (this.selectedReportLabel && this.customReports[this.selectedReportLabel]) {
+          return this.customReports[this.selectedReportLabel]
+        }
+        return this.selectedReport
       }
     }
   }
@@ -902,7 +986,230 @@
             </option>
           </select>
         </div>
-        <div v-html="selectedReport"></div>
+
+        <!-- Pulsanti di controllo -->
+        <div
+          v-if="selectedReport"
+          class="report-controls"
+          style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap"
+        >
+          <button
+            type="button"
+            @click="toggleEditMode"
+            style="
+              padding: 0.5rem 1rem;
+              background: #4a90e2;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+            "
+          >
+            {{ isEditingReport ? 'Annulla modifica' : 'Modifica testo' }}
+          </button>
+          <button
+            v-if="isEditingReport"
+            type="button"
+            @click="saveReportChanges"
+            style="
+              padding: 0.5rem 1rem;
+              background: #4caf50;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+            "
+          >
+            Salva modifiche
+          </button>
+          <button
+            v-if="customReports[selectedReportLabel]"
+            type="button"
+            @click="restoreDefaultReport"
+            style="
+              padding: 0.5rem 1rem;
+              background: #ff9800;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+            "
+          >
+            Ripristina originale
+          </button>
+          <span
+            v-if="customReports[selectedReportLabel]"
+            style="padding: 0.5rem; color: #4caf50; display: flex; align-items: center"
+          >
+            ✓ Personalizzato
+          </span>
+        </div>
+
+        <!-- Visualizzazione o editing -->
+        <div v-if="isEditingReport" style="margin-bottom: 1rem">
+          <textarea
+            v-model="editableReportContent"
+            rows="15"
+            style="
+              width: 100%;
+              padding: 0.75rem;
+              border: 2px solid #4a90e2;
+              border-radius: 4px;
+              font-family: monospace;
+              font-size: 0.9rem;
+              resize: vertical;
+            "
+            placeholder="Modifica il contenuto HTML del report..."
+          ></textarea>
+
+          <!-- Box informativo -->
+          <div
+            style="
+              margin-top: 0.75rem;
+              padding: 1rem;
+              background: #f5f9ff;
+              border-left: 4px solid #4a90e2;
+              border-radius: 4px;
+            "
+          >
+            <div style="font-size: 0.9rem; color: #333; margin-bottom: 0.5rem">
+              <strong>📝 Suggerimenti per la modifica:</strong>
+            </div>
+            <ul
+              style="
+                margin: 0.5rem 0;
+                padding-left: 1.5rem;
+                font-size: 0.85rem;
+                color: #555;
+                line-height: 1.6;
+              "
+            >
+              <li>
+                Usa
+                <code style="background: #e8f0fe; padding: 0.1rem 0.3rem; border-radius: 3px">
+                  &lt;li&gt;...&lt;/li&gt;
+                </code>
+                per ogni punto dell'elenco
+              </li>
+              <li>
+                Usa
+                <code style="background: #e8f0fe; padding: 0.1rem 0.3rem; border-radius: 3px">
+                  &lt;strong&gt;...&lt;/strong&gt;
+                </code>
+                per il grassetto
+              </li>
+              <li>
+                Mantieni la struttura con
+                <code style="background: #e8f0fe; padding: 0.1rem 0.3rem; border-radius: 3px">
+                  &lt;ul&gt;
+                </code>
+                e
+                <code style="background: #e8f0fe; padding: 0.1rem 0.3rem; border-radius: 3px">
+                  &lt;/ul&gt;
+                </code>
+                all'inizio e alla fine
+              </li>
+            </ul>
+
+            <!-- Pulsante per espandere le istruzioni -->
+            <button
+              type="button"
+              @click="showReportHelp = !showReportHelp"
+              style="
+                margin-top: 0.5rem;
+                padding: 0.4rem 0.8rem;
+                background: white;
+                color: #4a90e2;
+                border: 1px solid #4a90e2;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                transition: all 0.2s;
+              "
+              @mouseover="$event.target.style.background = '#e8f0fe'"
+              @mouseout="$event.target.style.background = 'white'"
+            >
+              {{
+                showReportHelp
+                  ? '▲ Nascondi istruzioni dettagliate'
+                  : '▼ Mostra istruzioni dettagliate ed esempi'
+              }}
+            </button>
+
+            <!-- Istruzioni dettagliate espandibili -->
+            <div
+              v-if="showReportHelp"
+              style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #d0e3f7"
+            >
+              <div style="font-size: 0.9rem; color: #333; margin-bottom: 0.75rem">
+                <strong>📖 Guida completa:</strong>
+              </div>
+
+              <div style="margin-bottom: 1rem">
+                <div
+                  style="font-size: 0.85rem; color: #555; font-weight: 600; margin-bottom: 0.3rem"
+                >
+                  ✅ Esempio CORRETTO:
+                </div>
+                <pre
+                  style="
+                    background: #fff;
+                    padding: 0.75rem;
+                    border: 1px solid #d0e3f7;
+                    border-radius: 4px;
+                    font-size: 0.8rem;
+                    overflow-x: auto;
+                  "
+                >
+&lt;ul&gt;
+  &lt;li&gt;Prescritti esami&lt;/li&gt;
+  &lt;li&gt;Prossimo controllo a &lt;strong&gt;4-6 settimane&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Chiamare il numero &lt;strong&gt;0303515904&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;</pre
+                >
+              </div>
+
+              <div style="margin-bottom: 1rem">
+                <div
+                  style="font-size: 0.85rem; color: #555; font-weight: 600; margin-bottom: 0.3rem"
+                >
+                  ❌ Esempio ERRATO (mancano i tag di chiusura):
+                </div>
+                <pre
+                  style="
+                    background: #fff;
+                    padding: 0.75rem;
+                    border: 1px solid #ffcdd2;
+                    border-radius: 4px;
+                    font-size: 0.8rem;
+                    overflow-x: auto;
+                  "
+                >
+&lt;ul&gt;
+  &lt;li&gt;Prescritti esami
+  &lt;li&gt;Prossimo controllo a &lt;strong&gt;4-6 settimane
+&lt;/ul&gt;</pre
+                >
+              </div>
+
+              <div style="font-size: 0.85rem; color: #555; line-height: 1.6">
+                <strong>⚠️ Ricorda:</strong>
+                <ul style="margin: 0.3rem 0; padding-left: 1.5rem">
+                  <li>
+                    Ogni tag aperto deve essere chiuso (es:
+                    <code style="background: #e8f0fe; padding: 0.1rem 0.3rem">&lt;li&gt;</code>
+                    →
+                    <code style="background: #e8f0fe; padding: 0.1rem 0.3rem">&lt;/li&gt;</code>
+                    )
+                  </li>
+                  <li>Salva e verifica il risultato prima di stampare</li>
+                  <li>In caso di errore, usa "Ripristina originale"</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else v-html="getCurrentReportContent()"></div>
       </section>
       <button class="print" @click="print()">Print</button>
 
