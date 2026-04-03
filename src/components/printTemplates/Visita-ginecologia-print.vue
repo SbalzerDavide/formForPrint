@@ -102,7 +102,6 @@
       },
       hpv: {
         get() {
-          console.log(this.$store.state.visitaGinecologicaPrintData.hpv)
           return {
             date: this.$store.state.visitaGinecologicaPrintData.hpvDate,
             result: this.$store.state.visitaGinecologicaPrintData.hpv
