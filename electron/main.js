@@ -9,6 +9,7 @@ import {
   getPatient,
   saveVisit,
   listVisitsByPatient,
+  listRecentVisits,
   getVisit
 } from './db.js'
 import { backupFileName, exportBackup, rotateBackup } from './backup.js'
@@ -102,6 +103,7 @@ function registerIpc() {
   )
   handle('visits:listByPatient', (event, patientId) => listVisitsByPatient(db, toId(patientId)))
   handle('visits:get', (event, id) => getVisit(db, toId(id)))
+  handle('visits:listRecent', (event, limit) => listRecentVisits(db, Math.min(toId(limit), 100)))
   handle('backup:export', async (event) => {
     const { canceled, filePath } = await dialog.showSaveDialog(
       BrowserWindow.fromWebContents(event.sender),

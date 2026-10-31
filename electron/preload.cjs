@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('localDb', {
   visits: {
     save: (visit) => ipcRenderer.invoke('visits:save', visit),
     listByPatient: (patientId) => ipcRenderer.invoke('visits:listByPatient', patientId),
+    listRecent: (limit) => ipcRenderer.invoke('visits:listRecent', limit),
     get: (id) => ipcRenderer.invoke('visits:get', id)
   },
   backup: {

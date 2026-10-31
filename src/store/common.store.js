@@ -3,6 +3,9 @@ import { Users } from '@/const/users.js'
 import { Offices } from '@/const/offices.js'
 import { Infections } from '@/const/infections.js'
 
+// Copia dei dati iniziali delle visite, per ripartire da un modulo vuoto (vedi RESET_PRINT_DATA)
+let initialPrintData = null
+
 export const commonStore = new Vuex.Store({
   state: {
     activePage: 'Home',
@@ -150,6 +153,22 @@ export const commonStore = new Vuex.Store({
     },
     SET_PATIENT_ID(state, patientId) {
       state.patientId = patientId
+    },
+    RESET_PATIENT(state) {
+      state.patientId = null
+      state.name = ''
+      state.surname = ''
+      state.dateOfBirth = ''
+      state.age = null
+      state.height = 0
+      state.normalWeight = 0
+      state.actualWeight = 0
+      state.bmi = 0
+      state.patientMoreText = ''
+    },
+    // printData: 'ecografiaOstetricaPrintData' | 'visitaGinecologicaPrintData' | 'visitaOstetricaPrintData'
+    RESET_PRINT_DATA(state, printData) {
+      state[printData] = JSON.parse(JSON.stringify(initialPrintData[printData]))
     },
     SET_USER(state, user) {
       state.user = user
@@ -308,3 +327,11 @@ export const commonStore = new Vuex.Store({
   //   }
   // }
 })
+
+initialPrintData = JSON.parse(
+  JSON.stringify({
+    ecografiaOstetricaPrintData: commonStore.state.ecografiaOstetricaPrintData,
+    visitaGinecologicaPrintData: commonStore.state.visitaGinecologicaPrintData,
+    visitaOstetricaPrintData: commonStore.state.visitaOstetricaPrintData
+  })
+)

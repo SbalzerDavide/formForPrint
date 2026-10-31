@@ -1,7 +1,13 @@
 <script>
   import Header from '@/components/sections/Header.vue'
   import PopupMessage from '@/components/PopupMessage.vue'
-  import { localDb, loadVisitIntoStore, errorMessage, VisitTypes } from '@/utils/localDb'
+  import {
+    localDb,
+    loadVisitIntoStore,
+    startNewVisit,
+    errorMessage,
+    VisitTypes
+  } from '@/utils/localDb'
 
   export default {
     name: 'Patients',
@@ -43,6 +49,9 @@
           }
         ]
       },
+      visitTypes() {
+        return Object.entries(VisitTypes).map(([type, visitType]) => ({ type, label: visitType.label }))
+      },
       filteredPatients() {
         const search = this.search.trim().toLowerCase()
         if (!search) return this.patients
@@ -79,6 +88,9 @@
       },
       selectPatient(patient) {
         this.$router.push({ name: 'Paziente', params: { patientId: patient.id } })
+      },
+      newVisit(type) {
+        startNewVisit(this.$store, this.$router, type, this.selectedPatient)
       },
       reprint(visit) {
         loadVisitIntoStore(this.$store, visit)
@@ -141,6 +153,12 @@
             {{ selectedPatient.surname }} {{ selectedPatient.name }}
             <span class="patient-id">ID {{ selectedPatient.id }}</span>
           </h3>
+          <div class="new-visit">
+            <span class="new-visit-label">Nuova visita</span>
+            <button v-for="visitType in visitTypes" :key="visitType.type" @click="newVisit(visitType.type)">
+              {{ visitType.label }}
+            </button>
+          </div>
           <table>
             <thead>
               <tr>
@@ -230,6 +248,22 @@
     flex: 1;
     h3 {
       margin-top: 0;
+    }
+    .new-visit {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      .new-visit-label {
+        font-weight: 600;
+        margin-right: 4px;
+      }
+      button {
+        padding: 6px 12px;
+        background: #55917f;
+        color: inherit;
+      }
     }
     .patient-id {
       font-size: 0.7em;

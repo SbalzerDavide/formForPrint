@@ -34,6 +34,9 @@
       // scrolla a top
       window.scrollTo(0, 0)
     },
+    unmounted() {
+      document.getElementById('app').classList.remove('appOnPrint')
+    },
     methods: {
       showPopup(message, type) {
         this.popupMessage = message

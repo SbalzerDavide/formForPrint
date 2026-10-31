@@ -211,3 +211,21 @@ export function getVisit(db, id) {
   const row = db.prepare('SELECT * FROM visits WHERE id = ?').get(id)
   return row ? rowToVisit(row) : null
 }
+
+// Ultime visite di tutte le pazienti, con nome e cognome (per la home)
+export function listRecentVisits(db, limit) {
+  const rows = db
+    .prepare(
+      `SELECT v.*, p.name AS patient_name, p.surname AS patient_surname
+       FROM visits v
+       JOIN patients p ON p.id = v.patient_id
+       ORDER BY v.updated_at DESC
+       LIMIT ?`
+    )
+    .all(limit)
+  return rows.map((row) => ({
+    ...rowToVisit(row),
+    patientName: row.patient_name,
+    patientSurname: row.patient_surname
+  }))
+}

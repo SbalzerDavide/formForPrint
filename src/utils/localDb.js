@@ -103,6 +103,20 @@ export function loadVisitIntoStore(store, visit) {
   store.commit('SET_CURRENT_VISIT', { id: visit.id, createdAt: visit.createdAt })
 }
 
+// Inizia una nuova visita con il modulo vuoto: per la paziente indicata
+// (salvata nel database) oppure, senza paziente, per una nuova paziente
+export function startNewVisit(store, router, type, patient = null) {
+  const visitType = VisitTypes[type]
+  store.commit('SET_CURRENT_VISIT', null)
+  store.commit('RESET_PRINT_DATA', visitType.printData)
+  store.commit('RESET_PATIENT')
+  if (patient) {
+    loadPatientIntoStore(store, patient)
+    store.commit('SET_PATIENT_ID', patient.id)
+  }
+  router.push({ name: visitType.route })
+}
+
 // Tipo di visita corrispondente a una rotta del modulo (es. 'VisitaOstetrica')
 export function visitTypeByRoute(routeName) {
   return Object.keys(VisitTypes).find((type) => VisitTypes[type].route === routeName) ?? null
