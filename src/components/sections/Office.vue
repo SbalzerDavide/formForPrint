@@ -1,5 +1,5 @@
 <script>
-  import { Users } from '@/const/users.js'
+  import { Users, operatorLabel } from '@/const/users.js'
   import { Offices } from '@/const/offices.js'
   import { storeModel } from '@/utils/storeModel.js'
 
@@ -18,6 +18,7 @@
       office: storeModel('office', 'SET_OFFICE')
     },
     methods: {
+      operatorLabel,
       print() {
         this.$emit('print')
       }
@@ -27,27 +28,51 @@
 
 <template>
   <section class="office">
-    <div class="d-flex">
-      <div class="d-flex operator">
-        <select v-model="user">
-          <option v-for="(user, index) in users" :key="index" :value="user">
-            {{ user.name }}
-          </option>
-        </select>
-      </div>
-
-      <div class="d-flex">
-        <div class="title">Ambulatorio</div>
-        <select v-model="office">
-          <option disabled selected value>-- select an option --</option>
-          <option v-for="office in offices" :key="office.id" :value="office">
-            {{ office.label }}
-          </option>
-        </select>
-      </div>
+    <div class="context">
+      <label class="visually-hidden" for="officeUser">Operatore</label>
+      <select id="officeUser" v-model="user">
+        <option v-for="(item, index) in users" :key="index" :value="item">
+          {{ operatorLabel(item) }}
+        </option>
+      </select>
+      <span class="dot" aria-hidden="true">·</span>
+      <label class="visually-hidden" for="officeOffice">Ambulatorio</label>
+      <select id="officeOffice" v-model="office">
+        <option :value="null" disabled>Ambulatorio</option>
+        <option v-for="item in offices" :key="item.id" :value="item">{{ item.label }}</option>
+      </select>
     </div>
     <div class="right-top">
-      <button class="print" @click="print">Print</button>
+      <button class="print" @click="print">Anteprima di stampa</button>
     </div>
   </section>
 </template>
+
+<style lang="scss" scoped>
+  .context {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    // Select senza bordo, come nella barra della home
+    select {
+      width: auto !important;
+      border-color: transparent;
+      background-color: transparent;
+      cursor: pointer;
+      &:hover {
+        border-color: var(--line);
+      }
+    }
+    .dot {
+      color: var(--muted);
+    }
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

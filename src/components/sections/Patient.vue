@@ -172,7 +172,7 @@
     margin: 0 0 10px;
     padding: 6px 10px;
     border-radius: 6px;
-    background-color: #fff3cd;
-    color: #856404;
+    background-color: var(--warning-bg);
+    color: var(--warning-text);
   }
 </style>

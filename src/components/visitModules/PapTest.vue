@@ -76,7 +76,7 @@
 </script>
 
 <template>
-  <div class="d-flex align-items-start gap-4">
+  <div class="d-flex align-items-center gap-4">
     <div class="w-48">Pap test</div>
     <input type="number" placeholder="Anno Pap test" id="papTestYear" v-model="papTestYear" />
     <select @change="setPapTestResult($event.target.value)">
@@ -96,9 +96,9 @@
       v-model="papTestResult"
     ></textarea>
   </div>
-  <div class="d-flex align-items-start gap-4">
+  <div class="d-flex align-items-center gap-4">
     <div class="w-48">HPV test</div>
-    <div class="d-flex align-items-center gap-1">
+    <div class="d-flex align-items-center gap-4">
       <input type="date" class="hpv-input" name="hpvDate" id="hpvDate" v-model="hpvDate" />
       <div class="d-flex gap-2 align-items-center">
         <input
@@ -109,7 +109,7 @@
           value="true"
           v-model="hpv"
         />
-        <label for="TromboPos">Positivo</label>
+        <label for="hpvPos">Positivo</label>
       </div>
       <div class="d-flex gap-2 align-items-center">
         <input
@@ -120,7 +120,7 @@
           value="false"
           v-model="hpv"
         />
-        <label for="hpv">Negativo</label>
+        <label for="hpvNeg">Negativo</label>
       </div>
     </div>
   </div>

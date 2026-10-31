@@ -1,36 +1,48 @@
+// Moduli delle visite. Stesso linguaggio della home: niente riquadri, sezioni separate
+// da linee sottili, titoli di sezione piccoli in maiuscolo, colori dai token (tokens.scss).
+
 .form {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: left;
+
   .double {
-    display: flex;
-    justify-content: space-between;
-    section {
-      width: 48%;
-      // flex-grow: 1;
-      // flex-basis: 300px;
-    }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 48px;
   }
+
   section {
     text-align: left;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.04);
-    border-radius: 8px;
-    margin: 18px 0;
-    padding: 10px;
+    margin: 0;
+    padding: 24px 0 20px;
+    border-top: 1px solid var(--line);
+
+    // Barra operatore / ambulatorio / stampa, come la barra in alto della home
     &.office {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0 16px;
+      border-top: 0;
       .operator {
         margin-right: 10px;
       }
       .title {
-        // display: flex;
-        // align-items: center;
-        vertical-align: middle;
+        margin: 0 10px 0 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: normal;
+        text-transform: none;
+        color: var(--muted);
+      }
+      select {
         margin-bottom: 0;
-        height: 100%;
-        margin-right: 10px;
       }
       .right-top {
         display: flex;
@@ -40,6 +52,42 @@
         }
       }
     }
+
+    // Titolo di sezione
+    > .title {
+      margin-bottom: 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      // Nota tra parentesi accanto al titolo (es. biometria fetale)
+      &:not(.d-flex) span {
+        font-weight: 400;
+        letter-spacing: normal;
+        text-transform: none;
+      }
+      // Titolo con pulsante "+" accanto (es. Allergie)
+      &.d-flex {
+        align-items: center;
+        gap: 10px;
+      }
+    }
+
+    // Sottotitoli all'interno di una sezione (es. Infezioni, Esami)
+    div > .title {
+      margin: 8px 0 10px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    hr {
+      height: 0;
+      margin: 18px 0;
+      border: 0;
+      border-top: 1px solid var(--line);
+    }
+
     .more-info {
       margin-top: 8px;
       .add-more {
@@ -49,13 +97,12 @@
         width: 30px;
         height: 30px;
         font-weight: 700;
-        border-radius: 8px;
-        border: 1px solid transparent;
-        background-color: #1a1a1a;
+        border-radius: var(--radius);
+        border: 1px solid var(--line-strong);
+        color: var(--accent);
         cursor: pointer;
-        transition: border-color 0.25s;
         &:hover {
-          border-color: #646cff;
+          background-color: var(--hover);
         }
       }
       textarea {
@@ -63,38 +110,108 @@
         resize: none;
       }
     }
+
+    // Elenchi con voci aggiunte a mano (allergie, anamnesi patologica remota)
+    .entry-list {
+      max-width: 520px;
+      margin: 0 0 10px;
+      padding: 0;
+      list-style: none;
+      li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 0 6px 2px;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+    .entry-remove {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border-color: transparent;
+      color: var(--muted);
+      &:hover:not(:disabled) {
+        color: var(--danger);
+      }
+    }
+    .entry-empty {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+    .entry-add-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      max-width: 520px;
+      select {
+        width: 100%;
+        margin-bottom: 0;
+      }
+    }
+    .entry-add {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 520px;
+      input {
+        flex: 1;
+        height: 2rem;
+        padding: 0 8px;
+      }
+    }
+
     &.patient {
       .section-content {
         display: flex;
+        column-gap: 32px;
         .left,
         .right {
           flex-grow: 1;
         }
       }
     }
-    .title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      span {
-        font-weight: normal;
-      }
-    }
+
     label:not(.custom-label) {
       display: inline-block;
       width: 150px;
     }
-    input:not(.custom-input) {
+    input:not(.custom-input):not([type='checkbox']):not([type='radio']) {
       width: 200px;
-      height: 1.75rem;
+      height: 2rem;
       margin-bottom: 8px;
+      padding: 0 8px;
     }
     select {
       width: 200px;
-      height: 1.75rem;
+      height: 2rem;
       margin-bottom: 8px;
+      padding: 0 6px;
     }
+    textarea {
+      padding: 8px 10px;
+      line-height: 1.5;
+    }
+    input[type='checkbox'],
+    input[type='radio'] {
+      width: 16px;
+      height: 16px;
+      margin: 0 6px 0 0;
+      vertical-align: middle;
+    }
+    // Etichetta subito dopo un radio o una casella: larga quanto il testo
+    input[type='checkbox'] + label,
+    input[type='radio'] + label {
+      width: auto;
+      cursor: pointer;
+    }
+
     &.pregnancy {
-      input {
+      input:not([type='checkbox']):not([type='radio']) {
         width: 150px;
       }
       .epoca-gestazionale-CRL {
@@ -118,10 +235,12 @@
           justify-content: flex-end;
         }
         button {
-          padding: 3px 8px;
+          padding: 4px 10px;
         }
       }
     }
+
+    // Schede "Ultima mestruazione" / "Data prevista parto"
     .switch {
       display: flex;
       position: relative;
@@ -129,17 +248,21 @@
       & > .selEnd {
         margin: 5px 15px 10px 5px;
         padding-bottom: 5px;
-        color: #888;
+        color: var(--muted);
         cursor: pointer;
+        &:hover {
+          color: inherit;
+        }
         &.act {
-          color: rgba(255, 255, 255, 0.87);
+          color: inherit;
+          font-weight: 600;
         }
       }
       .active {
         position: absolute;
         bottom: 10px;
         height: 2px;
-        background-color: rgb(133, 133, 133);
+        background-color: var(--accent);
         transition: all 0.3s;
         &.start {
           width: 135px;
@@ -150,13 +273,8 @@
           left: 175px;
         }
       }
-
-      // justify-content: space-between;
-      // width: 280px;
-      // padding: 5px 10px;
-      // border-radius: 25px;
-      // border: 1px solid rgb(133, 133, 133);
     }
+
     &.eco {
       select,
       input {
@@ -166,6 +284,7 @@
         margin-left: 150px;
       }
     }
+
     &.biometria-fetale,
     &.strutture-materne {
       .biometria-item {
@@ -183,6 +302,7 @@
       .unit {
         width: 30px;
         margin-right: 30px;
+        color: var(--muted);
       }
       .percentile {
         min-width: 50px;
@@ -191,36 +311,38 @@
         display: flex;
         align-items: center;
         .right-ok {
-          width: 18px;
-          height: 18px;
+          width: 14px;
+          height: 14px;
           border-radius: 50%;
-          background: green;
+          background: var(--success);
         }
         .right-not-ok {
-          width: 18px;
-          height: 18px;
+          width: 14px;
+          height: 14px;
           border-radius: 50%;
-          background: red;
+          background: var(--danger);
         }
       }
       button {
         margin-left: 10px;
-        padding: 3px 8px;
+        padding: 4px 10px;
       }
       .crl-diff,
       .nt-delta {
         margin-left: 10px;
       }
     }
+
+    // Pannello di ridatazione (in sovrimpressione)
     &.re-dating-panel {
       margin: 0;
       padding: 0;
+      border: 0;
       position: fixed;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0;
-      backdrop-filter: blur(4px);
       z-index: 1;
       display: flex;
       align-items: center;
@@ -232,26 +354,27 @@
         left: 0;
         right: 0;
         z-index: 1;
+        background-color: color-mix(in oklch, Canvas 70%, transparent);
       }
       .re-dating-container {
-        padding: 20px;
+        padding: 24px;
         border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.87);
-        background-color: #242424;
+        border: 1px solid var(--line-strong);
+        background-color: Canvas;
+        box-shadow: 0 12px 40px color-mix(in oklch, CanvasText 18%, transparent);
         z-index: 2;
         span {
           display: inline-block;
           width: 200px;
-          font-weight: bold;
+          font-weight: 600;
         }
         .old-date {
           margin: 12px 0;
           padding: 8px 0;
-          border-bottom: 1px solid #d9d9d9;
+          border-bottom: 1px solid var(--line);
         }
         .new-date {
           display: flex;
-          // align-items: center;
           margin: 8px 0;
         }
         .panel-title {
@@ -264,7 +387,7 @@
         .number {
           display: flex;
           input {
-            width: 40px;
+            width: 48px;
             margin: 5px;
           }
         }
@@ -287,6 +410,7 @@
         }
       }
     }
+
     &.anatomy {
       .anatomy-container {
         display: flex;
@@ -297,17 +421,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         margin-right: 8px;
         font-weight: 700;
-        border-radius: 8px;
-        border: 1px solid transparent;
-        background-color: #1a1a1a;
+        border-radius: var(--radius);
+        border: 1px solid var(--line-strong);
+        color: var(--accent);
         cursor: pointer;
-        transition: border-color 0.25s;
         &:hover {
-          border-color: #646cff;
+          background-color: var(--hover);
         }
       }
       .left {
@@ -324,11 +447,10 @@
         label {
           width: 240px;
           &.anatomy-checked {
-            font-weight: bold;
+            font-weight: 600;
           }
         }
         input[type='checkbox'] {
-          width: auto;
           margin-right: 40px;
         }
         input[type='text'] {
@@ -337,9 +459,11 @@
         }
       }
     }
+
     &.doppler {
       .doppler-item {
         display: flex;
+        align-items: center;
       }
       label {
         width: 35%;
@@ -352,6 +476,7 @@
       .unit {
         width: 30px;
         margin-right: 30px;
+        color: var(--muted);
       }
       .percentile {
         width: 80px;
@@ -377,14 +502,14 @@
           position: relative;
           width: 100px;
           height: 1.5px;
-          background: rgba(255, 255, 255, 0.87);
+          background: currentColor;
           .middle {
             position: absolute;
             left: 50px;
             top: -4px;
             width: 1.5px;
             height: 9px;
-            background: rgba(255, 255, 255, 0.87);
+            background: currentColor;
           }
           .point {
             position: absolute;
@@ -392,22 +517,24 @@
             width: 7px;
             height: 7px;
             transform: rotate(-45deg);
-            background: rgba(255, 255, 255, 0.87);
+            background: var(--accent);
           }
         }
         .line {
           height: 12px;
           width: 1.5px;
-          background: rgba(255, 255, 255, 0.87);
+          background: currentColor;
         }
       }
     }
+
     &.conclusion {
       textarea {
         width: 100%;
         resize: none;
       }
     }
+
     &.more {
       & > div {
         margin: 5px 0;
@@ -441,65 +568,25 @@
       }
     }
   }
+
+  // Pulsante "Print" (barra in alto e fondo pagina): azione principale
   button.print {
-    background: #55917f;
+    border-color: transparent;
+    background-color: var(--accent-fill);
+    color: var(--on-accent);
+    &:hover:not(:disabled) {
+      background-color: var(--accent-fill-hover);
+    }
+  }
+  > button.print {
+    align-self: flex-end;
+    margin: 8px 0 24px;
+    padding: 0.7em 2.4em;
   }
 }
-// @media (prefers-color-scheme: light) {
-.theme-light {
-  .form {
-    section {
-      background-color: rgba(221, 213, 223, 0.3);
-      .more-info {
-        .add-more {
-          // background-color: rgba(0, 0, 0, .1);s
-          background-color: rgba(229, 190, 237, 0.5);
-        }
-      }
-      &.anatomy {
-        .anatomy-more {
-          background-color: rgba(0, 0, 0, 0.1);
-        }
-      }
-      .chart-percentile {
-        .line,
-        .base .middle,
-        .base .point,
-        .base {
-          background-color: #1a1a1a !important;
-        }
-      }
-      &.re-dating-panel {
-        .re-dating-container {
-          border: 1px solid rgba(0, 0, 0, 0.87);
-          background-color: #ddd5df;
-          .old-date {
-            border-bottom: 1px solid #242424;
-          }
-          button {
-            background-color: rgba(0, 0, 0, 0.1);
-          }
-          .action {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-          }
-        }
-      }
-    }
-    .act {
-      color: rgba(0, 0, 0, 0.87) !important;
-    }
 
-    input,
-    select {
-      background-color: rgba(0, 0, 0, 0.04);
-      border: 1px solid #1a1a1a;
-      height: 1.75rem;
-      margin-bottom: 8px;
-    }
-    textarea {
-      background-color: rgba(0, 0, 0, 0.04);
-    }
+@media (max-width: 900px) {
+  .form .double {
+    grid-template-columns: 1fr;
   }
 }

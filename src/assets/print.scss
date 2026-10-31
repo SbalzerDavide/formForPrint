@@ -10,11 +10,22 @@
   color: #1a1a1a;
   position: relative;
   font-size: 15px;
+  // Pulsanti fuori dal foglio: seguono il tema della pagina, non il foglio bianco
   button {
     position: absolute;
-    background: #55917f;
     right: -150px;
     width: 140px;
+    border-color: color-mix(in oklch, CanvasText 30%, transparent);
+    background-color: Canvas;
+    color: CanvasText;
+  }
+  button.confirm {
+    border-color: transparent;
+    background-color: var(--accent-fill);
+    color: var(--on-accent);
+    &:hover:not(:disabled) {
+      background-color: var(--accent-fill-hover);
+    }
   }
   .confirm {
     top: 30px;

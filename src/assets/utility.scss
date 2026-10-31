@@ -205,6 +205,16 @@ $border-radius: (
 .items-stretch {
   align-items: stretch;
 }
+// Alias con i nomi usati nei moduli delle visite
+.align-items-start {
+  align-items: flex-start;
+}
+.align-items-center {
+  align-items: center;
+}
+.justify-content-between {
+  justify-content: space-between;
+}
 
 .justify-start {
   justify-content: flex-start;

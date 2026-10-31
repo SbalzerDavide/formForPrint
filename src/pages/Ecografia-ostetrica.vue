@@ -1079,7 +1079,7 @@
       </select>
     </section>
 
-    <button class="print" @click="print()">Print</button>
+    <button class="print" @click="print()">Anteprima di stampa</button>
   </div>
   <!-- <Print v-else @comeBack="comeBack" /> -->
 </template>

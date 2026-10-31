@@ -18,3 +18,7 @@ export const Users = [
     operatorId: "221236"
   }
 ]
+
+// Es. "Dott.ssa Giorgia Mazzoni"
+export const operatorLabel = (user) =>
+  `${user.gender === 'F' ? 'Dott.ssa' : 'Dott.'} ${user.name} ${user.surname}`

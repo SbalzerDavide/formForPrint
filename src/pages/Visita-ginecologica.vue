@@ -165,6 +165,9 @@
           this.addMoreAllergie = false
         }
       },
+      removeAllergy(index) {
+        this.allergies.splice(index, 1)
+      },
       addPathologicalAnamnesis() {
         this.addMorePathologicalAnamnesis = true
         this.newPathologicalAnamnesis = ''
@@ -233,7 +236,7 @@
     <div class="form">
       <Office @print="print()" />
       <Patient />
-      <div class="d-flex justify-content-between align-items-center gap-3">
+      <div class="double">
         <section class="reason">
           <div class="title">Motivo della visita</div>
           <div class="mb-4 w-full">
@@ -263,24 +266,28 @@
               </div>
             </span>
           </div>
-          <div class="d-flex h-2/3">
-            <ul class="d-flex flex-col flex-wrap pl-0">
-              <li
-                class="d-flex gap-2 justify-content-between items-center w-40"
-                v-for="allergy in allergies"
-                :key="allergy"
+          <ul v-if="allergies.length" class="entry-list">
+            <li v-for="(allergy, index) in allergies" :key="allergy">
+              <span>{{ allergy }}</span>
+              <button
+                type="button"
+                class="entry-remove"
+                :aria-label="`Rimuovi ${allergy}`"
+                @click="removeAllergy(index)"
               >
-                <span>- {{ allergy }}</span>
-              </li>
-            </ul>
-          </div>
-          <div v-if="addMoreAllergie === true" class="d-flex align-items-center gap-2">
+                <font-awesome-icon icon="fa-solid fa-xmark" />
+              </button>
+            </li>
+          </ul>
+          <p v-else-if="!addMoreAllergie" class="entry-empty">Nessuna allergia registrata</p>
+          <div v-if="addMoreAllergie === true" class="entry-add">
             <input
               ref="addAllergyElement"
               v-model="newAllergy"
               @keyup.enter="saveNewAllergy"
+              @keyup.esc="addMoreAllergie = false"
               type="text"
-              class=""
+              class="custom-input"
               placeholder="Inserisci allergia"
             />
             <div @click="saveNewAllergy" class="icon-check">
@@ -293,7 +300,7 @@
         <div class="title">Anamnesi familiare</div>
         <div class="d-flex items-center gap-4 mb-4">
           <div class="">Eventi trombotici e cardiovascolari</div>
-          <div class="d-flex gap-1">
+          <div class="d-flex gap-4">
             <div class="d-flex gap-2 align-items-center">
               <input
                 class="custom-input w-4"
@@ -333,22 +340,25 @@
             <font-awesome-icon icon="fa-solid fa-plus" />
           </div>
         </div>
-        <div class="d-flex h-2/3">
-          <ul class="pl-0">
-            <li
-              class="d-flex gap-2 justify-content-between items-center"
-              v-for="(pathologicalAnamnesis, index) in pathologicalAnamneses"
-              :key="pathologicalAnamnesis"
+        <ul v-if="pathologicalAnamneses.length" class="entry-list">
+          <li
+            v-for="(pathologicalAnamnesis, index) in pathologicalAnamneses"
+            :key="pathologicalAnamnesis"
+          >
+            <span>{{ pathologicalAnamnesis }}</span>
+            <button
+              type="button"
+              class="entry-remove"
+              :aria-label="`Rimuovi ${pathologicalAnamnesis}`"
+              @click="removePathologicalAnamnesis(index)"
             >
-              <span>- {{ pathologicalAnamnesis }}</span>
-              <span @click="removePathologicalAnamnesis(index)" class="icon-delete">
-                <font-awesome-icon icon="fa-solid fa-trash" />
-              </span>
-            </li>
-          </ul>
-        </div>
+              <font-awesome-icon icon="fa-solid fa-xmark" />
+            </button>
+          </li>
+        </ul>
+        <p v-else-if="!addMorePathologicalAnamnesis" class="entry-empty">Nessuna voce registrata</p>
 
-        <div v-if="addMorePathologicalAnamnesis === true" class="d-flex flex-col gap-2 w-1/2">
+        <div v-if="addMorePathologicalAnamnesis === true" class="entry-add-group">
           <select @change="setPathologicalAnamnesis" ref="addPathologicalAnamnesisSelectElement">
             <option disabled selected value>-- select an option --</option>
             <option
@@ -360,13 +370,14 @@
             </option>
             <option value="">Altro</option>
           </select>
-          <div class="d-flex align-items-center gap-2 w-full">
+          <div class="entry-add">
             <input
               ref="addPathologicalAnamnesisElement"
               v-model="newPathologicalAnamnesis"
               @keyup.enter="saveNewPathologicalAnamnesis"
+              @keyup.esc="addMorePathologicalAnamnesis = false"
               type="text"
-              class="flex-grow"
+              class="custom-input"
               placeholder="Inserisci anamnesi patologica remota"
             />
             <div @click="saveNewPathologicalAnamnesis" class="icon-check">
@@ -534,70 +545,36 @@
           ></textarea>
         </div>
       </section>
-      <button class="print" @click="print()">Print</button>
+      <button class="print" @click="print()">Anteprima di stampa</button>
     </div>
   </div>
 </template>
 
-<style scoped>
-  .add-more {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    color: #646cff;
-    font-size: 18px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: all 0.25s;
-    &:hover {
-      border-color: #646cff;
-      background-color: #2a2a2a;
-    }
-  }
-
-  .icon-delete {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    color: #f44336;
-    font-size: 18px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: all 0.25s;
-    &:hover {
-      border-color: #f44336;
-      background-color: #2a2a2a;
-    }
-  }
-
+<style lang="scss" scoped>
+  .add-more,
+  .icon-delete,
   .icon-check {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 30px;
     height: 30px;
-    color: #4caf50;
-    font-size: 18px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background-color: #1a1a1a;
+    font-size: 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line-strong);
     cursor: pointer;
-    transition: all 0.25s;
     &:hover {
-      border-color: #4caf50;
-      background-color: #2a2a2a;
+      background-color: var(--hover);
     }
   }
-  .allergies-section {
-    height: 250px;
+  .add-more {
+    color: var(--accent);
+  }
+  .icon-delete {
+    color: var(--danger);
+  }
+  .icon-check {
+    color: var(--success);
   }
   .input-large {
     width: 400px !important;

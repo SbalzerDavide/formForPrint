@@ -130,7 +130,12 @@
           </h3>
           <div class="new-visit">
             <span class="new-visit-label">Nuova visita</span>
-            <button v-for="visitType in visitTypes" :key="visitType.type" @click="newVisit(visitType.type)">
+            <button
+              v-for="visitType in visitTypes"
+              :key="visitType.type"
+              class="primary"
+              @click="newVisit(visitType.type)"
+            >
               {{ visitType.label }}
             </button>
           </div>
@@ -223,8 +228,6 @@
       }
       button {
         padding: 6px 12px;
-        background: #55917f;
-        color: inherit;
       }
     }
     .patient-id {

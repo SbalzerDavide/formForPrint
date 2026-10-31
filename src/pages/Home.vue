@@ -1,5 +1,5 @@
 <script>
-import { Users } from '@/const/users.js'
+import { Users, operatorLabel } from '@/const/users.js'
 import { Offices } from '@/const/offices.js'
 import { storeModel } from '@/utils/storeModel.js'
 import { localDb, loadVisitIntoStore, startNewVisit, VisitTypes } from '@/utils/localDb'
@@ -74,9 +74,7 @@ export default {
     window.removeEventListener('keydown', this.onShortcut)
   },
   methods: {
-    operatorLabel(user) {
-      return `${user.gender === 'F' ? 'Dott.ssa' : 'Dott.'} ${user.name} ${user.surname}`
-    },
+    operatorLabel,
     newVisit(type) {
       startNewVisit(this.$store, this.$router, type)
     },
@@ -236,12 +234,6 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  --accent: oklch(0.74 0.075 170);
-  --accent-soft: color-mix(in oklch, var(--accent) 22%, transparent);
-  --line: color-mix(in oklch, currentColor 16%, transparent);
-  --hover: color-mix(in oklch, currentColor 7%, transparent);
-  --muted: color-mix(in oklch, currentColor 68%, transparent);
-
   max-width: 1080px;
   margin: 0 auto;
   text-align: left;
@@ -536,12 +528,5 @@ button.link {
     padding-left: 0;
     border-left: 0;
   }
-}
-</style>
-
-<style lang="scss">
-/* Nel tema chiaro l'accento è più scuro, per restare leggibile sullo sfondo */
-body.theme-light .home {
-  --accent: oklch(0.5 0.075 170);
 }
 </style>

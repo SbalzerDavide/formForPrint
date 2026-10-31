@@ -26,6 +26,7 @@
 </template>
 
 <style lang="scss">
+  @use './assets/tokens.scss';
   @use './assets/utility.scss';
   @use './assets/form.scss';
 </style>

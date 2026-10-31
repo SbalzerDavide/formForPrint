@@ -192,11 +192,6 @@
 
 <style lang="scss" scoped>
   .settings {
-    --accent: oklch(0.74 0.075 170);
-    --line: color-mix(in oklch, currentColor 16%, transparent);
-    --hover: color-mix(in oklch, currentColor 7%, transparent);
-    --muted: color-mix(in oklch, currentColor 68%, transparent);
-
     max-width: 760px;
     margin: 32px auto 0;
     text-align: left;
@@ -339,11 +334,5 @@
       margin: 0;
       word-break: break-all;
     }
-  }
-</style>
-
-<style lang="scss">
-  body.theme-light .settings {
-    --accent: oklch(0.5 0.075 170);
   }
 </style>
