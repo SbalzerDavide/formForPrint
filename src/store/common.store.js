@@ -16,7 +16,6 @@ export const commonStore = new Vuex.Store({
     user: Users[0], // Default user
     office: null,
     ecoTool: 'Voluson Signature 18', // Default eco tool
-    patients: [],
     // patient 
     // id della paziente nel database locale (null = nuova paziente)
     patientId: null,
@@ -172,9 +171,6 @@ export const commonStore = new Vuex.Store({
     },
     SET_USER(state, user) {
       state.user = user
-    },
-    SET_PATIENTS(state, patients) {
-      state.patients = patients
     },
     SET_OFFICE(state, office) {
       if (office && office.id === 'pralboino') {

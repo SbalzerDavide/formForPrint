@@ -7,7 +7,6 @@
     data() {
       return {
         patientMore: false,
-        selectedPatient: null,
         localDb: localDb,
         savedPatients: []
       }
@@ -24,11 +23,6 @@
       bmi: {
         get() {
           return this.$store.state.bmi
-        }
-      },
-      patients: {
-        get() {
-          return this.$store.state.patients
         }
       },
       height: storeModel('height', 'SET_HEIGHT'),
@@ -75,23 +69,6 @@
     methods: {
       formatDate(date) {
         return dayjs(date).format('DD/MM/YYYY')
-      },
-      changePatient() {
-        const [day, month, year] = this.selectedPatient.dateOfBirth.split('-').map(Number)
-
-        // Add padding to month and day to ensure they always have two digits
-        const paddedMonth = month.toString().padStart(2, '0')
-        const paddedDay = day.toString().padStart(2, '0')
-
-        this.$store.commit('SET_NAME', this.selectedPatient.Name)
-        this.$store.commit('SET_SURNAME', this.selectedPatient.Surname)
-        this.$store.commit('SET_DATE_OF_BIRTH', `${year}-${paddedMonth}-${paddedDay}`)
-        this.$store.commit('SET_HEIGHT', parseInt(this.selectedPatient.Height))
-        this.$store.commit('SET_NORMAL_WEIGHT', parseInt(this.selectedPatient.Weight))
-        if (this.selectedPatient.MoreInfo) {
-          this.patientMore = true
-          this.$store.commit('SET_PATIENT_MORE_TEXT', this.selectedPatient.MoreInfo)
-        }
       }
     }
   }
@@ -100,15 +77,6 @@
 <template>
   <section class="patient">
     <div class="title">Dati Paziente</div>
-    <!-- <div class="d-flex align-center">
-      <div class="patients-label">Seleziona un paziente registrato</div>
-      <select v-model="selectedPatient" @change="changePatient()">
-        <option v-for="patient in patients" :key="patient.id" :value="patient">
-          {{ patient.Name }} {{ patient.Surname }}
-        </option>
-      </select>
-    </div> -->
-
     <div v-if="localDb" class="saved-patient d-flex align-center">
       <label class="patients-label" for="savedPatient">Paziente registrata</label>
       <select v-model="savedPatientId" id="savedPatient">

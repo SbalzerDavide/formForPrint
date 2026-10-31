@@ -1,5 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } from 'electron'
 import fs from 'node:fs'
+import fsp from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import {
@@ -13,6 +14,12 @@ import {
   getVisit
 } from './db.js'
 import { backupFileName, exportBackup, rotateBackup } from './backup.js'
+import {
+  exportPatientsCsv,
+  planPatientsImport,
+  applyPatientsImport,
+  summarizePlan
+} from './patientsCsv.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -116,6 +123,58 @@ function registerIpc() {
     if (canceled || !filePath) return null
     await exportBackup(db, filePath)
     return filePath
+  })
+  handle('patients:exportCsv', async (event) => {
+    const date = new Date().toISOString().slice(0, 10)
+    const { canceled, filePath } = await dialog.showSaveDialog(
+      BrowserWindow.fromWebContents(event.sender),
+      {
+        title: 'Esporta pazienti',
+        defaultPath: path.join(app.getPath('documents'), `pazienti-${date}.csv`),
+        filters: [{ name: 'CSV', extensions: ['csv'] }]
+      }
+    )
+    if (canceled || !filePath) return null
+    const { csv, count } = exportPatientsCsv(db)
+    await fsp.writeFile(filePath, csv, 'utf8')
+    return { filePath, count }
+  })
+  handle('patients:importCsv', async (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    const { canceled, filePaths } = await dialog.showOpenDialog(win, {
+      title: 'Importa pazienti',
+      properties: ['openFile'],
+      filters: [{ name: 'CSV', extensions: ['csv', 'txt'] }]
+    })
+    if (canceled || !filePaths.length) return null
+
+    const plan = planPatientsImport(db, await fsp.readFile(filePaths[0], 'utf8'))
+    const summary = summarizePlan(plan)
+    if (summary.created + summary.updated === 0) {
+      return { applied: false, summary }
+    }
+
+    const { response } = await dialog.showMessageBox(win, {
+      type: 'question',
+      buttons: ['Importa', 'Annulla'],
+      defaultId: 0,
+      cancelId: 1,
+      message: `Importare le pazienti da ${path.basename(filePaths[0])}?`,
+      detail: [
+        `Nuove: ${summary.created}`,
+        `Da aggiornare: ${summary.updated}`,
+        `Già aggiornate: ${summary.unchanged}`,
+        `Possibili doppioni, saltate: ${summary.duplicates.length}`,
+        `Righe con errori, saltate: ${summary.errors.length}`,
+        '',
+        'Prima di importare viene fatto un backup del database.'
+      ].join('\n')
+    })
+    if (response !== 0) return null
+
+    await rotateBackup(db, backupDir)
+    applyPatientsImport(db, plan)
+    return { applied: true, summary }
   })
 }
 

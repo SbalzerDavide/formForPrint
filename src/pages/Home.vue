@@ -1,5 +1,4 @@
 <script>
-import ThemeSwitch from '@/components/ThemeSwitch.vue'
 import { Users } from '@/const/users.js'
 import { Offices } from '@/const/offices.js'
 import { storeModel } from '@/utils/storeModel.js'
@@ -16,9 +15,6 @@ const MAX_RESULTS = 6
 
 export default {
   name: 'Home',
-  components: {
-    ThemeSwitch
-  },
   data() {
     return {
       localDb: localDb,
@@ -149,7 +145,10 @@ export default {
           <option :value="null" disabled>Ambulatorio</option>
           <option v-for="item in offices" :key="item.id" :value="item">{{ item.label }}</option>
         </select>
-        <span class="theme"><ThemeSwitch /></span>
+        <router-link :to="{ name: 'Impostazioni' }" class="settings-link" title="Impostazioni">
+          <font-awesome-icon icon="fa-solid fa-gear" />
+          <span class="visually-hidden">Impostazioni</span>
+        </router-link>
       </div>
     </header>
 
@@ -301,8 +300,14 @@ a:focus-visible {
   .dot {
     color: var(--muted);
   }
-  .theme {
+  .settings-link {
     margin-left: 12px;
+    padding: 6px;
+    border-radius: 6px;
+    color: var(--muted);
+    &:hover {
+      color: inherit;
+    }
   }
 }
 

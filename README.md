@@ -30,6 +30,15 @@ Nell'app desktop pazienti e visite vengono salvati in un database SQLite locale,
 
 Le visite vengono salvate premendo "Salva" o "Conferma" nell'anteprima di stampa. Dalla home, "Pazienti e visite salvate" mostra lo storico, da cui si può ristampare o modificare una visita.
 
-A ogni avvio viene fatta una copia del database nella sottocartella `backups` (vengono mantenute le ultime 10). Dalla pagina Pazienti, "Esporta backup" salva una copia dove si vuole.
+A ogni avvio viene fatta una copia del database nella sottocartella `backups` (vengono mantenute le ultime 10). Da Impostazioni, "Esporta backup" salva una copia dove si vuole.
+
+### Importare ed esportare le pazienti (CSV)
+
+Dalla pagina Impostazioni (icona a forma di ingranaggio in alto a destra):
+
+- **Esporta pazienti (CSV)** salva un file con colonne `Codice;Cognome;Nome;Data di nascita;Altezza (cm);Peso (kg);Note;Ultima modifica`, apribile con Excel.
+- **Importa pazienti (CSV)** legge un file nello stesso formato (sono accettati anche il separatore `,` e le colonne del vecchio `patients.csv`). Prima di importare mostra un riepilogo e fa un backup del database.
+
+Il **Codice** identifica la paziente su qualunque computer: importando di nuovo un file, le pazienti con un codice già presente vengono aggiornate solo se nel file sono più recenti. Le righe senza codice (es. file compilati a mano) creano nuove pazienti, ma se esiste già una paziente con stessi nome, cognome e data di nascita vengono saltate e segnalate come possibili doppioni.
 
 Con `pnpm electron:dev` i dati vanno in una cartella separata (`Form for Print (dev)`), così le prove non toccano i dati reali.

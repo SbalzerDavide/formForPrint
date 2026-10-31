@@ -1,4 +1,5 @@
 import { DatabaseSync } from 'node:sqlite'
+import { randomUUID } from 'node:crypto'
 
 export const VISIT_TYPES = ['ecografia-ostetrica', 'visita-ginecologica', 'visita-ostetrica']
 
@@ -44,6 +45,18 @@ const MIGRATIONS = [
   INSERT INTO patients_new SELECT * FROM patients;
   DROP TABLE patients;
   ALTER TABLE patients_new RENAME TO patients;
+  `,
+  // Codice univoco universale (UUID) della paziente: a differenza dell'id, che è locale,
+  // è lo stesso su ogni installazione e permette di riconoscerla quando si importa un CSV
+  `
+  ALTER TABLE patients ADD COLUMN uid TEXT;
+
+  UPDATE patients SET uid = lower(
+    hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)), 2) || '-' ||
+    substr('89ab', 1 + abs(random()) % 4, 1) || substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))
+  );
+
+  CREATE UNIQUE INDEX patients_uid ON patients (uid);
   `
 ]
 
@@ -73,7 +86,7 @@ function migrate(db) {
   }
 }
 
-function transaction(db, fn) {
+export function transaction(db, fn) {
   db.exec('BEGIN')
   try {
     const result = fn()
@@ -90,6 +103,7 @@ const now = () => new Date().toISOString()
 function rowToPatient(row) {
   return {
     id: row.id,
+    uid: row.uid,
     name: row.name,
     surname: row.surname,
     dateOfBirth: row.date_of_birth,
@@ -162,11 +176,57 @@ function upsertPatient(db, patientId, patient) {
   const timestamp = now()
   const { lastInsertRowid } = db
     .prepare(
-      `INSERT INTO patients (name, surname, date_of_birth, data, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?)`
+      `INSERT INTO patients (uid, name, surname, date_of_birth, data, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
     )
-    .run(name, surname, dateOfBirth, data, timestamp, timestamp)
+    .run(randomUUID(), name, surname, dateOfBirth, data, timestamp, timestamp)
   return Number(lastInsertRowid)
+}
+
+export function findPatientByUid(db, uid) {
+  const row = db.prepare('SELECT * FROM patients WHERE uid = ?').get(uid)
+  return row ? rowToPatient(row) : null
+}
+
+// Pazienti con stessi nome, cognome e data di nascita (per segnalare possibili doppioni)
+export function findPatientsByIdentity(db, { name, surname, dateOfBirth }) {
+  const rows = db
+    .prepare(
+      `SELECT * FROM patients
+       WHERE name = ? COLLATE NOCASE AND surname = ? COLLATE NOCASE AND date_of_birth = ?`
+    )
+    .all(name, surname, dateOfBirth)
+  return rows.map(rowToPatient)
+}
+
+// Scrive una paziente arrivata da un'importazione, mantenendo il suo codice e la data di modifica.
+// patient: { uid, name, surname, dateOfBirth, height, normalWeight, moreInfo, updatedAt }
+export function writeImportedPatient(db, patient) {
+  const data = JSON.stringify({
+    height: patient.height,
+    normalWeight: patient.normalWeight,
+    moreInfo: patient.moreInfo
+  })
+  const { changes } = db
+    .prepare(
+      `UPDATE patients SET name = ?, surname = ?, date_of_birth = ?, data = ?, updated_at = ?
+       WHERE uid = ?`
+    )
+    .run(patient.name, patient.surname, patient.dateOfBirth, data, patient.updatedAt, patient.uid)
+  if (changes > 0) return
+
+  db.prepare(
+    `INSERT INTO patients (uid, name, surname, date_of_birth, data, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`
+  ).run(
+    patient.uid,
+    patient.name,
+    patient.surname,
+    patient.dateOfBirth,
+    data,
+    now(),
+    patient.updatedAt
+  )
 }
 
 // Salva una visita: se visitId è indicato la aggiorna, altrimenti ne crea una nuova.

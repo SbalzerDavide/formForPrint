@@ -5,7 +5,9 @@ contextBridge.exposeInMainWorld('localDb', {
   info: () => ipcRenderer.invoke('db:info'),
   patients: {
     list: () => ipcRenderer.invoke('patients:list'),
-    get: (id) => ipcRenderer.invoke('patients:get', id)
+    get: (id) => ipcRenderer.invoke('patients:get', id),
+    exportCsv: () => ipcRenderer.invoke('patients:exportCsv'),
+    importCsv: () => ipcRenderer.invoke('patients:importCsv')
   },
   visits: {
     save: (visit) => ipcRenderer.invoke('visits:save', visit),

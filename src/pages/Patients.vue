@@ -1,19 +1,11 @@
 <script>
   import Header from '@/components/sections/Header.vue'
-  import PopupMessage from '@/components/PopupMessage.vue'
-  import {
-    localDb,
-    loadVisitIntoStore,
-    startNewVisit,
-    errorMessage,
-    VisitTypes
-  } from '@/utils/localDb'
+  import { localDb, loadVisitIntoStore, startNewVisit, VisitTypes } from '@/utils/localDb'
 
   export default {
     name: 'Patients',
     components: {
-      Header,
-      PopupMessage
+      Header
     },
     props: {
       // Dalla rotta /pazienti/:patientId
@@ -27,11 +19,7 @@
         patients: [],
         loaded: false,
         search: '',
-        visits: [],
-        dbInfo: null,
-        triggerPopup: false,
-        popupMessage: '',
-        popupType: 'success'
+        visits: []
       }
     },
     computed: {
@@ -74,7 +62,6 @@
       if (!localDb) return
       this.patients = await localDb.patients.list()
       this.loaded = true
-      this.dbInfo = await localDb.info()
     },
     methods: {
       formatDate(date) {
@@ -100,20 +87,6 @@
         loadVisitIntoStore(this.$store, visit)
         this.$router.push({ name: VisitTypes[visit.type].route })
       },
-      async exportBackup() {
-        try {
-          const filePath = await localDb.backup.export()
-          if (filePath) {
-            this.popupMessage = `Backup salvato in ${filePath}`
-            this.popupType = 'success'
-            this.triggerPopup = true
-          }
-        } catch (error) {
-          this.popupMessage = `Backup non riuscito: ${errorMessage(error)}`
-          this.popupType = 'error'
-          this.triggerPopup = true
-        }
-      }
     }
   }
 </script>
@@ -122,7 +95,9 @@
   <Header :breadcrumbs="breadcrumbs"></Header>
   <div class="patients-page">
     <p v-if="loaded && !patients.length" class="empty">
-      Nessuna paziente salvata. Le visite vengono salvate quando confermi la stampa o premi "Salva".
+      Nessuna paziente salvata. Le visite vengono salvate quando confermi la stampa o premi "Salva";
+      le pazienti si possono anche importare da
+      <router-link :to="{ name: 'Impostazioni' }">Impostazioni</router-link>.
     </p>
 
     <div v-else class="columns">
@@ -185,19 +160,6 @@
         </template>
       </section>
     </div>
-
-    <footer class="backup">
-      <button @click="exportBackup">Esporta backup</button>
-      <span v-if="dbInfo" class="db-path">Database: {{ dbInfo.dbPath }}</span>
-    </footer>
-
-    <PopupMessage
-      :content="popupMessage"
-      position="bottom"
-      :type="popupType"
-      :show="triggerPopup"
-      @showBack="triggerPopup = false"
-    />
   </div>
 </template>
 
@@ -291,16 +253,5 @@
   }
   .empty {
     opacity: 0.8;
-  }
-  .backup {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-top: 30px;
-    .db-path {
-      font-size: 0.8em;
-      opacity: 0.7;
-      word-break: break-all;
-    }
   }
 </style>
