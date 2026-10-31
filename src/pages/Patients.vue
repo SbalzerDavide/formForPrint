@@ -9,11 +9,18 @@
       Header,
       PopupMessage
     },
+    props: {
+      // Dalla rotta /pazienti/:patientId
+      patientId: {
+        type: String,
+        default: null
+      }
+    },
     data() {
       return {
         patients: [],
+        loaded: false,
         search: '',
-        selectedPatient: null,
         visits: [],
         dbInfo: null,
         triggerPopup: false,
@@ -22,6 +29,20 @@
       }
     },
     computed: {
+      selectedPatient() {
+        return this.patients.find((p) => p.id === Number(this.patientId)) ?? null
+      },
+      breadcrumbs() {
+        if (!this.patientId) return [{ label: 'Pazienti' }]
+        return [
+          { label: 'Pazienti', to: { name: 'Pazienti' } },
+          {
+            label: this.selectedPatient
+              ? `${this.selectedPatient.surname} ${this.selectedPatient.name}`
+              : `Paziente ${this.patientId}`
+          }
+        ]
+      },
       filteredPatients() {
         const search = this.search.trim().toLowerCase()
         if (!search) return this.patients
@@ -31,10 +52,19 @@
         )
       }
     },
+    watch: {
+      patientId: {
+        immediate: true,
+        async handler(patientId) {
+          this.visits = patientId && localDb ? await localDb.visits.listByPatient(Number(patientId)) : []
+        }
+      }
+    },
     async created() {
       this.$store.commit('SET_ACTIVE_PAGE', 'Pazienti')
       if (!localDb) return
       this.patients = await localDb.patients.list()
+      this.loaded = true
       this.dbInfo = await localDb.info()
     },
     methods: {
@@ -47,9 +77,8 @@
       visitLabel(type) {
         return VisitTypes[type]?.label ?? type
       },
-      async selectPatient(patient) {
-        this.selectedPatient = patient
-        this.visits = await localDb.visits.listByPatient(patient.id)
+      selectPatient(patient) {
+        this.$router.push({ name: 'Paziente', params: { patientId: patient.id } })
       },
       reprint(visit) {
         loadVisitIntoStore(this.$store, visit)
@@ -78,9 +107,9 @@
 </script>
 
 <template>
-  <Header></Header>
+  <Header :breadcrumbs="breadcrumbs"></Header>
   <div class="patients-page">
-    <p v-if="!patients.length" class="empty">
+    <p v-if="loaded && !patients.length" class="empty">
       Nessuna paziente salvata. Le visite vengono salvate quando confermi la stampa o premi "Salva".
     </p>
 
@@ -105,8 +134,9 @@
       </section>
 
       <section class="visit-list">
-        <p v-if="!selectedPatient" class="empty">Seleziona una paziente per vedere le visite.</p>
-        <template v-else>
+        <p v-if="!patientId" class="empty">Seleziona una paziente per vedere le visite.</p>
+        <p v-else-if="loaded && !selectedPatient" class="empty">Paziente non trovata.</p>
+        <template v-else-if="selectedPatient">
           <h3>
             {{ selectedPatient.surname }} {{ selectedPatient.name }}
             <span class="patient-id">ID {{ selectedPatient.id }}</span>

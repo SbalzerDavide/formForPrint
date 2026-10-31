@@ -11,6 +11,7 @@ import Patients from '@/pages/Patients.vue'
 const routes = [
   { path: '/', name: 'Home', component: Home },
   { path: '/pazienti', name: 'Pazienti', component: Patients },
+  { path: '/pazienti/:patientId(\\d+)', name: 'Paziente', component: Patients, props: true },
   {
     path: '/visita', name: 'Visita', component: Visit, children: [
       { path: 'ecografia-ostetrica', name: 'EcografiaOstetrica', component: EcografiaOstetrica },

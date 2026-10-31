@@ -183,7 +183,10 @@ export function saveVisit(db, { visitId, patientId, patient, type, data }) {
       const { changes } = db
         .prepare('UPDATE visits SET patient_id = ?, type = ?, data = ?, updated_at = ? WHERE id = ?')
         .run(savedPatientId, type, json, now(), visitId)
-      if (changes > 0) return { patientId: savedPatientId, visitId }
+      if (changes > 0) {
+        const { created_at } = db.prepare('SELECT created_at FROM visits WHERE id = ?').get(visitId)
+        return { patientId: savedPatientId, visitId, createdAt: created_at }
+      }
     }
 
     const timestamp = now()
@@ -193,7 +196,7 @@ export function saveVisit(db, { visitId, patientId, patient, type, data }) {
          VALUES (?, ?, ?, ?, ?)`
       )
       .run(savedPatientId, type, json, timestamp, timestamp)
-    return { patientId: savedPatientId, visitId: Number(lastInsertRowid) }
+    return { patientId: savedPatientId, visitId: Number(lastInsertRowid), createdAt: timestamp }
   })
 }
 

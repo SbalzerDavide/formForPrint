@@ -11,7 +11,7 @@ export default {
   },
   mounted() {
     // Tornando alla home si inizia una nuova visita
-    this.$store.commit('SET_CURRENT_VISIT_ID', null);
+    this.$store.commit('SET_CURRENT_VISIT', null);
     this.$refs.openApp.focus();
   },
   methods: {

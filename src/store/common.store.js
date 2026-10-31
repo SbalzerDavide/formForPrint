@@ -7,8 +7,8 @@ export const commonStore = new Vuex.Store({
   state: {
     activePage: 'Home',
     printType: '',
-    // id della visita salvata nel database locale (null = non ancora salvata)
-    currentVisitId: null,
+    // visita salvata nel database locale: { id, createdAt } (null = non ancora salvata)
+    currentVisit: null,
     // office 
     user: Users[0], // Default user
     office: null,
@@ -145,8 +145,8 @@ export const commonStore = new Vuex.Store({
     SET_PRINT_TYPE(state, printType) {
       state.printType = printType
     },
-    SET_CURRENT_VISIT_ID(state, currentVisitId) {
-      state.currentVisitId = currentVisitId
+    SET_CURRENT_VISIT(state, currentVisit) {
+      state.currentVisit = currentVisit
     },
     SET_PATIENT_ID(state, patientId) {
       state.patientId = patientId

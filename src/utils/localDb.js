@@ -40,7 +40,7 @@ export async function saveCurrentVisit(store) {
   const visitType = VisitTypes[state.printType]
 
   const result = await localDb.visits.save({
-    visitId: state.currentVisitId,
+    visitId: state.currentVisit?.id ?? null,
     patientId: state.patientId,
     type: state.printType,
     patient: plain({
@@ -70,7 +70,7 @@ export async function saveCurrentVisit(store) {
     })
   })
   store.commit('SET_PATIENT_ID', result.patientId)
-  store.commit('SET_CURRENT_VISIT_ID', result.visitId)
+  store.commit('SET_CURRENT_VISIT', { id: result.visitId, createdAt: result.createdAt })
   return result
 }
 
@@ -100,5 +100,10 @@ export function loadVisitIntoStore(store, visit) {
   store.commit('SET_ECO_TOOL', ecoTool)
   store.commit(visitType.mutation, printData)
   store.commit('SET_PRINT_TYPE', visit.type)
-  store.commit('SET_CURRENT_VISIT_ID', visit.id)
+  store.commit('SET_CURRENT_VISIT', { id: visit.id, createdAt: visit.createdAt })
+}
+
+// Tipo di visita corrispondente a una rotta del modulo (es. 'VisitaOstetrica')
+export function visitTypeByRoute(routeName) {
+  return Object.keys(VisitTypes).find((type) => VisitTypes[type].route === routeName) ?? null
 }
