@@ -1,6 +1,16 @@
-import { app, BrowserWindow, net, protocol, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } from 'electron'
+import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import {
+  openDatabase,
+  listPatients,
+  getPatient,
+  saveVisit,
+  listVisitsByPatient,
+  getVisit
+} from './db.js'
+import { backupFileName, exportBackup, rotateBackup } from './backup.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -11,6 +21,11 @@ const distDir = path.join(__dirname, '..', 'dist-app')
 const devServerArg = process.argv.find((arg) => arg.startsWith('--dev-server='))
 const devServerUrl = devServerArg?.split('=')[1]
 
+// In sviluppo i dati vanno in una cartella separata, per non toccare quelli reali
+if (devServerUrl) {
+  app.setPath('userData', path.join(app.getPath('appData'), `${app.getName()} (dev)`))
+}
+
 // L'app viene servita tramite il protocollo app:// invece di file://,
 // così fetch() (es. patients.csv) funziona come sul web
 protocol.registerSchemesAsPrivileged([
@@ -19,6 +34,10 @@ protocol.registerSchemesAsPrivileged([
     privileges: { standard: true, secure: true, supportFetchAPI: true }
   }
 ])
+
+let db
+let dbPath
+let backupDir
 
 function serveDist() {
   protocol.handle('app', (request) => {
@@ -33,6 +52,67 @@ function serveDist() {
   })
 }
 
+function initDatabase() {
+  const dataDir = app.getPath('userData')
+  dbPath = path.join(dataDir, 'formforprint.db')
+  backupDir = path.join(dataDir, 'backups')
+
+  fs.mkdirSync(dataDir, { recursive: true })
+  const isNew = !fs.existsSync(dbPath)
+  db = openDatabase(dbPath)
+
+  // Backup automatico a ogni avvio (non serve per un database appena creato)
+  if (!isNew) {
+    rotateBackup(db, backupDir).catch((error) => console.error('Backup non riuscito:', error))
+  }
+}
+
+// Accetta richieste solo dalla pagina dell'app
+function isTrustedSender(event) {
+  const url = event.senderFrame?.url ?? ''
+  return url.startsWith('app://bundle/') || (devServerUrl && url.startsWith(devServerUrl))
+}
+
+function handle(channel, fn) {
+  ipcMain.handle(channel, (event, ...args) => {
+    if (!isTrustedSender(event)) throw new Error('Richiesta non autorizzata')
+    return fn(event, ...args)
+  })
+}
+
+function toId(value) {
+  const id = Number(value)
+  if (!Number.isInteger(id) || id <= 0) throw new Error('Id non valido')
+  return id
+}
+
+function registerIpc() {
+  handle('db:info', () => ({ dbPath, backupDir }))
+  handle('patients:list', () => listPatients(db))
+  handle('patients:get', (event, id) => getPatient(db, toId(id)))
+  handle('visits:save', (event, visit) =>
+    saveVisit(db, {
+      ...visit,
+      visitId: visit.visitId ? toId(visit.visitId) : null
+    })
+  )
+  handle('visits:listByPatient', (event, patientId) => listVisitsByPatient(db, toId(patientId)))
+  handle('visits:get', (event, id) => getVisit(db, toId(id)))
+  handle('backup:export', async (event) => {
+    const { canceled, filePath } = await dialog.showSaveDialog(
+      BrowserWindow.fromWebContents(event.sender),
+      {
+        title: 'Esporta backup',
+        defaultPath: path.join(app.getPath('documents'), backupFileName()),
+        filters: [{ name: 'Database SQLite', extensions: ['db'] }]
+      }
+    )
+    if (canceled || !filePath) return null
+    await exportBackup(db, filePath)
+    return filePath
+  })
+}
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1400,
@@ -41,6 +121,7 @@ function createWindow() {
     minHeight: 600,
     autoHideMenuBar: true,
     webPreferences: {
+      preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true
@@ -61,6 +142,14 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  try {
+    initDatabase()
+  } catch (error) {
+    dialog.showErrorBox('Database non disponibile', error.message)
+    app.quit()
+    return
+  }
+  registerIpc()
   serveDist()
   createWindow()
 
@@ -71,4 +160,8 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
+})
+
+app.on('will-quit', () => {
+  db?.close()
 })

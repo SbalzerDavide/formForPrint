@@ -6,9 +6,11 @@ import VisitaGinecologica from '@/pages/Visita-ginecologica.vue'
 import VisitaOstetrica from '@/pages/Visita-ostetrica.vue'
 import Visit from '@/pages/Visit.vue'
 import Print from '@/pages/Print.vue'
+import Patients from '@/pages/Patients.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
+  { path: '/pazienti', name: 'Pazienti', component: Patients },
   {
     path: '/visita', name: 'Visita', component: Visit, children: [
       { path: 'ecografia-ostetrica', name: 'EcografiaOstetrica', component: EcografiaOstetrica },

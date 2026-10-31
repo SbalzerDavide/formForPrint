@@ -1,12 +1,15 @@
 <script>
   import { storeModel } from '@/utils/storeModel'
+  import { localDb, loadPatientIntoStore } from '@/utils/localDb'
   export default {
     name: 'Patient',
     components: {},
     data() {
       return {
         patientMore: false,
-        selectedPatient: null
+        selectedPatient: null,
+        localDb: localDb,
+        savedPatients: []
       }
     },
     computed: {
@@ -31,10 +34,38 @@
       height: storeModel('height', 'SET_HEIGHT'),
       normalWeight: storeModel('normalWeight', 'SET_NORMAL_WEIGHT'),
       actualWeight: storeModel('actualWeight', 'SET_ACTUAL_WEIGHT'),
-      patientMoreText: storeModel('patientMoreText', 'SET_PATIENT_MORE_TEXT')
+      patientMoreText: storeModel('patientMoreText', 'SET_PATIENT_MORE_TEXT'),
+      // Paziente salvata che corrisponde a nome, cognome e data di nascita inseriti
+      savedPatientId: {
+        get() {
+          const match = this.savedPatients.find(
+            (p) =>
+              p.name.toLowerCase() === this.name.trim().toLowerCase() &&
+              p.surname.toLowerCase() === this.surname.trim().toLowerCase() &&
+              p.dateOfBirth === this.dateOfBirth
+          )
+          return match ? match.id : ''
+        },
+        set(id) {
+          const patient = this.savedPatients.find((p) => p.id === id)
+          loadPatientIntoStore(
+            this.$store,
+            patient ?? { name: '', surname: '', dateOfBirth: '', height: 0, normalWeight: 0, actualWeight: 0 }
+          )
+          this.patientMore = !!this.patientMoreText
+        }
+      }
     },
-    mounted() {},
+    async mounted() {
+      if (localDb) {
+        this.savedPatients = await localDb.patients.list()
+      }
+      this.patientMore = !!this.patientMoreText
+    },
     methods: {
+      formatDate(date) {
+        return dayjs(date).format('DD/MM/YYYY')
+      },
       changePatient() {
         const [day, month, year] = this.selectedPatient.dateOfBirth.split('-').map(Number)
 
@@ -67,6 +98,17 @@
         </option>
       </select>
     </div> -->
+
+    <div v-if="localDb" class="saved-patient d-flex align-center">
+      <label class="patients-label" for="savedPatient">Paziente registrata</label>
+      <select v-model="savedPatientId" id="savedPatient">
+        <option value="">-- Nuova paziente --</option>
+        <option v-for="patient in savedPatients" :key="patient.id" :value="patient.id">
+          {{ patient.surname }} {{ patient.name }}
+          <template v-if="patient.dateOfBirth">({{ formatDate(patient.dateOfBirth) }})</template>
+        </option>
+      </select>
+    </div>
 
     <div class="section-content">
       <div class="left">
@@ -139,5 +181,8 @@
   .patients-label {
     margin-right: 10px;
     font-weight: bold;
+  }
+  .saved-patient {
+    margin-bottom: 10px;
   }
 </style>

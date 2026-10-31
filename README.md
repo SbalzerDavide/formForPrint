@@ -20,3 +20,16 @@ L'app può essere eseguita come applicazione nativa per macOS e Windows.
 Note:
 - La build per Electron va in `dist-app/`, separata da `dist/` (usata per GitHub Pages).
 - Le app non sono firmate: su macOS aprire la prima volta con tasto destro → Apri, su Windows confermare l'avviso di SmartScreen.
+
+### Dati delle pazienti
+
+Nell'app desktop pazienti e visite vengono salvati in un database SQLite locale, senza passare da nessun server:
+
+- macOS: `~/Library/Application Support/Form for Print/formforprint.db`
+- Windows: `%APPDATA%\Form for Print\formforprint.db`
+
+Le visite vengono salvate premendo "Salva" o "Conferma" nell'anteprima di stampa. Dalla home, "Pazienti e visite salvate" mostra lo storico, da cui si può ristampare o modificare una visita.
+
+A ogni avvio viene fatta una copia del database nella sottocartella `backups` (vengono mantenute le ultime 10). Dalla pagina Pazienti, "Esporta backup" salva una copia dove si vuole.
+
+Con `pnpm electron:dev` i dati vanno in una cartella separata (`Form for Print (dev)`), così le prove non toccano i dati reali.
