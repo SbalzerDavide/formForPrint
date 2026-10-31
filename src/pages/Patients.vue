@@ -96,6 +96,7 @@
           >
             <div class="patient-name">{{ patient.surname }} {{ patient.name }}</div>
             <div class="patient-meta">
+              ID {{ patient.id }} ·
               <span v-if="patient.dateOfBirth">{{ formatDate(patient.dateOfBirth) }} · </span>
               {{ patient.visitCount }} {{ patient.visitCount === 1 ? 'visita' : 'visite' }}
             </div>
@@ -106,7 +107,10 @@
       <section class="visit-list">
         <p v-if="!selectedPatient" class="empty">Seleziona una paziente per vedere le visite.</p>
         <template v-else>
-          <h3>{{ selectedPatient.surname }} {{ selectedPatient.name }}</h3>
+          <h3>
+            {{ selectedPatient.surname }} {{ selectedPatient.name }}
+            <span class="patient-id">ID {{ selectedPatient.id }}</span>
+          </h3>
           <table>
             <thead>
               <tr>
@@ -196,6 +200,12 @@
     flex: 1;
     h3 {
       margin-top: 0;
+    }
+    .patient-id {
+      font-size: 0.7em;
+      font-weight: normal;
+      opacity: 0.7;
+      margin-left: 8px;
     }
     table {
       width: 100%;

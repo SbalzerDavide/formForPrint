@@ -35,16 +35,10 @@
       normalWeight: storeModel('normalWeight', 'SET_NORMAL_WEIGHT'),
       actualWeight: storeModel('actualWeight', 'SET_ACTUAL_WEIGHT'),
       patientMoreText: storeModel('patientMoreText', 'SET_PATIENT_MORE_TEXT'),
-      // Paziente salvata che corrisponde a nome, cognome e data di nascita inseriti
+      // Paziente selezionata ('' = nuova paziente, verrà creata al salvataggio)
       savedPatientId: {
         get() {
-          const match = this.savedPatients.find(
-            (p) =>
-              p.name.toLowerCase() === this.name.trim().toLowerCase() &&
-              p.surname.toLowerCase() === this.surname.trim().toLowerCase() &&
-              p.dateOfBirth === this.dateOfBirth
-          )
-          return match ? match.id : ''
+          return this.$store.state.patientId ?? ''
         },
         set(id) {
           const patient = this.savedPatients.find((p) => p.id === id)
@@ -52,8 +46,24 @@
             this.$store,
             patient ?? { name: '', surname: '', dateOfBirth: '', height: 0, normalWeight: 0, actualWeight: 0 }
           )
+          this.$store.commit('SET_PATIENT_ID', patient ? patient.id : null)
           this.patientMore = !!this.patientMoreText
         }
+      },
+      // Paziente già salvata con gli stessi dati di quella nuova che si sta inserendo
+      possibleDuplicate() {
+        if (this.$store.state.patientId) return null
+        const name = this.name.trim().toLowerCase()
+        const surname = this.surname.trim().toLowerCase()
+        if (!name || !surname) return null
+        return (
+          this.savedPatients.find(
+            (p) =>
+              p.name.toLowerCase() === name &&
+              p.surname.toLowerCase() === surname &&
+              p.dateOfBirth === this.dateOfBirth
+          ) ?? null
+        )
       }
     },
     async mounted() {
@@ -106,9 +116,14 @@
         <option v-for="patient in savedPatients" :key="patient.id" :value="patient.id">
           {{ patient.surname }} {{ patient.name }}
           <template v-if="patient.dateOfBirth">({{ formatDate(patient.dateOfBirth) }})</template>
+          · ID {{ patient.id }}
         </option>
       </select>
     </div>
+    <p v-if="possibleDuplicate" class="duplicate-warning">
+      Esiste già una paziente con questi dati (ID {{ possibleDuplicate.id }}). Se è lei, selezionala
+      da "Paziente registrata", altrimenti al salvataggio verrà creata una nuova paziente.
+    </p>
 
     <div class="section-content">
       <div class="left">
@@ -184,5 +199,12 @@
   }
   .saved-patient {
     margin-bottom: 10px;
+  }
+  .duplicate-warning {
+    margin: 0 0 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: #fff3cd;
+    color: #856404;
   }
 </style>

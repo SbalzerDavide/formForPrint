@@ -33,13 +33,15 @@ export function errorMessage(error) {
 // Copia semplice dei dati: gli oggetti reattivi di Vue non possono passare all'IPC
 const plain = (value) => JSON.parse(JSON.stringify(value ?? null))
 
-// Salva la visita in stampa con i dati della paziente; se è già stata salvata la aggiorna
+// Salva la visita in stampa con i dati della paziente; se è già stata salvata la aggiorna.
+// La paziente è quella selezionata (patientId), altrimenti ne viene creata una nuova.
 export async function saveCurrentVisit(store) {
   const state = store.state
   const visitType = VisitTypes[state.printType]
 
   const result = await localDb.visits.save({
     visitId: state.currentVisitId,
+    patientId: state.patientId,
     type: state.printType,
     patient: plain({
       name: state.name,
@@ -67,6 +69,7 @@ export async function saveCurrentVisit(store) {
       printData: state[visitType.printData]
     })
   })
+  store.commit('SET_PATIENT_ID', result.patientId)
   store.commit('SET_CURRENT_VISIT_ID', result.visitId)
   return result
 }
@@ -90,6 +93,7 @@ export function loadVisitIntoStore(store, visit) {
   const visitType = VisitTypes[visit.type]
 
   loadPatientIntoStore(store, patient)
+  store.commit('SET_PATIENT_ID', visit.patientId)
   // Le select confrontano gli oggetti: si usano quelli delle costanti
   store.commit('SET_USER', Users.find((u) => u.operatorId === user?.operatorId) ?? user)
   store.commit('SET_OFFICE', Offices.find((o) => o.id === office?.id) ?? office)

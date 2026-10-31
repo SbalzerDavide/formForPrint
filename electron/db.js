@@ -27,21 +27,47 @@ const MIGRATIONS = [
   );
 
   CREATE INDEX visits_patient_id ON visits (patient_id, created_at);
+  `,
+  // Le pazienti sono identificate solo dall'id (mai riutilizzato): si toglie il vincolo
+  // di unicità su nome, cognome e data di nascita, così sono ammesse le omonime
+  `
+  CREATE TABLE patients_new (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    surname TEXT NOT NULL,
+    date_of_birth TEXT NOT NULL DEFAULT '',
+    data TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
+  INSERT INTO patients_new SELECT * FROM patients;
+  DROP TABLE patients;
+  ALTER TABLE patients_new RENAME TO patients;
   `
 ]
 
+// Il database va poi preparato con migrateDatabase(), che attiva anche le foreign key.
+// node:sqlite le attiva di default: qui restano spente, perché durante le migrazioni
+// ricreare una tabella cancellerebbe a cascata le righe collegate (es. le visite).
 export function openDatabase(dbPath) {
-  const db = new DatabaseSync(dbPath)
-  db.exec('PRAGMA foreign_keys = ON')
-  migrate(db)
-  return db
+  return new DatabaseSync(dbPath, { enableForeignKeyConstraints: false })
 }
 
+export function migrateDatabase(db) {
+  migrate(db)
+  db.exec('PRAGMA foreign_keys = ON')
+}
+
+// A fine migrazione si verifica che i riferimenti tra tabelle siano ancora validi
 function migrate(db) {
   const { user_version: version } = db.prepare('PRAGMA user_version').get()
   for (let i = version; i < MIGRATIONS.length; i++) {
     transaction(db, () => {
       db.exec(MIGRATIONS[i])
+      if (db.prepare('PRAGMA foreign_key_check').all().length > 0) {
+        throw new Error(`Migrazione ${i + 1}: riferimenti non validi tra visite e pazienti`)
+      }
       db.exec(`PRAGMA user_version = ${i + 1}`)
     })
   }
@@ -106,9 +132,8 @@ export function getPatient(db, id) {
   return row ? rowToPatient(row) : null
 }
 
-// Aggiorna la paziente con stesso nome, cognome e data di nascita, altrimenti la crea.
-// Correggere uno di questi campi crea quindi una nuova paziente invece di sovrascriverne un'altra.
-function upsertPatient(db, patient) {
+// Aggiorna la paziente con l'id indicato, oppure ne crea una nuova se l'id manca.
+function upsertPatient(db, patientId, patient) {
   const name = String(patient.name ?? '').trim()
   const surname = String(patient.surname ?? '').trim()
   const dateOfBirth = String(patient.dateOfBirth ?? '')
@@ -121,22 +146,17 @@ function upsertPatient(db, patient) {
     moreInfo: patient.moreInfo ?? ''
   })
 
-  const existing = db
-    .prepare(
-      `SELECT id FROM patients
-       WHERE name = ? COLLATE NOCASE AND surname = ? COLLATE NOCASE AND date_of_birth = ?`
-    )
-    .get(name, surname, dateOfBirth)
-
-  if (existing) {
-    db.prepare('UPDATE patients SET name = ?, surname = ?, data = ?, updated_at = ? WHERE id = ?').run(
-      name,
-      surname,
-      data,
-      now(),
-      existing.id
-    )
-    return existing.id
+  if (patientId) {
+    const { changes } = db
+      .prepare(
+        `UPDATE patients SET name = ?, surname = ?, date_of_birth = ?, data = ?, updated_at = ?
+         WHERE id = ?`
+      )
+      .run(name, surname, dateOfBirth, data, now(), patientId)
+    if (changes === 0) {
+      throw new Error(`Paziente con ID ${patientId} non trovata`)
+    }
+    return patientId
   }
 
   const timestamp = now()
@@ -150,12 +170,13 @@ function upsertPatient(db, patient) {
 }
 
 // Salva una visita: se visitId è indicato la aggiorna, altrimenti ne crea una nuova.
-export function saveVisit(db, { visitId, patient, type, data }) {
+// La paziente è quella con patientId; se manca ne viene creata una nuova.
+export function saveVisit(db, { visitId, patientId, patient, type, data }) {
   if (!VISIT_TYPES.includes(type)) {
     throw new Error(`Tipo di visita non valido: ${type}`)
   }
   return transaction(db, () => {
-    const savedPatientId = upsertPatient(db, patient)
+    const savedPatientId = upsertPatient(db, patientId, patient)
     const json = JSON.stringify(data)
 
     if (visitId) {

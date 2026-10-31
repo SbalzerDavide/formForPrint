@@ -15,6 +15,8 @@ export const commonStore = new Vuex.Store({
     ecoTool: 'Voluson Signature 18', // Default eco tool
     patients: [],
     // patient 
+    // id della paziente nel database locale (null = nuova paziente)
+    patientId: null,
     name: '',
     surname: '',
     dateOfBirth: '',
@@ -145,6 +147,9 @@ export const commonStore = new Vuex.Store({
     },
     SET_CURRENT_VISIT_ID(state, currentVisitId) {
       state.currentVisitId = currentVisitId
+    },
+    SET_PATIENT_ID(state, patientId) {
+      state.patientId = patientId
     },
     SET_USER(state, user) {
       state.user = user

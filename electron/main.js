@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import {
   openDatabase,
+  migrateDatabase,
   listPatients,
   getPatient,
   saveVisit,
@@ -52,7 +53,7 @@ function serveDist() {
   })
 }
 
-function initDatabase() {
+async function initDatabase() {
   const dataDir = app.getPath('userData')
   dbPath = path.join(dataDir, 'formforprint.db')
   backupDir = path.join(dataDir, 'backups')
@@ -61,10 +62,12 @@ function initDatabase() {
   const isNew = !fs.existsSync(dbPath)
   db = openDatabase(dbPath)
 
-  // Backup automatico a ogni avvio (non serve per un database appena creato)
+  // Backup automatico a ogni avvio, prima di eventuali migrazioni
+  // (non serve per un database appena creato)
   if (!isNew) {
-    rotateBackup(db, backupDir).catch((error) => console.error('Backup non riuscito:', error))
+    await rotateBackup(db, backupDir).catch((error) => console.error('Backup non riuscito:', error))
   }
+  migrateDatabase(db)
 }
 
 // Accetta richieste solo dalla pagina dell'app
@@ -93,7 +96,8 @@ function registerIpc() {
   handle('visits:save', (event, visit) =>
     saveVisit(db, {
       ...visit,
-      visitId: visit.visitId ? toId(visit.visitId) : null
+      visitId: visit.visitId ? toId(visit.visitId) : null,
+      patientId: visit.patientId ? toId(visit.patientId) : null
     })
   )
   handle('visits:listByPatient', (event, patientId) => listVisitsByPatient(db, toId(patientId)))
@@ -141,9 +145,9 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   try {
-    initDatabase()
+    await initDatabase()
   } catch (error) {
     dialog.showErrorBox('Database non disponibile', error.message)
     app.quit()
