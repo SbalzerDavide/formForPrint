@@ -10,7 +10,7 @@
     },
     mounted() {
       // USO
-      this.fetchAndParseCSV('/patients.csv')
+      this.fetchAndParseCSV('./patients.csv')
         .then((patients) => {
           this.$store.commit('SET_PATIENTS', patients)
         })
