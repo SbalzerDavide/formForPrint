@@ -22,14 +22,20 @@
     padding: 24px 0 20px;
     border-top: 1px solid var(--line);
 
-    // Barra operatore / ambulatorio / stampa, come la barra in alto della home
+    // Barra operatore / ambulatorio / stampa, come la barra in alto della home.
+    // Resta visibile sotto l'intestazione durante lo scorrimento.
     &.office {
+      position: sticky;
+      top: var(--header-height);
+      z-index: 1;
+      background-color: var(--page-bg);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
       padding: 12px 0 16px;
       border-top: 0;
+      border-bottom: 1px solid var(--line);
       .operator {
         margin-right: 10px;
       }
@@ -51,6 +57,11 @@
           margin-left: 20px;
         }
       }
+    }
+
+    // La barra operatore ha già la sua linea sotto
+    &.office + section {
+      border-top: 0;
     }
 
     // Titolo di sezione

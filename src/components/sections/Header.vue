@@ -44,6 +44,16 @@
   </nav>
 </template>
 <style lang="scss" scoped>
+  // Barra sempre visibile durante lo scorrimento
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    height: var(--header-height);
+    background-color: var(--page-bg);
+  }
   .breadcrumbs {
     display: flex;
     flex-wrap: wrap;

@@ -1,7 +1,17 @@
 // Token grafici condivisi da tutte le pagine (home, impostazioni, moduli delle visite).
 // I colori neutri derivano dal colore del testo (currentColor), così valgono in entrambi i temi.
 
+:root {
+  // Altezza della barra in alto, fissa durante lo scorrimento (Header.vue)
+  --header-height: 56px;
+  // Barra fissa + barra operatore dei moduli: i campi raggiunti con Tab non finiscono sotto
+  scroll-padding-top: calc(var(--header-height) + 80px);
+}
+
 body {
+  // Stesso sfondo della pagina (style.css), per le barre fisse
+  --page-bg: #242424;
+
   --accent: oklch(0.74 0.075 170);
   --accent-soft: color-mix(in oklch, var(--accent) 22%, transparent);
   // Pulsante principale: abbastanza scuro da garantire il contrasto con il testo chiaro
@@ -29,6 +39,7 @@ body.theme-dark {
 
 body.theme-light {
   color-scheme: light;
+  --page-bg: #fff;
   --accent: oklch(0.5 0.075 170);
   --danger: oklch(0.55 0.18 25);
   --success: oklch(0.52 0.13 150);
